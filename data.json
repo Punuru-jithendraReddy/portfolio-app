@@ -2,23 +2,32 @@
     "profile": {
         "name": "Jithendra Reddy Punuru",
         "role": "Software Engineer",
-        "summary": "Software Engineer with solid experience in Power BI, SQL, Python, and Microsoft Power Platform. \nSkilled in building dashboards, automating workflows, integrating Oracle systems, and improving \nbusiness processes. Known for reducing manual efforts and improving efficiency through automation \nand clean data models.",
-        "image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/Profile.jpg",
+        "tagline": "Business Intelligence & Automation Architect",
+        "email": "jithendrareddypunuru@gmail.com",
+        "phone": "+91-8374547319",
+        "location": "Bengaluru, India",
+        "linkedin": "https://www.linkedin.com/in/jithendrareddypunuru/",
+        "summary": "Software Engineer with solid experience in Power BI, SQL, Python, and Microsoft Power Platform. Skilled in building dashboards, automating workflows, integrating Oracle systems, and improving business processes. Known for reducing manual efforts and improving efficiency through automation and clean data models.",
+        "image_url": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/Profile.jpg",
         "contact_info": [
             {
                 "label": "Mail",
-                "value": "jithendrareddypunuru@gmail.com",
+                "value": "mailto:jithendrareddypunuru@gmail.com",
                 "icon": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/gmail.png",
                 "category": "Email"
             },
             {
-                "label": "Linkedin",
+                "label": "LinkedIn",
                 "value": "https://www.linkedin.com/in/jithendrareddypunuru/",
                 "icon": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/linkedin.png",
                 "category": "LinkedIn"
             }
-        ],
-        "image_url": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/Profile.jpg"
+        ]
+    },
+    "metrics": {
+        "dashboards": "8+",
+        "manual_reduction": "40%",
+        "efficiency": "30%"
     },
     "skills": {
         "Power BI": 95,
@@ -26,25 +35,24 @@
         "Power Automate": 90,
         "Python": 85,
         "SQL": 80,
-        "Azure Logic Apps": 75    
+        "Azure Logic Apps": 75
     },
     "experience": [
         {
             "role": "Software Engineer (BI & Automation)",
             "company": "Svarapps Technologies Pvt Ltd",
             "date": "Sep 2024 - Present",
-            "description": "- Delivered 8+ high-impact Power BI dashboards across Finance, Sales, Logistics, and Operations, improving management decision-making and financial visibility.\n- Built and optimized end-to-end data pipelines (Oracle \u2192 SharePoint \u2192 Power BI) using Python and automation, reducing manual effort and improving data reliability.\n- Enhanced reporting performance by optimizing data models and refresh logic, achieving faster refresh times and more responsive dashboards.\n- Developed automation and AI solutions using Copilot Studio, Logic Apps, and AI Builder to enable self-service insights, automate invoice processing, and streamline file management.\n- Drove cost optimization by introducing Excel-based reporting alternatives, reducing dependency on premium BI licensing without sacrificing insights."
+            "description": "• Delivered 8+ high-impact Power BI dashboards across Finance, Sales, Logistics, and Operations.\n• Built and optimized end-to-end data pipelines (Oracle → SharePoint → Power BI) using Python and automation.\n• Enhanced reporting performance by optimizing data models and refresh logic.\n• Developed automation and AI solutions using Copilot Studio, Logic Apps, and AI Builder."
         },
         {
             "role": "Data Analyst Intern",
             "company": "AI Varient",
             "date": "Jan 2023 - Jan 2024",
-            "description": "- Generated Reports and Dashboards using Power-Bi Desktop, Tableau, and Advanced Excel. \n- Constructed tabular and multidimensional data models. \n- Created compelling data visualizations from live & extract data sources. \n- Processed and shaped data using Excel, MySQL and advanced extraction techniques. \n- Completed two projects during a 6-month internship, demonstrating proficiency in data analytics and visualization. "
+            "description": "• Generated Reports and Dashboards using Power-Bi Desktop, Tableau, and Advanced Excel.\n• Constructed tabular and multidimensional data models.\n• Created compelling data visualizations from live & extract data sources.\n• Processed and shaped data using Excel, MySQL and advanced extraction techniques."
         }
     ],
     "projects": [
-        
-       {
+        {
             "title": "Executive Command Center",
             "category": "Finance",
             "image": "https://placehold.co/600x350/222/FFF?text=Executive+Dashboard",
@@ -132,12 +140,5 @@
             "solution": "Custom Power App with automated approval workflows.",
             "impact": "40% reduction in HR coordination effort."
         }
-    ],
-    "metrics": {
-        "dashboards": "8+",
-        "manual_reduction": "40%",
-        "efficiency": "30%"
-    }
+    ]
 }
-
-
