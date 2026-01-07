@@ -46,23 +46,29 @@ def save_data(data):
     except Exception as e:
         st.error(f"Save failed: {e}")
 
-# --- HELPER: IMAGE RENDERER ---
+# --- HELPER: IMAGE RENDERER (FIXED WIDTH ERROR) ---
 def render_image(image_path, width=None):
     if not image_path: return
     
-    # Clean logic for both URL and Local
+    # 1. Determine Path
     if image_path.startswith("http"):
-        st.image(image_path, width=width)
+        final_path = image_path
     else:
-        # Check local assets
         filename = os.path.basename(image_path)
+        # Try finding it in assets or root
         possible_paths = [os.path.join(BASE_DIR, "assets", filename), os.path.join(BASE_DIR, filename)]
+        final_path = "https://placehold.co/600x400/png?text=Image+Missing"
         for path in possible_paths:
             if os.path.exists(path):
-                st.image(path, width=width)
-                return
-        # Fallback if missing
-        st.image("https://placehold.co/600x400/png?text=Image+Missing", width=width)
+                final_path = path
+                break
+    
+    # 2. Safe Render (Prevents InvalidWidthError)
+    if width: 
+        st.image(final_path, width=width)
+    else: 
+        # If no width provided, use container width (Default behavior)
+        st.image(final_path, use_container_width=True)
 
 # --- INITIALIZE ---
 if 'data' not in st.session_state: st.session_state.data = load_data()
@@ -227,15 +233,20 @@ elif selected == "Projects":
     for i, p in enumerate(st.session_state.data.get('projects', [])):
         with cols[i%2]:
             with st.container(border=True):
-                render_image(p.get('image', ''), width=None)
+                # FIXED: Removed width=None
+                render_image(p.get('image', ''))
                 st.subheader(p.get('title', 'Project'))
-                st.caption(p.get('category', 'General'))
-                if p.get('problem'): st.info(f"**Problem:** {p['problem']}")
-                if p.get('solution'): st.success(f"**Solution:** {p['solution']}")
-                if p.get('impact'): st.warning(f"**Impact:** {p['impact']}")
+                st.caption(f"📂 {p.get('category', 'General')}")
+                
+                # --- VISIBLE PROBLEM, SOLUTION, IMPACT ---
+                if p.get('problem'):
+                    st.info(f"**Problem:**\n{p['problem']}")
+                if p.get('solution'):
+                    st.success(f"**Solution:**\n{p['solution']}")
+                if p.get('impact'):
+                    st.warning(f"**Impact:**\n{p['impact']}")
 
 # --- SKILLS & CONTACT ---
-# (Standard display logic for Skills and Contact remains the same for brevity)
 elif selected == "Skills":
     st.header("Skills")
     skills = st.session_state.data.get('skills', {})
