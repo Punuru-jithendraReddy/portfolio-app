@@ -2,25 +2,140 @@
     "profile": {
         "name": "Jithendra Reddy Punuru",
         "role": "Software Engineer",
-        "summary": "I'm a Software Engineer specializing in the Microsoft Power Platform...",
-        "image": "profile.png",
+        "summary": "Software Engineer with solid experience in Power BI, SQL, Python, and Microsoft Power Platform. \nSkilled in building dashboards, automating workflows, integrating Oracle systems, and improving \nbusiness processes. Known for reducing manual efforts and improving efficiency through automation \nand clean data models.",
+        "image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/Profile.jpg",
         "contact_info": [
             {
-                "label": "Email",
-                "value": "mailto:jithendrareddypunuru@gmail.com",
-                "icon_file": "gmail.png"
+                "label": "Mail",
+                "value": "jithendrareddypunuru@gmail.com",
+                "icon": ""https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/gmail.png",
+                "category": "Email"
             },
             {
-                "label": "LinkedIn",
+                "label": "Linkedin",
                 "value": "https://www.linkedin.com/in/jithendrareddypunuru/",
-                "icon_file": "linkedin.png"
+                "icon": ""https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/linkedin.png",
+                "category": "LinkedIn"
             }
-        ]
+        ],
+        "image_url": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/Profile.jpg"
     },
     "skills": {
-        "Power BI": 90,
-        "Python": 85
+        "Power BI": 95,
+        "DAX": 90,
+        "Power Automate": 90,
+        "Python": 85,
+        "SQL": 80,
+        "Azure Logic Apps": 75    
     },
-    "experience": [],
-    "projects": []
+    "experience": [
+        {
+            "role": "Software Engineer (BI & Automation)",
+            "company": "Svarapps Technologies Pvt Ltd",
+            "date": "Sep 2024 - Present",
+            "description": "- Delivered 8+ high-impact Power BI dashboards across Finance, Sales, Logistics, and Operations, improving management decision-making and financial visibility.\n- Built and optimized end-to-end data pipelines (Oracle \u2192 SharePoint \u2192 Power BI) using Python and automation, reducing manual effort and improving data reliability.\n- Enhanced reporting performance by optimizing data models and refresh logic, achieving faster refresh times and more responsive dashboards.\n- Developed automation and AI solutions using Copilot Studio, Logic Apps, and AI Builder to enable self-service insights, automate invoice processing, and streamline file management.\n- Drove cost optimization by introducing Excel-based reporting alternatives, reducing dependency on premium BI licensing without sacrificing insights."
+        },
+        {
+            "role": "Data Analyst Intern",
+            "company": "AI Varient",
+            "date": "Jan 2023 - Jan 2024",
+            "description": "- Generated Reports and Dashboards using Power-Bi Desktop, Tableau, and Advanced Excel. \n- Constructed tabular and multidimensional data models. \n- Created compelling data visualizations from live & extract data sources. \n- Processed and shaped data using Excel, MySQL and advanced extraction techniques. \n- Completed two projects during a 6-month internship, demonstrating proficiency in data analytics and visualization. "
+        }
+    ],
+    "projects": [
+        
+        {
+            "title": "Executive Command Center",
+            "category": "Finance",
+            "image": "https://placehold.co/600x350/222/FFF?text=Executive+Dashboard",
+            "problem": "Executives lacked a clear, real-time view of business performance across regions.",
+            "solution": "Centralized 'Single Source of Truth' hub for Sales, Profit Margin, and Deal Size.",
+            "impact": "25% improvement in financial visibility."
+        },
+        {
+            "title": "Financial Budget Tracking",
+            "category": "Finance",
+            "image": "https://placehold.co/600x350/222/FFF?text=Budget+Dashboard",
+            "problem": "Lack of clear visibility into budget variances made it difficult to track overspending.",
+            "solution": "Real-time comparison of Actuals vs Budget vs Forecast with drill-down capabilities.",
+            "impact": "Enabled timely corrective actions on budget deviations."
+        },
+        {
+            "title": "Sales Forecasting & Pipeline",
+            "category": "Sales",
+            "image": "https://placehold.co/600x350/222/FFF?text=Forecasting+Dashboard",
+            "problem": "Unreliable forecasts and unclear pipeline visibility made resource planning hard.",
+            "solution": "Bridges past results with current pipeline data to deliver accurate revenue forecasts.",
+            "impact": "Improved reliability of revenue projections for investors."
+        },
+        {
+            "title": "Performance Leaderboard",
+            "category": "Sales",
+            "image": "https://placehold.co/600x350/222/FFF?text=Leaderboard+Dashboard",
+            "problem": "Relying on intuition to assess performance caused leaders to overlook top talent.",
+            "solution": "Automated rankings and trend insights to recognize high performers instantly.",
+            "impact": "Data-driven performance reviews without manual reporting."
+        },
+        {
+            "title": "Supply Chain Intelligence (PO)",
+            "category": "Logistics",
+            "image": "https://placehold.co/600x350/222/FFF?text=PO+Dashboard",
+            "problem": "Frequent PO changes raised costs and hid supplier inefficiencies.",
+            "solution": "Root Cause Analysis dashboard categorizing reasons for order revisions.",
+            "impact": "Identified bottlenecks and improved supplier performance."
+        },
+        {
+            "title": "Live Operations Monitor",
+            "category": "Logistics",
+            "image": "https://placehold.co/600x350/222/FFF?text=Ops+Monitor",
+            "problem": "Delays and workflow issues were often noticed only after affecting customers.",
+            "solution": "Real-time tracking of orders and pipeline stages with live metric tickers.",
+            "impact": "Proactive removal of blockers before escalation."
+        },
+        {
+            "title": "Workflow Process Monitoring",
+            "category": "Logistics",
+            "image": "https://placehold.co/600x350/222/FFF?text=Workflow+Dashboard",
+            "problem": "Inefficiencies in key multi-step processes often went unnoticed.",
+            "solution": "Granular visibility into every stage of a workflow, highlighting stuck items.",
+            "impact": "Instant identification of process bottlenecks."
+        },
+        {
+            "title": "Advanced Benchmarking",
+            "category": "Sales",
+            "image": "https://placehold.co/600x350/222/FFF?text=Benchmarking+Dashboard",
+            "problem": "Measuring performance only in the present hides improvement or decline.",
+            "solution": "Compares present activity to historical benchmarks (Last 3 Months/Year).",
+            "impact": "Reveals true performance direction (positive/negative trends)."
+        },
+        {
+            "title": "Flat File Comparison Tool",
+            "category": "Tools",
+            "image": "https://placehold.co/600x350/007bff/FFF?text=Python+Tool",
+            "problem": "Manual validation of large Excel/CSV files is error-prone.",
+            "solution": "Browser-based Python Streamlit tool for comparing Source vs Target files.",
+            "impact": "Supports 100k+ rows with auto-normalization."
+        },
+        {
+            "title": "AI Invoice Automation",
+            "category": "Automation",
+            "image": "https://placehold.co/600x350/ff5722/FFF?text=AI+Invoice",
+            "problem": "Manual extraction of chemical specs from PDFs was time-consuming.",
+            "solution": "Automated flow using Copilot Studio, AI Builder, and Power Automate.",
+            "impact": "50% reduction in manual data entry."
+        },
+        {
+            "title": "Recruitment Management App",
+            "category": "Apps",
+            "image": "https://placehold.co/600x350/28a745/FFF?text=Power+Apps",
+            "problem": "Hiring process was lost in disjointed email chains.",
+            "solution": "Custom Power App with automated approval workflows.",
+            "impact": "40% reduction in HR coordination effort."
+        }
+    ],
+    "metrics": {
+        "dashboards": "8+",
+        "manual_reduction": "40%",
+        "efficiency": "30%"
+    }
 }
