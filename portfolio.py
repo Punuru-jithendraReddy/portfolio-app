@@ -9,6 +9,7 @@ import plotly.graph_objects as go
 # --- CONFIGURATION ---
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_FILE = os.path.join(BASE_DIR, 'data.json')
+ASSETS_DIR = os.path.join(BASE_DIR, 'assets')
 ADMIN_PASSWORD = "admin" 
 
 st.set_page_config(layout="wide", page_title="Portfolio", page_icon="✨")
@@ -16,41 +17,68 @@ st.set_page_config(layout="wide", page_title="Portfolio", page_icon="✨")
 # --- CUSTOM CSS ---
 st.markdown("""
 <style>
-    /* GLOBAL FONTS */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
-    html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
+    /* GLOBAL */
+    .main { padding-top: 1rem; }
+    h1, h2, h3 { font-family: 'Segoe UI', sans-serif; color: #0F172A; }
     
-    /* PROJECT CARDS */
+    /* PROJECT CARDS (With Animation) */
     .project-card {
-        border: 1px solid #e0e0e0;
-        border-radius: 10px;
-        padding: 0px;
-        background-color: white;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        background-color: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 0; /* Image touches edges */
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        margin-bottom: 25px;
         overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease; /* SMOOTH ANIMATION */
+        height: 100%;
     }
     
-    /* CONTACT CARDS */
-    .contact-card-modern {
-        background-color: white;
-        padding: 30px;
-        border-radius: 15px;
-        border: 1px solid #e2e8f0;
-        text-align: center;
-        text-decoration: none !important;
-        color: inherit !important;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        transition: transform 0.2s, border-color 0.2s;
-        display: block;
-        margin-bottom: 20px;
-    }
-    .contact-card-modern:hover {
-        transform: translateY(-5px);
+    /* HOVER EFFECT */
+    .project-card:hover {
+        transform: translateY(-8px); /* LIFT UP */
+        box-shadow: 0 12px 20px -5px rgba(59, 130, 246, 0.25); /* GLOW */
         border-color: #3B82F6;
-        box-shadow: 0 10px 15px rgba(59, 130, 246, 0.15);
     }
-    .contact-label { font-size: 1.2rem; font-weight: 700; color: #1E293B; margin-bottom: 5px; }
-    .contact-val { font-size: 0.95rem; color: #3B82F6; word-break: break-all; }
+
+    .p-img-container {
+        width: 100%;
+        height: 200px;
+        overflow: hidden;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .p-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .p-content {
+        padding: 20px;
+    }
+
+    .p-title {
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: #1E293B;
+        margin-bottom: 5px;
+    }
+
+    .p-cat {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: #64748B;
+        text-transform: uppercase;
+        margin-bottom: 15px;
+    }
+
+    .p-detail {
+        font-size: 0.95rem;
+        color: #475569;
+        margin-bottom: 10px;
+        line-height: 1.5;
+    }
 
     /* SKILL METRICS */
     .skill-metric {
@@ -60,6 +88,29 @@ st.markdown("""
         text-align: center;
         border: 1px solid #E2E8F0;
     }
+
+    /* CONTACT CARDS */
+    .contact-card-modern {
+        background-color: white;
+        padding: 25px;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        text-align: center;
+        text-decoration: none !important;
+        color: inherit !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        transition: transform 0.2s, border-color 0.2s;
+        display: block;
+    }
+    .contact-card-modern:hover {
+        transform: translateY(-5px);
+        border-color: #3B82F6;
+        box-shadow: 0 8px 15px rgba(59, 130, 246, 0.1);
+    }
+    .contact-icon-big { width: 40px; height: 40px; margin-bottom: 10px; object-fit: contain; }
+    .contact-label { font-size: 1.1rem; font-weight: 700; color: #1E293B; margin-bottom: 5px; }
+    .contact-val { font-size: 0.9rem; color: #3B82F6; }
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -76,32 +127,36 @@ def save_data(data):
         st.toast("Saved! Download JSON to update GitHub.", icon="💾")
     except Exception as e: st.error(f"Save failed: {e}")
 
-# --- IMAGE RENDERER (Safe) ---
-def render_image(image_path, width=None):
-    if not image_path: return
+# --- HELPER: GET IMAGE SOURCE (For HTML Injection) ---
+def get_img_src(image_path):
+    if not image_path: return "https://placehold.co/600x400/png?text=No+Image"
     
     # Auto-Fix GitHub Blob Links
     if "github.com" in image_path and "/blob/" in image_path:
         image_path = image_path.replace("github.com", "raw.githubusercontent.com").replace("/blob/", "/")
     
     if image_path.startswith("http"):
-        # Use container width if width is None to prevent errors
-        if width: st.image(image_path, width=width)
-        else: st.image(image_path, use_container_width=True)
-    else:
-        # Local file fallback
-        filename = os.path.basename(image_path)
-        possible_paths = [os.path.join(BASE_DIR, "assets", filename), os.path.join(BASE_DIR, filename)]
-        found = False
-        for path in possible_paths:
-            if os.path.exists(path):
-                if width: st.image(path, width=width)
-                else: st.image(path, use_container_width=True)
-                found = True
-                break
-        if not found:
-            # Placeholder
-            st.image("https://placehold.co/600x400/png?text=No+Image", use_container_width=True)
+        return image_path
+    
+    # Local File -> Base64
+    filename = os.path.basename(image_path)
+    possible_paths = [os.path.join(BASE_DIR, "assets", filename), os.path.join(BASE_DIR, filename)]
+    
+    for path in possible_paths:
+        if os.path.exists(path):
+            with open(path, "rb") as f:
+                data = f.read()
+                b64 = base64.b64encode(data).decode()
+                return f"data:image/png;base64,{b64}"
+    
+    return "https://placehold.co/600x400/png?text=Missing"
+
+# --- HELPER: STREAMLIT IMAGE RENDERER ---
+def render_image(image_path, width=None):
+    src = get_img_src(image_path)
+    # Using container width prevents the "InvalidWidthError"
+    if width: st.image(src, width=width)
+    else: st.image(src, use_container_width=True)
 
 # --- INITIALIZE ---
 if 'data' not in st.session_state: st.session_state.data = load_data()
@@ -188,10 +243,10 @@ elif selected == "Experience":
     for job in st.session_state.data.get('experience', []):
         with st.container(border=True):
             st.markdown(f"### {job.get('role', 'Role')}")
-            st.markdown(f"**{job.get('company', 'Company')}** | *{job.get('date', 'Date')}*")
+            st.caption(f"**{job.get('company', 'Company')}** | {job.get('date', 'Date')}")
             st.markdown(job.get('description', ''))
 
-# --- PROJECTS (FIXED: NO HTML, CLEAN LAYOUT) ---
+# --- PROJECTS (FIXED: ANIMATED HTML CARDS) ---
 elif selected == "Projects":
     st.title("Projects")
     
@@ -215,32 +270,33 @@ elif selected == "Projects":
                 if st.button("Update"): st.session_state.data['projects'][pidx] = {"title": ept, "category": epc, "image": epi, "problem": epp, "solution": eps, "impact": epimp}; save_data(st.session_state.data); st.rerun()
                 if st.button("Delete", type="primary"): st.session_state.data['projects'].pop(pidx); save_data(st.session_state.data); st.rerun()
 
-    # --- UI: CLEANER CARDS (Native Elements) ---
+    # --- UI: ANIMATED CARDS (No Expander) ---
     cols = st.columns(2)
     for i, p in enumerate(st.session_state.data.get('projects', [])):
         with cols[i%2]:
-            with st.container(border=True):
-                render_image(p.get('image', ''))
-                st.subheader(p.get('title', 'Project'))
-                st.caption(f"📂 {p.get('category', 'General')}")
-                
-                st.markdown("---")
-                
-                # FIXED: Removed raw HTML strings. Using native expanders for cleanliness.
-                # This fixes the issue of "<div class..." text appearing.
-                if p.get('problem'):
-                    with st.expander("🚨 **Problem**", expanded=True):
-                        st.write(p['problem'])
-                
-                if p.get('solution'):
-                    with st.expander("💡 **Solution**"):
-                        st.write(p['solution'])
-                
-                if p.get('impact'):
-                    with st.expander("🚀 **Impact**"):
-                        st.write(p['impact'])
+            img_src = get_img_src(p.get('image', ''))
+            
+            # Construct Content Block
+            details = ""
+            if p.get('problem'): details += f"<div class='p-detail'><b>🚨 Problem:</b> {p['problem']}</div>"
+            if p.get('solution'): details += f"<div class='p-detail'><b>💡 Solution:</b> {p['solution']}</div>"
+            if p.get('impact'): details += f"<div class='p-detail'><b>🚀 Impact:</b> {p['impact']}</div>"
 
-# --- SKILLS (FIXED: Chart Top, List Bottom) ---
+            # HTML CARD
+            st.markdown(f"""
+            <div class="project-card">
+                <div class="p-img-container">
+                    <img src="{img_src}" class="p-img">
+                </div>
+                <div class="p-content">
+                    <div class="p-title">{p.get('title')}</div>
+                    <div class="p-cat">📂 {p.get('category')}</div>
+                    {details}
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+# --- SKILLS ---
 elif selected == "Skills":
     st.title("Technical Skills")
     skills = st.session_state.data.get('skills', {})
@@ -253,32 +309,21 @@ elif selected == "Skills":
         if st.button("Delete All", type="primary"): 
             st.session_state.data['skills'] = {}; save_data(st.session_state.data); st.rerun()
 
-    # 1. SPIDER CHART (Top Center)
+    # 1. Chart Centered
     if skills:
         c1, c2, c3 = st.columns([1, 2, 1])
         with c2:
-            fig = go.Figure(data=go.Scatterpolar(
-                r=list(skills.values()), theta=list(skills.keys()), fill='toself',
-                marker=dict(color='#3B82F6')
-            ))
-            fig.update_layout(
-                polar=dict(radialaxis=dict(visible=True, range=[0, 100])),
-                showlegend=False,
-                margin=dict(l=40, r=40, t=30, b=30),
-                height=300
-            )
+            fig = go.Figure(data=go.Scatterpolar(r=list(skills.values()), theta=list(skills.keys()), fill='toself', marker=dict(color='#3B82F6')))
+            fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 100])), showlegend=False, margin=dict(l=40, r=40, t=30, b=30), height=250)
             st.plotly_chart(fig, use_container_width=True)
 
-    st.markdown("---")
-    
-    # 2. SKILL LIST (Bottom Grid with Percentages)
-    st.subheader("Proficiency Levels")
+    # 2. Grid List
+    st.markdown("### Proficiency")
     s_cols = st.columns(3)
     skill_items = list(skills.items())
     
     for i, (s, v) in enumerate(skill_items):
         with s_cols[i % 3]:
-            # Simple clean metric style
             st.markdown(f"""
             <div class="skill-metric">
                 <div style="font-weight:bold; color:#334155;">{s}</div>
@@ -288,7 +333,7 @@ elif selected == "Skills":
             <div style="height:15px"></div>
             """, unsafe_allow_html=True)
 
-# --- CONTACT (FIXED: Professional Cards) ---
+# --- CONTACT ---
 elif selected == "Contact":
     st.title("Get In Touch")
     prof = st.session_state.data.get('profile', {})
@@ -302,16 +347,14 @@ elif selected == "Contact":
             val = item.get('value', '#')
             label = item.get('label', 'Link')
             
-            # Use icon if http, else link symbol
             if icon_url.startswith("http"): 
-                # Inline image styling for card
-                img_html = f'<img src="{icon_url}" style="width:40px; height:40px; margin-bottom:10px;">'
+                img_tag = f'<img src="{icon_url}" class="contact-icon-big">' 
             else:
-                img_html = '<span style="font-size:40px;">🔗</span>'
+                img_tag = '<span style="font-size:40px; display:block; margin-bottom:10px;">🔗</span>'
             
             st.markdown(f"""
             <a href="{val}" target="_blank" class="contact-card-modern">
-                {img_html}
+                {img_tag}
                 <div class="contact-label">{label}</div>
                 <div class="contact-val">{val}</div>
             </a>
