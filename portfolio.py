@@ -20,41 +20,30 @@ st.markdown("""
     .main { padding-top: 1rem; }
     h1, h2, h3 { font-family: 'Segoe UI', sans-serif; color: #0F172A; }
     
-    /* PROJECT CARDS */
-    .project-container {
-        padding: 20px;
-        background-color: #ffffff;
-        border-radius: 12px;
-        border: 1px solid #e2e8f0;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        margin-bottom: 20px;
-    }
-    
     /* SKILL BARS */
     .skill-text { font-weight: 600; color: #334155; margin-bottom: 5px; display: flex; justify-content: space-between; }
     
     /* CONTACT CARDS */
     .contact-card-modern {
         background-color: white;
-        padding: 30px;
-        border-radius: 15px;
+        padding: 25px;
+        border-radius: 12px;
         border: 1px solid #e2e8f0;
         text-align: center;
         text-decoration: none !important;
         color: inherit !important;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         transition: transform 0.2s, border-color 0.2s;
-        height: 100%;
         display: block;
     }
     .contact-card-modern:hover {
         transform: translateY(-5px);
         border-color: #3B82F6;
-        box-shadow: 0 10px 15px rgba(59, 130, 246, 0.15);
+        box-shadow: 0 8px 15px rgba(59, 130, 246, 0.1);
     }
-    .contact-icon-big { width: 50px; height: 50px; margin-bottom: 15px; object-fit: contain; }
-    .contact-label { font-size: 1.2rem; font-weight: 700; color: #1E293B; margin-bottom: 5px; }
-    .contact-val { font-size: 0.9rem; color: #3B82F6; word-break: break-all; }
+    .contact-icon-big { width: 40px; height: 40px; margin-bottom: 10px; object-fit: contain; }
+    .contact-label { font-size: 1.1rem; font-weight: 700; color: #1E293B; margin-bottom: 5px; }
+    .contact-val { font-size: 0.9rem; color: #3B82F6; }
 
 </style>
 """, unsafe_allow_html=True)
@@ -72,18 +61,17 @@ def save_data(data):
         st.toast("Saved! Download JSON to update GitHub.", icon="💾")
     except Exception as e: st.error(f"Save failed: {e}")
 
-# --- IMAGE RENDERER (With Auto-Fix for GitHub Links) ---
+# --- IMAGE RENDERER (Auto-Fix for GitHub Links) ---
 def render_image(image_path, width=None):
     if not image_path: return
     
-    # AUTO-FIX: Convert GitHub Blob link to Raw link if user pastes wrong one
+    # AUTO-FIX: Convert GitHub Blob link to Raw link
     if "github.com" in image_path and "/blob/" in image_path:
         image_path = image_path.replace("github.com", "raw.githubusercontent.com").replace("/blob/", "/")
     
     if image_path.startswith("http"):
         st.image(image_path, width=width)
     else:
-        # Local file fallback
         filename = os.path.basename(image_path)
         possible_paths = [os.path.join(BASE_DIR, "assets", filename), os.path.join(BASE_DIR, filename)]
         found = False
@@ -93,7 +81,7 @@ def render_image(image_path, width=None):
                 found = True
                 break
         if not found:
-            st.image("https://placehold.co/600x400/png?text=Image+Not+Found", width=width)
+            st.image("https://placehold.co/600x400/png?text=No+Image", width=width)
 
 # --- INITIALIZE ---
 if 'data' not in st.session_state: st.session_state.data = load_data()
@@ -207,25 +195,28 @@ elif selected == "Projects":
                 if st.button("Update"): st.session_state.data['projects'][pidx] = {"title": ept, "category": epc, "image": epi, "problem": epp, "solution": eps, "impact": epimp}; save_data(st.session_state.data); st.rerun()
                 if st.button("Delete", type="primary"): st.session_state.data['projects'].pop(pidx); save_data(st.session_state.data); st.rerun()
 
-    # --- UI: FIXED HTML BUG & REDUCED CONGESTION ---
+    # --- UI: FIXED DESIGN (No raw HTML text, no congestion) ---
     cols = st.columns(2)
     for i, p in enumerate(st.session_state.data.get('projects', [])):
         with cols[i%2]:
-            with st.container():
-                st.markdown('<div class="project-container">', unsafe_allow_html=True)
+            with st.container(border=True):
                 render_image(p.get('image', ''), width=None)
                 st.subheader(p.get('title', 'Project'))
                 st.caption(f"📂 {p.get('category', 'General')}")
                 
-                # Using native Streamlit elements to avoid "text displaying html code" bug
+                # FIXED: Using native Streamlit elements instead of HTML strings
+                # This fixes the "<div class..." text appearing on screen
                 if p.get('problem'):
-                    st.info(f"**Problem:** {p['problem']}")
-                if p.get('solution'):
-                    st.success(f"**Solution:** {p['solution']}")
-                if p.get('impact'):
-                    st.warning(f"**Impact:** {p['impact']}")
+                    with st.expander("🚨 Problem", expanded=True):
+                        st.write(p['problem'])
                 
-                st.markdown('</div>', unsafe_allow_html=True)
+                if p.get('solution'):
+                    with st.expander("💡 Solution", expanded=False):
+                        st.write(p['solution'])
+                
+                if p.get('impact'):
+                    with st.expander("🚀 Impact", expanded=False):
+                        st.write(p['impact'])
 
 # --- SKILLS ---
 elif selected == "Skills":
@@ -284,8 +275,11 @@ elif selected == "Contact":
             val = item.get('value', '#')
             label = item.get('label', 'Link')
             
-            # Icon HTML
-            img_tag = f'<img src="{icon_url}" class="contact-icon-big">' if icon_url.startswith("http") else '<span style="font-size:40px; display:block; margin-bottom:10px;">🔗</span>'
+            # Icon HTML (Auto-fix for local vs web)
+            if icon_url.startswith("http"): 
+                img_tag = f'<img src="{icon_url}" class="contact-icon-big">' 
+            else:
+                img_tag = '<span style="font-size:40px; display:block; margin-bottom:10px;">🔗</span>'
             
             st.markdown(f"""
             <a href="{val}" target="_blank" class="contact-card-modern">
