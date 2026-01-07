@@ -13,14 +13,14 @@ ADMIN_PASSWORD = "admin"
 
 st.set_page_config(layout="wide", page_title="Portfolio", page_icon="✨")
 
-# --- CUSTOM CSS (Restored the "Good" Designs) ---
+# --- CUSTOM CSS ---
 st.markdown("""
 <style>
     /* GLOBAL */
     .main { padding-top: 1rem; }
     h1, h2, h3 { font-family: 'Segoe UI', sans-serif; color: #0F172A; }
     
-    /* 1. HERO METRICS (Home - You liked this) */
+    /* HERO CARDS */
     .metric-card {
         background: white; border: 1px solid #E2E8F0; border-radius: 12px;
         padding: 20px; text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
@@ -30,11 +30,11 @@ st.markdown("""
     .metric-value { font-size: 1.8rem; font-weight: 800; color: #3B82F6; }
     .metric-label { font-size: 0.85rem; font-weight: 600; color: #64748B; text-transform: uppercase; }
 
-    /* 2. TIMELINE EXPERIENCE (Experience - You liked this) */
+    /* TIMELINE CARDS */
     .timeline-card {
         background: white; border-radius: 12px; padding: 24px;
         margin-bottom: 20px;
-        border-left: 6px solid #3B82F6; /* Accent Line */
+        border-left: 6px solid #3B82F6;
         box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         transition: transform 0.2s;
     }
@@ -44,7 +44,7 @@ st.markdown("""
     .t-date { font-size: 0.85rem; color: #94A3B8; float: right; font-weight: 500; }
     .t-desc { font-size: 0.95rem; color: #334155; line-height: 1.6; margin-top: 10px; white-space: pre-line; }
 
-    /* 3. CONTACT CARDS (Clean Action Buttons) */
+    /* CONTACT CARDS */
     .contact-card-modern {
         background-color: white;
         padding: 25px;
@@ -66,6 +66,9 @@ st.markdown("""
     .contact-label { font-size: 1.1rem; font-weight: 700; color: #1E293B; margin-bottom: 5px; }
     .contact-val { font-size: 0.9rem; color: #3B82F6; }
 
+    /* UTILS */
+    .project-text { margin-bottom: 8px; font-size: 0.95rem; }
+    .stImage > img { border-radius: 8px; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -82,15 +85,14 @@ def save_data(data):
         st.toast("Saved! Download JSON to update GitHub.", icon="💾")
     except Exception as e: st.error(f"Save failed: {e}")
 
-# --- CRITICAL FIX: IMAGE RENDERER ---
+# --- IMAGE RENDERER ---
 def render_image(image_path, width=None):
     if not image_path: return
     
-    # 1. Auto-Fix GitHub Blob Links
+    # Auto-Fix GitHub Blob Links
     if "github.com" in image_path and "/blob/" in image_path:
         image_path = image_path.replace("github.com", "raw.githubusercontent.com").replace("/blob/", "/")
     
-    # 2. Determine Path
     final_path = None
     if image_path.startswith("http"):
         final_path = image_path
@@ -104,11 +106,10 @@ def render_image(image_path, width=None):
         if not final_path:
             final_path = "https://placehold.co/600x400/png?text=Image+Missing"
 
-    # 3. RENDER (Fixing the Error)
+    # FIXED: Use container width if specific width is None
     if width: 
         st.image(final_path, width=width)
     else: 
-        # If no width provided, use container width. NEVER pass width=None.
         st.image(final_path, use_container_width=True)
 
 # --- INITIALIZE ---
@@ -139,7 +140,7 @@ with st.sidebar:
             st.session_state.is_admin = False
             st.rerun()
 
-# --- HOME (Restored) ---
+# --- HOME ---
 if selected == "Home":
     prof = st.session_state.data.get('profile', {})
     mets = st.session_state.data.get('metrics', {})
@@ -171,7 +172,7 @@ if selected == "Home":
         render_image(prof.get('image_url'), width=350)
         st.markdown('</div>', unsafe_allow_html=True)
 
-# --- EXPERIENCE (Restored) ---
+# --- EXPERIENCE ---
 elif selected == "Experience":
     st.title("Professional Experience")
     if st.session_state.is_admin:
@@ -193,7 +194,6 @@ elif selected == "Experience":
                 if c1.button("Update"): st.session_state.data['experience'][idx] = {"role": er, "company": ec, "date": ed, "description": edesc}; save_data(st.session_state.data); st.rerun()
                 if c2.button("Delete", type="primary"): st.session_state.data['experience'].pop(idx); save_data(st.session_state.data); st.rerun()
 
-    # The timeline design you liked
     for job in st.session_state.data.get('experience', []):
         st.markdown(f"""
         <div class="timeline-card">
@@ -204,7 +204,7 @@ elif selected == "Experience":
         </div>
         """, unsafe_allow_html=True)
 
-# --- PROJECTS ---
+# --- PROJECTS (FIXED: NO DROPDOWNS) ---
 elif selected == "Projects":
     st.title("Projects")
     
@@ -228,26 +228,33 @@ elif selected == "Projects":
                 if st.button("Update"): st.session_state.data['projects'][pidx] = {"title": ept, "category": epc, "image": epi, "problem": epp, "solution": eps, "impact": epimp}; save_data(st.session_state.data); st.rerun()
                 if st.button("Delete", type="primary"): st.session_state.data['projects'].pop(pidx); save_data(st.session_state.data); st.rerun()
 
+    # --- UI: CLEAN CARDS (Info Visible Directly) ---
     cols = st.columns(2)
     for i, p in enumerate(st.session_state.data.get('projects', [])):
         with cols[i%2]:
             with st.container(border=True):
-                # FIXED WIDTH ERROR HERE
-                render_image(p.get('image', ''))
+                # Image
+                render_image(p.get('image', ''), width=None)
+                
+                # Header
                 st.subheader(p.get('title', 'Project'))
                 st.caption(f"📂 {p.get('category', 'General')}")
                 
+                st.markdown("---") # Divider for cleanliness
+                
+                # Details - VISIBLE (No Expanders)
                 if p.get('problem'):
-                    with st.expander("🚨 Problem", expanded=True):
-                        st.write(p['problem'])
+                    st.markdown(f"**🚨 Problem:** {p['problem']}")
+                    st.write("") # Spacer
+                
                 if p.get('solution'):
-                    with st.expander("💡 Solution", expanded=False):
-                        st.write(p['solution'])
+                    st.markdown(f"**💡 Solution:** {p['solution']}")
+                    st.write("")
+                
                 if p.get('impact'):
-                    with st.expander("🚀 Impact", expanded=False):
-                        st.write(p['impact'])
+                    st.markdown(f"**🚀 Impact:** {p['impact']}")
 
-# --- SKILLS (Fixed to Clean Standard Design) ---
+# --- SKILLS ---
 elif selected == "Skills":
     st.title("Technical Skills")
     skills = st.session_state.data.get('skills', {})
@@ -260,9 +267,9 @@ elif selected == "Skills":
         if st.button("Delete All", type="primary"): 
             st.session_state.data['skills'] = {}; save_data(st.session_state.data); st.rerun()
 
-    # Layout: Chart Left, List Right (Standard & Clean)
     c1, c2 = st.columns([1, 1])
     
+    # Left: Spider Chart
     with c1:
         if skills:
             fig = go.Figure(data=go.Scatterpolar(
@@ -272,6 +279,7 @@ elif selected == "Skills":
             fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 100])), showlegend=False, margin=dict(l=40, r=40, t=30, b=30))
             st.plotly_chart(fig, use_container_width=True)
 
+    # Right: List with Percentages
     with c2:
         st.markdown("### Proficiency")
         for s, v in skills.items():
@@ -292,7 +300,6 @@ elif selected == "Contact":
             val = item.get('value', '#')
             label = item.get('label', 'Link')
             
-            # Icon HTML
             if icon_url.startswith("http"): 
                 img_tag = f'<img src="{icon_url}" class="contact-icon-big">' 
             else:
