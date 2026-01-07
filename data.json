@@ -55,7 +55,7 @@
         {
             "title": "Executive Command Center",
             "category": "Finance",
-            "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800",
+            "image": "https://images.unsplash.com/photo-1611974765270-ca1258634369?auto=format&fit=crop&w=800",
             "problem": "Executives lacked a clear, real-time view of business performance across regions.",
             "solution": "Centralized 'Single Source of Truth' hub for Sales, Profit Margin, and Deal Size.",
             "impact": "25% improvement in financial visibility."
@@ -79,7 +79,7 @@
         {
             "title": "Performance Leaderboard",
             "category": "Sales",
-            "image": "https://images.unsplash.com/photo-1511884642898-4c92249f20b6?auto=format&fit=crop&w=800",
+            "image": "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800",
             "problem": "Relying on intuition to assess performance caused leaders to overlook top talent.",
             "solution": "Automated rankings and trend insights to recognize high performers instantly.",
             "impact": "Data-driven performance reviews without manual reporting."
@@ -87,7 +87,7 @@
         {
             "title": "Supply Chain Intelligence (PO)",
             "category": "Logistics",
-            "image": "https://images.unsplash.com/photo-1494412574643-35d324698420?auto=format&fit=crop&w=800",
+            "image": "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800",
             "problem": "Frequent PO changes raised costs and hid supplier inefficiencies.",
             "solution": "Root Cause Analysis dashboard categorizing reasons for order revisions.",
             "impact": "Identified bottlenecks and improved supplier performance."
@@ -95,7 +95,7 @@
         {
             "title": "Live Operations Monitor",
             "category": "Logistics",
-            "image": "https://images.unsplash.com/photo-1581093458791-9f302e6d8359?auto=format&fit=crop&w=800",
+            "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800",
             "problem": "Delays and workflow issues were often noticed only after affecting customers.",
             "solution": "Real-time tracking of orders and pipeline stages with live metric tickers.",
             "impact": "Proactive removal of blockers before escalation."
@@ -127,7 +127,7 @@
         {
             "title": "AI Invoice Automation",
             "category": "Automation",
-            "image": "https://images.unsplash.com/photo-1633419461186-7d75076e52e6?auto=format&fit=crop&w=800",
+            "image": "https://images.unsplash.com/photo-1618044733300-9472054094ee?auto=format&fit=crop&w=800",
             "problem": "Manual extraction of chemical specs from PDFs was time-consuming.",
             "solution": "Automated flow using Copilot Studio, AI Builder, and Power Automate.",
             "impact": "50% reduction in manual data entry."
