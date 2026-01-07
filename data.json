@@ -55,7 +55,7 @@
         {
             "title": "Executive Command Center",
             "category": "Finance",
-            "image": "https://images.unsplash.com/photo-1611974765270-ca1258634369?auto=format&fit=crop&w=800",
+            "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800",
             "problem": "Executives lacked a clear, real-time view of business performance across regions.",
             "solution": "Centralized 'Single Source of Truth' hub for Sales, Profit Margin, and Deal Size.",
             "impact": "25% improvement in financial visibility."
