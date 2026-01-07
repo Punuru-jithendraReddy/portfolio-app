@@ -1,4 +1,3 @@
-
 import streamlit as st
 import json
 import os
@@ -315,6 +314,4 @@ elif selected == "Contact":
                 </div>
             </a>
             """, unsafe_allow_html=True)
-
-```
 
