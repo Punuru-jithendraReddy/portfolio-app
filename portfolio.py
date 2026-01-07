@@ -13,17 +13,38 @@ ADMIN_PASSWORD = "admin"
 
 st.set_page_config(layout="wide", page_title="Portfolio", page_icon="✨")
 
-# --- CUSTOM CSS ---
+# --- CUSTOM CSS (Restored the "Good" Designs) ---
 st.markdown("""
 <style>
     /* GLOBAL */
     .main { padding-top: 1rem; }
     h1, h2, h3 { font-family: 'Segoe UI', sans-serif; color: #0F172A; }
     
-    /* SKILL BARS */
-    .skill-text { font-weight: 600; color: #334155; margin-bottom: 5px; display: flex; justify-content: space-between; }
-    
-    /* CONTACT CARDS */
+    /* 1. HERO METRICS (Home - You liked this) */
+    .metric-card {
+        background: white; border: 1px solid #E2E8F0; border-radius: 12px;
+        padding: 20px; text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        transition: transform 0.2s;
+    }
+    .metric-card:hover { transform: translateY(-5px); border-color: #3B82F6; }
+    .metric-value { font-size: 1.8rem; font-weight: 800; color: #3B82F6; }
+    .metric-label { font-size: 0.85rem; font-weight: 600; color: #64748B; text-transform: uppercase; }
+
+    /* 2. TIMELINE EXPERIENCE (Experience - You liked this) */
+    .timeline-card {
+        background: white; border-radius: 12px; padding: 24px;
+        margin-bottom: 20px;
+        border-left: 6px solid #3B82F6; /* Accent Line */
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        transition: transform 0.2s;
+    }
+    .timeline-card:hover { transform: translateX(5px); box-shadow: 0 10px 15px rgba(0,0,0,0.05); }
+    .t-role { font-size: 1.3rem; font-weight: 700; color: #1E293B; margin: 0; }
+    .t-company { font-size: 1rem; font-weight: 600; color: #3B82F6; margin-bottom: 8px; display: inline-block;}
+    .t-date { font-size: 0.85rem; color: #94A3B8; float: right; font-weight: 500; }
+    .t-desc { font-size: 0.95rem; color: #334155; line-height: 1.6; margin-top: 10px; white-space: pre-line; }
+
+    /* 3. CONTACT CARDS (Clean Action Buttons) */
     .contact-card-modern {
         background-color: white;
         padding: 25px;
@@ -61,27 +82,34 @@ def save_data(data):
         st.toast("Saved! Download JSON to update GitHub.", icon="💾")
     except Exception as e: st.error(f"Save failed: {e}")
 
-# --- IMAGE RENDERER (Auto-Fix for GitHub Links) ---
+# --- CRITICAL FIX: IMAGE RENDERER ---
 def render_image(image_path, width=None):
     if not image_path: return
     
-    # AUTO-FIX: Convert GitHub Blob link to Raw link
+    # 1. Auto-Fix GitHub Blob Links
     if "github.com" in image_path and "/blob/" in image_path:
         image_path = image_path.replace("github.com", "raw.githubusercontent.com").replace("/blob/", "/")
     
+    # 2. Determine Path
+    final_path = None
     if image_path.startswith("http"):
-        st.image(image_path, width=width)
+        final_path = image_path
     else:
         filename = os.path.basename(image_path)
         possible_paths = [os.path.join(BASE_DIR, "assets", filename), os.path.join(BASE_DIR, filename)]
-        found = False
         for path in possible_paths:
             if os.path.exists(path):
-                st.image(path, width=width)
-                found = True
+                final_path = path
                 break
-        if not found:
-            st.image("https://placehold.co/600x400/png?text=No+Image", width=width)
+        if not final_path:
+            final_path = "https://placehold.co/600x400/png?text=Image+Missing"
+
+    # 3. RENDER (Fixing the Error)
+    if width: 
+        st.image(final_path, width=width)
+    else: 
+        # If no width provided, use container width. NEVER pass width=None.
+        st.image(final_path, use_container_width=True)
 
 # --- INITIALIZE ---
 if 'data' not in st.session_state: st.session_state.data = load_data()
@@ -111,7 +139,7 @@ with st.sidebar:
             st.session_state.is_admin = False
             st.rerun()
 
-# --- HOME ---
+# --- HOME (Restored) ---
 if selected == "Home":
     prof = st.session_state.data.get('profile', {})
     mets = st.session_state.data.get('metrics', {})
@@ -135,15 +163,15 @@ if selected == "Home":
         st.write(prof.get('summary', ''))
         st.markdown("<br>", unsafe_allow_html=True)
         mc1, mc2, mc3 = st.columns(3)
-        mc1.metric("Dashboards", mets.get('dashboards', '0'))
-        mc2.metric("Work Reduced", mets.get('manual_reduction', '0%'))
-        mc3.metric("Efficiency", mets.get('efficiency', '0%'))
+        with mc1: st.markdown(f'<div class="metric-card"><div class="metric-value">{mets.get("dashboards","0")}</div><div class="metric-label">Dashboards</div></div>', unsafe_allow_html=True)
+        with mc2: st.markdown(f'<div class="metric-card"><div class="metric-value">{mets.get("manual_reduction","0%")}</div><div class="metric-label">Reduction</div></div>', unsafe_allow_html=True)
+        with mc3: st.markdown(f'<div class="metric-card"><div class="metric-value">{mets.get("efficiency","0%")}</div><div class="metric-label">Efficiency</div></div>', unsafe_allow_html=True)
     with c2:
         st.markdown('<div style="padding: 20px;">', unsafe_allow_html=True)
         render_image(prof.get('image_url'), width=350)
         st.markdown('</div>', unsafe_allow_html=True)
 
-# --- EXPERIENCE ---
+# --- EXPERIENCE (Restored) ---
 elif selected == "Experience":
     st.title("Professional Experience")
     if st.session_state.is_admin:
@@ -165,11 +193,16 @@ elif selected == "Experience":
                 if c1.button("Update"): st.session_state.data['experience'][idx] = {"role": er, "company": ec, "date": ed, "description": edesc}; save_data(st.session_state.data); st.rerun()
                 if c2.button("Delete", type="primary"): st.session_state.data['experience'].pop(idx); save_data(st.session_state.data); st.rerun()
 
+    # The timeline design you liked
     for job in st.session_state.data.get('experience', []):
-        with st.container(border=True):
-            st.markdown(f"### {job.get('role', 'Role')}")
-            st.caption(f"**{job.get('company', 'Company')}** | {job.get('date', 'Date')}")
-            st.markdown(job.get('description', ''))
+        st.markdown(f"""
+        <div class="timeline-card">
+            <span class="t-date">{job.get('date')}</span>
+            <div class="t-role">{job.get('role')}</div>
+            <div class="t-company">{job.get('company')}</div>
+            <div class="t-desc">{job.get('description')}</div>
+        </div>
+        """, unsafe_allow_html=True)
 
 # --- PROJECTS ---
 elif selected == "Projects":
@@ -195,30 +228,26 @@ elif selected == "Projects":
                 if st.button("Update"): st.session_state.data['projects'][pidx] = {"title": ept, "category": epc, "image": epi, "problem": epp, "solution": eps, "impact": epimp}; save_data(st.session_state.data); st.rerun()
                 if st.button("Delete", type="primary"): st.session_state.data['projects'].pop(pidx); save_data(st.session_state.data); st.rerun()
 
-    # --- UI: FIXED DESIGN (No raw HTML text, no congestion) ---
     cols = st.columns(2)
     for i, p in enumerate(st.session_state.data.get('projects', [])):
         with cols[i%2]:
             with st.container(border=True):
-                render_image(p.get('image', ''), width=None)
+                # FIXED WIDTH ERROR HERE
+                render_image(p.get('image', ''))
                 st.subheader(p.get('title', 'Project'))
                 st.caption(f"📂 {p.get('category', 'General')}")
                 
-                # FIXED: Using native Streamlit elements instead of HTML strings
-                # This fixes the "<div class..." text appearing on screen
                 if p.get('problem'):
                     with st.expander("🚨 Problem", expanded=True):
                         st.write(p['problem'])
-                
                 if p.get('solution'):
                     with st.expander("💡 Solution", expanded=False):
                         st.write(p['solution'])
-                
                 if p.get('impact'):
                     with st.expander("🚀 Impact", expanded=False):
                         st.write(p['impact'])
 
-# --- SKILLS ---
+# --- SKILLS (Fixed to Clean Standard Design) ---
 elif selected == "Skills":
     st.title("Technical Skills")
     skills = st.session_state.data.get('skills', {})
@@ -231,34 +260,23 @@ elif selected == "Skills":
         if st.button("Delete All", type="primary"): 
             st.session_state.data['skills'] = {}; save_data(st.session_state.data); st.rerun()
 
-    # --- UI: SPIDER CHART TOP CENTER ---
-    if skills:
-        col_chart1, col_chart2, col_chart3 = st.columns([1, 2, 1])
-        with col_chart2:
+    # Layout: Chart Left, List Right (Standard & Clean)
+    c1, c2 = st.columns([1, 1])
+    
+    with c1:
+        if skills:
             fig = go.Figure(data=go.Scatterpolar(
                 r=list(skills.values()), theta=list(skills.keys()), fill='toself',
                 marker=dict(color='#3B82F6')
             ))
-            fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 100])), showlegend=False, margin=dict(l=40, r=40, t=30, b=30), height=300)
+            fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 100])), showlegend=False, margin=dict(l=40, r=40, t=30, b=30))
             st.plotly_chart(fig, use_container_width=True)
 
-    # --- UI: SKILLS LIST DOWN WITH PERCENTAGES ---
-    st.markdown("### Proficiency Levels")
-    s_cols = st.columns(3)
-    skill_items = list(skills.items())
-    for i, (s, v) in enumerate(skill_items):
-        with s_cols[i % 3]:
-            st.markdown(f"""
-            <div style="margin-bottom:15px;">
-                <div class="skill-text">
-                    <span>{s}</span>
-                    <span>{v}%</span>
-                </div>
-                <div style="background:#E2E8F0; border-radius:6px; height:8px; width:100%;">
-                    <div style="background:linear-gradient(90deg, #3B82F6, #2563EB); border-radius:6px; height:100%; width:{v}%;"></div>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
+    with c2:
+        st.markdown("### Proficiency")
+        for s, v in skills.items():
+            st.write(f"**{s}** ({v}%)")
+            st.progress(v)
 
 # --- CONTACT ---
 elif selected == "Contact":
@@ -269,13 +287,12 @@ elif selected == "Contact":
     c1, c2 = st.columns(2)
     
     for i, item in enumerate(prof.get('contact_info', [])):
-        # Alternate columns for grid look
         with (c1 if i % 2 == 0 else c2):
             icon_url = item.get('icon', '')
             val = item.get('value', '#')
             label = item.get('label', 'Link')
             
-            # Icon HTML (Auto-fix for local vs web)
+            # Icon HTML
             if icon_url.startswith("http"): 
                 img_tag = f'<img src="{icon_url}" class="contact-icon-big">' 
             else:
