@@ -1,19 +1,4 @@
-I understand. In the previous "emergency fix" to get the screen working, I simplified the code to only include "Add" to ensure it ran without errors.
 
-Here is the **Fully Featured Code**. It includes **Add, Edit, and Delete** tabs for Experience, Projects, and Skills.
-
-### **1. Update `portfolio.py**`
-
-Copy this entire block. It replaces your current file.
-
-**New Features:**
-
-* **Tabs:** "Add New" and "Edit Existing" tabs for every section.
-* **Edit:** You can select a specific Job or Project, change its details, and update it.
-* **Delete:** A red button to remove specific items.
-* **Safe Image Rendering:** Includes the fix for the `InvalidWidthError`.
-
-```python
 import streamlit as st
 import json
 import os
@@ -332,3 +317,4 @@ elif selected == "Contact":
             """, unsafe_allow_html=True)
 
 ```
+
