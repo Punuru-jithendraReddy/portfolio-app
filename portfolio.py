@@ -1,3 +1,19 @@
+I understand. In the previous "emergency fix" to get the screen working, I simplified the code to only include "Add" to ensure it ran without errors.
+
+Here is the **Fully Featured Code**. It includes **Add, Edit, and Delete** tabs for Experience, Projects, and Skills.
+
+### **1. Update `portfolio.py**`
+
+Copy this entire block. It replaces your current file.
+
+**New Features:**
+
+* **Tabs:** "Add New" and "Edit Existing" tabs for every section.
+* **Edit:** You can select a specific Job or Project, change its details, and update it.
+* **Delete:** A red button to remove specific items.
+* **Safe Image Rendering:** Includes the fix for the `InvalidWidthError`.
+
+```python
 import streamlit as st
 import json
 import os
@@ -11,14 +27,14 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_FILE = os.path.join(BASE_DIR, 'data.json')
 ADMIN_PASSWORD = "admin" 
 
-st.set_page_config(layout="wide", page_title="Portfolio", page_icon="💼")
+st.set_page_config(layout="wide", page_title="Portfolio Admin", page_icon="⚙️")
 
-# --- 1. THE SAFETY NET DATA (Fallback if JSON is missing) ---
+# --- 1. SAFETY NET DATA ---
 DEFAULT_DATA = {
     "profile": {
         "name": "Jithendra Reddy Punuru",
         "role": "Software Engineer",
-        "summary": "I'm a Software Engineer specializing in the Microsoft Power Platform...",
+        "summary": "Software Engineer specializing in Power BI and Automation...",
         "image_url": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/Profile.jpg", 
         "contact_info": [
             {
@@ -56,83 +72,57 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --- HELPER: DATA MANAGER ---
+# --- HELPERS ---
 def load_data():
-    """Tries to load JSON. If file is missing/empty, returns DEFAULT_DATA."""
-    if not os.path.exists(DATA_FILE):
-        return DEFAULT_DATA
+    if not os.path.exists(DATA_FILE): return DEFAULT_DATA
     try:
         with open(DATA_FILE, 'r', encoding='utf-8') as f:
             data = json.load(f)
             if not data: return DEFAULT_DATA
             return data
-    except:
-        return DEFAULT_DATA
+    except: return DEFAULT_DATA
 
 def save_data(data):
-    """Saves changes to the local session file."""
     try:
         with open(DATA_FILE, 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=4)
-        st.toast("Changes Saved locally! Download to make permanent.", icon="✅")
+        st.toast("Saved! Remember to Download JSON to update GitHub.", icon="💾")
     except Exception as e:
         st.error(f"Save failed: {e}")
 
-# --- HELPER: IMAGE RENDERER (FIXED) ---
 def render_image(image_path, width=None):
-    """
-    Renders an image safely. 
-    Fixes StreamlitInvalidWidthError by not passing width=None explicitly.
-    """
-    # 1. Handle Empty Path (Use Default)
-    if not image_path:
-        image_path = DEFAULT_DATA['profile']['image_url']
+    if not image_path: image_path = DEFAULT_DATA['profile']['image_url']
     
-    final_path = None
-
-    # 2. Determine Source (Web vs Local)
+    # Logic to handle paths
     if image_path.startswith("http"):
         final_path = image_path
     else:
-        # Check local file existence
+        # Check local
         filename = os.path.basename(image_path)
-        possible_paths = [
-            os.path.join(BASE_DIR, "assets", filename),
-            os.path.join(BASE_DIR, filename)
-        ]
+        possible_paths = [os.path.join(BASE_DIR, "assets", filename), os.path.join(BASE_DIR, filename)]
+        final_path = "https://placehold.co/400x400/png?text=Image+Missing"
         for path in possible_paths:
             if os.path.exists(path):
                 final_path = path
                 break
-        
-        # Fallback if local file not found
-        if not final_path:
-            final_path = "https://placehold.co/400x400/png?text=Image+Missing"
+    
+    # Safe Render (Fixes InvalidWidthError)
+    if width: st.image(final_path, width=width)
+    else: st.image(final_path, use_container_width=True)
 
-    # 3. Render with Correct Width Logic
-    if width is not None:
-        st.image(final_path, width=width)
-    else:
-        # If no width specified, fill the container (avoids 'None' error)
-        st.image(final_path, use_container_width=True)
-
-# --- MAIN APP LOGIC ---
-if 'data' not in st.session_state:
-    st.session_state.data = load_data()
-if 'is_admin' not in st.session_state:
-    st.session_state.is_admin = False
+# --- INITIALIZE ---
+if 'data' not in st.session_state: st.session_state.data = load_data()
+if 'is_admin' not in st.session_state: st.session_state.is_admin = False
 
 # --- SIDEBAR ---
 with st.sidebar:
-    prof = st.session_state.data.get('profile', DEFAULT_DATA['profile'])
-    
+    prof = st.session_state.data.get('profile', {})
     st.markdown('<div style="text-align: center;">', unsafe_allow_html=True)
     render_image(prof.get('image_url'), width=120)
     st.markdown('</div>', unsafe_allow_html=True)
     
     selected = option_menu(None, ["Home", "Experience", "Projects", "Skills", "Contact"], 
                            icons=["house", "briefcase", "rocket", "cpu", "envelope"], default_index=0)
-    
     st.markdown("---")
     
     if not st.session_state.is_admin:
@@ -142,13 +132,9 @@ with st.sidebar:
                 st.rerun()
     else:
         st.success("Admin Mode")
-        # DOWNLOAD BUTTON
-        st.download_button(
-            label="📥 Download Updated data.json",
-            data=json.dumps(st.session_state.data, indent=4),
-            file_name="data.json",
-            mime="application/json"
-        )
+        st.download_button("📥 Download Updated data.json", 
+                           data=json.dumps(st.session_state.data, indent=4), 
+                           file_name="data.json", mime="application/json")
         if st.button("Logout"):
             st.session_state.is_admin = False
             st.rerun()
@@ -163,7 +149,7 @@ if selected == "Home":
             n_name = st.text_input("Name", prof.get('name', ''))
             n_role = st.text_input("Role", prof.get('role', ''))
             n_sum = st.text_area("Summary", prof.get('summary', ''))
-            n_img = st.text_input("Image URL (http...)", prof.get('image_url', ''))
+            n_img = st.text_input("Image URL", prof.get('image_url', ''))
             
             c1, c2, c3 = st.columns(3)
             m1 = c1.text_input("Dashboards", mets.get('dashboards', ''))
@@ -181,13 +167,10 @@ if selected == "Home":
         st.title(prof.get('name', 'Name'))
         st.subheader(prof.get('role', 'Role'))
         st.write(prof.get('summary', ''))
-        
-        # Metrics Display
         mc1, mc2, mc3 = st.columns(3)
         mc1.metric("Dashboards", mets.get('dashboards', '0'))
         mc2.metric("Work Reduced", mets.get('manual_reduction', '0%'))
         mc3.metric("Efficiency", mets.get('efficiency', '0%'))
-        
     with c2:
         render_image(prof.get('image_url'), width=300)
 
@@ -196,16 +179,43 @@ elif selected == "Experience":
     st.header("Experience")
     
     if st.session_state.is_admin:
-        with st.expander("➕ Add Job"):
-            r = st.text_input("Role")
-            c = st.text_input("Company")
-            d = st.text_input("Date (e.g. Jan 2024 - Present)")
-            desc = st.text_area("Description")
-            if st.button("Add"):
+        tab_add, tab_edit = st.tabs(["➕ Add New", "✏️ Edit / Delete"])
+        
+        # 1. ADD NEW
+        with tab_add:
+            r = st.text_input("Role", key="new_r")
+            c = st.text_input("Company", key="new_c")
+            d = st.text_input("Date", key="new_d")
+            desc = st.text_area("Description", key="new_desc")
+            if st.button("Save Job"):
                 st.session_state.data.setdefault('experience', []).insert(0, {"role": r, "company": c, "date": d, "description": desc})
                 save_data(st.session_state.data)
                 st.rerun()
+        
+        # 2. EDIT / DELETE
+        with tab_edit:
+            exp_list = st.session_state.data.get('experience', [])
+            if not exp_list:
+                st.info("No jobs to edit.")
+            else:
+                sel_idx = st.selectbox("Select Job", range(len(exp_list)), format_func=lambda x: f"{exp_list[x]['role']} @ {exp_list[x]['company']}")
+                curr_job = exp_list[sel_idx]
                 
+                er = st.text_input("Edit Role", curr_job['role'])
+                ec = st.text_input("Edit Company", curr_job['company'])
+                ed = st.text_input("Edit Date", curr_job['date'])
+                edesc = st.text_area("Edit Description", curr_job['description'])
+                
+                c1, c2 = st.columns(2)
+                if c1.button("Update Job"):
+                    st.session_state.data['experience'][sel_idx] = {"role": er, "company": ec, "date": ed, "description": edesc}
+                    save_data(st.session_state.data)
+                    st.rerun()
+                if c2.button("Delete Job", type="primary"):
+                    st.session_state.data['experience'].pop(sel_idx)
+                    save_data(st.session_state.data)
+                    st.rerun()
+
     for job in st.session_state.data.get('experience', []):
         st.subheader(job.get('role', 'Role'))
         st.caption(f"{job.get('company', 'Company')} | {job.get('date', 'Date')}")
@@ -217,22 +227,48 @@ elif selected == "Projects":
     st.header("Projects")
     
     if st.session_state.is_admin:
-        with st.expander("➕ Add Project"):
-            pt = st.text_input("Title")
-            pc = st.text_input("Category")
-            pi = st.text_input("Image URL (http...)")
-            pp = st.text_area("Problem")
-            if st.button("Add Project"):
+        tab_add, tab_edit = st.tabs(["➕ Add New", "✏️ Edit / Delete"])
+        
+        # 1. ADD NEW
+        with tab_add:
+            pt = st.text_input("Title", key="np_t")
+            pc = st.text_input("Category", key="np_c")
+            pi = st.text_input("Image URL", key="np_i")
+            pp = st.text_area("Problem", key="np_p")
+            if st.button("Save Project"):
                 st.session_state.data.setdefault('projects', []).append({"title": pt, "category": pc, "image": pi, "problem": pp})
                 save_data(st.session_state.data)
                 st.rerun()
+        
+        # 2. EDIT / DELETE
+        with tab_edit:
+            proj_list = st.session_state.data.get('projects', [])
+            if not proj_list:
+                st.info("No projects to edit.")
+            else:
+                sel_p_idx = st.selectbox("Select Project", range(len(proj_list)), format_func=lambda x: proj_list[x]['title'])
+                curr_p = proj_list[sel_p_idx]
+                
+                ep_t = st.text_input("Edit Title", curr_p.get('title', ''))
+                ep_c = st.text_input("Edit Category", curr_p.get('category', ''))
+                ep_i = st.text_input("Edit Image URL", curr_p.get('image', ''))
+                ep_p = st.text_area("Edit Problem", curr_p.get('problem', ''))
+                
+                c1, c2 = st.columns(2)
+                if c1.button("Update Project"):
+                    st.session_state.data['projects'][sel_p_idx] = {"title": ep_t, "category": ep_c, "image": ep_i, "problem": ep_p}
+                    save_data(st.session_state.data)
+                    st.rerun()
+                if c2.button("Delete Project", type="primary"):
+                    st.session_state.data['projects'].pop(sel_p_idx)
+                    save_data(st.session_state.data)
+                    st.rerun()
 
     cols = st.columns(2)
     for i, p in enumerate(st.session_state.data.get('projects', [])):
         with cols[i%2]:
             with st.container(border=True):
-                # FIXED: removed width=None to use default behavior
-                render_image(p.get('image', ''))
+                render_image(p.get('image', ''), width=None)
                 st.subheader(p.get('title', 'Project'))
                 st.caption(p.get('category', 'General'))
                 st.write(p.get('problem', ''))
@@ -250,12 +286,19 @@ elif selected == "Skills":
     with c2:
         if st.session_state.is_admin:
             with st.form("sk"):
-                n = st.text_input("Skill")
-                v = st.slider("Val", 0, 100, 50)
-                if st.form_submit_button("Add"):
+                n = st.text_input("Skill Name")
+                v = st.slider("Value", 0, 100, 50)
+                if st.form_submit_button("Add / Update Skill"):
                     st.session_state.data.setdefault('skills', {})[n] = v
                     save_data(st.session_state.data)
                     st.rerun()
+            
+            del_sk = st.selectbox("Select to Delete", ["-"] + list(skills.keys()))
+            if del_sk != "-" and st.button("Delete Skill", type="primary"):
+                del st.session_state.data['skills'][del_sk]
+                save_data(st.session_state.data)
+                st.rerun()
+                
         for s, v in skills.items():
             st.write(f"**{s}**")
             st.progress(v)
@@ -266,8 +309,7 @@ elif selected == "Contact":
     prof = st.session_state.data.get('profile', {})
     
     c1, c2 = st.columns([1, 2])
-    with c1:
-        render_image(prof.get('image_url'), width=150)
+    with c1: render_image(prof.get('image_url'), width=150)
     
     with c2:
         for item in prof.get('contact_info', []):
@@ -288,3 +330,5 @@ elif selected == "Contact":
                 </div>
             </a>
             """, unsafe_allow_html=True)
+
+```
