@@ -42,13 +42,13 @@
             "role": "Software Engineer (BI & Automation)",
             "company": "Svarapps Technologies Pvt Ltd",
             "date": "Sep 2024 - Present",
-            "description": "• Delivered 8+ high-impact Power BI dashboards across Finance, Sales, Logistics, and Operations.\n• Built and optimized end-to-end data pipelines (Oracle → SharePoint → Power BI) using Python and automation.\n• Enhanced reporting performance by optimizing data models and refresh logic.\n• Developed automation and AI solutions using Copilot Studio, Logic Apps, and AI Builder."
+            "description": "- Delivered 8+ high-impact Power BI dashboards across Finance, Sales, Logistics, and Operations, improving management decision-making and financial visibility.\n- Built and optimized end-to-end data pipelines (Oracle -> SharePoint -> Power BI) using Python and automation, reducing manual effort and improving data reliability.\n- Enhanced reporting performance by optimizing data models and refresh logic, achieving faster refresh times and more responsive dashboards.\n- Developed automation and AI solutions using Copilot Studio, Logic Apps, and AI Builder to enable self-service insights, automate invoice processing, and streamline file management.\n- Drove cost optimization by introducing Excel-based reporting alternatives, reducing dependency on premium BI licensing without sacrificing insights."
         },
         {
             "role": "Data Analyst Intern",
             "company": "AI Varient",
             "date": "Jan 2023 - Jan 2024",
-            "description": "• Generated Reports and Dashboards using Power-Bi Desktop, Tableau, and Advanced Excel.\n• Constructed tabular and multidimensional data models.\n• Created compelling data visualizations from live & extract data sources.\n• Processed and shaped data using Excel, MySQL and advanced extraction techniques."
+            "description": "- Generated Reports and Dashboards using Power-Bi Desktop, Tableau, and Advanced Excel.\n- Constructed tabular and multidimensional data models.\n- Created compelling data visualizations from live & extract data sources.\n- Processed and shaped data using Excel, MySQL and advanced extraction techniques.\n- Completed two projects during a 6-month internship, demonstrating proficiency in data analytics and visualization."
         }
     ],
     "projects": [
