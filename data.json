@@ -8,13 +8,13 @@
             {
                 "label": "Mail",
                 "value": "jithendrareddypunuru@gmail.com",
-                "icon": ""https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/gmail.png",
+                "icon": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/gmail.png",
                 "category": "Email"
             },
             {
                 "label": "Linkedin",
                 "value": "https://www.linkedin.com/in/jithendrareddypunuru/",
-                "icon": ""https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/linkedin.png",
+                "icon": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/linkedin.png",
                 "category": "LinkedIn"
             }
         ],
@@ -139,3 +139,4 @@
         "efficiency": "30%"
     }
 }
+
