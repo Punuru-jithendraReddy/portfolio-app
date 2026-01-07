@@ -16,59 +16,50 @@ st.set_page_config(layout="wide", page_title="Portfolio", page_icon="✨")
 # --- CUSTOM CSS ---
 st.markdown("""
 <style>
-    /* GLOBAL */
-    .main { padding-top: 1rem; }
-    h1, h2, h3 { font-family: 'Segoe UI', sans-serif; color: #0F172A; }
+    /* GLOBAL FONTS */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+    html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
     
-    /* HERO CARDS */
-    .metric-card {
-        background: white; border: 1px solid #E2E8F0; border-radius: 12px;
-        padding: 20px; text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-        transition: transform 0.2s;
+    /* PROJECT CARDS */
+    .project-card {
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 0px;
+        background-color: white;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        overflow: hidden;
     }
-    .metric-card:hover { transform: translateY(-5px); border-color: #3B82F6; }
-    .metric-value { font-size: 1.8rem; font-weight: 800; color: #3B82F6; }
-    .metric-label { font-size: 0.85rem; font-weight: 600; color: #64748B; text-transform: uppercase; }
-
-    /* TIMELINE CARDS */
-    .timeline-card {
-        background: white; border-radius: 12px; padding: 24px;
-        margin-bottom: 20px;
-        border-left: 6px solid #3B82F6;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        transition: transform 0.2s;
-    }
-    .timeline-card:hover { transform: translateX(5px); box-shadow: 0 10px 15px rgba(0,0,0,0.05); }
-    .t-role { font-size: 1.3rem; font-weight: 700; color: #1E293B; margin: 0; }
-    .t-company { font-size: 1rem; font-weight: 600; color: #3B82F6; margin-bottom: 8px; display: inline-block;}
-    .t-date { font-size: 0.85rem; color: #94A3B8; float: right; font-weight: 500; }
-    .t-desc { font-size: 0.95rem; color: #334155; line-height: 1.6; margin-top: 10px; white-space: pre-line; }
-
+    
     /* CONTACT CARDS */
     .contact-card-modern {
         background-color: white;
-        padding: 25px;
-        border-radius: 12px;
+        padding: 30px;
+        border-radius: 15px;
         border: 1px solid #e2e8f0;
         text-align: center;
         text-decoration: none !important;
         color: inherit !important;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         transition: transform 0.2s, border-color 0.2s;
         display: block;
+        margin-bottom: 20px;
     }
     .contact-card-modern:hover {
         transform: translateY(-5px);
         border-color: #3B82F6;
-        box-shadow: 0 8px 15px rgba(59, 130, 246, 0.1);
+        box-shadow: 0 10px 15px rgba(59, 130, 246, 0.15);
     }
-    .contact-icon-big { width: 40px; height: 40px; margin-bottom: 10px; object-fit: contain; }
-    .contact-label { font-size: 1.1rem; font-weight: 700; color: #1E293B; margin-bottom: 5px; }
-    .contact-val { font-size: 0.9rem; color: #3B82F6; }
+    .contact-label { font-size: 1.2rem; font-weight: 700; color: #1E293B; margin-bottom: 5px; }
+    .contact-val { font-size: 0.95rem; color: #3B82F6; word-break: break-all; }
 
-    /* UTILS */
-    .project-text { margin-bottom: 8px; font-size: 0.95rem; }
-    .stImage > img { border-radius: 8px; }
+    /* SKILL METRICS */
+    .skill-metric {
+        background-color: #F8FAFC;
+        border-radius: 8px;
+        padding: 15px;
+        text-align: center;
+        border: 1px solid #E2E8F0;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -85,7 +76,7 @@ def save_data(data):
         st.toast("Saved! Download JSON to update GitHub.", icon="💾")
     except Exception as e: st.error(f"Save failed: {e}")
 
-# --- IMAGE RENDERER ---
+# --- IMAGE RENDERER (Safe) ---
 def render_image(image_path, width=None):
     if not image_path: return
     
@@ -93,24 +84,24 @@ def render_image(image_path, width=None):
     if "github.com" in image_path and "/blob/" in image_path:
         image_path = image_path.replace("github.com", "raw.githubusercontent.com").replace("/blob/", "/")
     
-    final_path = None
     if image_path.startswith("http"):
-        final_path = image_path
+        # Use container width if width is None to prevent errors
+        if width: st.image(image_path, width=width)
+        else: st.image(image_path, use_container_width=True)
     else:
+        # Local file fallback
         filename = os.path.basename(image_path)
         possible_paths = [os.path.join(BASE_DIR, "assets", filename), os.path.join(BASE_DIR, filename)]
+        found = False
         for path in possible_paths:
             if os.path.exists(path):
-                final_path = path
+                if width: st.image(path, width=width)
+                else: st.image(path, use_container_width=True)
+                found = True
                 break
-        if not final_path:
-            final_path = "https://placehold.co/600x400/png?text=Image+Missing"
-
-    # FIXED: Use container width if specific width is None
-    if width: 
-        st.image(final_path, width=width)
-    else: 
-        st.image(final_path, use_container_width=True)
+        if not found:
+            # Placeholder
+            st.image("https://placehold.co/600x400/png?text=No+Image", use_container_width=True)
 
 # --- INITIALIZE ---
 if 'data' not in st.session_state: st.session_state.data = load_data()
@@ -164,9 +155,9 @@ if selected == "Home":
         st.write(prof.get('summary', ''))
         st.markdown("<br>", unsafe_allow_html=True)
         mc1, mc2, mc3 = st.columns(3)
-        with mc1: st.markdown(f'<div class="metric-card"><div class="metric-value">{mets.get("dashboards","0")}</div><div class="metric-label">Dashboards</div></div>', unsafe_allow_html=True)
-        with mc2: st.markdown(f'<div class="metric-card"><div class="metric-value">{mets.get("manual_reduction","0%")}</div><div class="metric-label">Reduction</div></div>', unsafe_allow_html=True)
-        with mc3: st.markdown(f'<div class="metric-card"><div class="metric-value">{mets.get("efficiency","0%")}</div><div class="metric-label">Efficiency</div></div>', unsafe_allow_html=True)
+        mc1.metric("Dashboards", mets.get('dashboards', '0'))
+        mc2.metric("Work Reduced", mets.get('manual_reduction', '0%'))
+        mc3.metric("Efficiency", mets.get('efficiency', '0%'))
     with c2:
         st.markdown('<div style="padding: 20px;">', unsafe_allow_html=True)
         render_image(prof.get('image_url'), width=350)
@@ -195,16 +186,12 @@ elif selected == "Experience":
                 if c2.button("Delete", type="primary"): st.session_state.data['experience'].pop(idx); save_data(st.session_state.data); st.rerun()
 
     for job in st.session_state.data.get('experience', []):
-        st.markdown(f"""
-        <div class="timeline-card">
-            <span class="t-date">{job.get('date')}</span>
-            <div class="t-role">{job.get('role')}</div>
-            <div class="t-company">{job.get('company')}</div>
-            <div class="t-desc">{job.get('description')}</div>
-        </div>
-        """, unsafe_allow_html=True)
+        with st.container(border=True):
+            st.markdown(f"### {job.get('role', 'Role')}")
+            st.markdown(f"**{job.get('company', 'Company')}** | *{job.get('date', 'Date')}*")
+            st.markdown(job.get('description', ''))
 
-# --- PROJECTS (FIXED: NO DROPDOWNS) ---
+# --- PROJECTS (FIXED: NO HTML, CLEAN LAYOUT) ---
 elif selected == "Projects":
     st.title("Projects")
     
@@ -228,33 +215,32 @@ elif selected == "Projects":
                 if st.button("Update"): st.session_state.data['projects'][pidx] = {"title": ept, "category": epc, "image": epi, "problem": epp, "solution": eps, "impact": epimp}; save_data(st.session_state.data); st.rerun()
                 if st.button("Delete", type="primary"): st.session_state.data['projects'].pop(pidx); save_data(st.session_state.data); st.rerun()
 
-    # --- UI: CLEAN CARDS (Info Visible Directly) ---
+    # --- UI: CLEANER CARDS (Native Elements) ---
     cols = st.columns(2)
     for i, p in enumerate(st.session_state.data.get('projects', [])):
         with cols[i%2]:
             with st.container(border=True):
-                # Image
-                render_image(p.get('image', ''), width=None)
-                
-                # Header
+                render_image(p.get('image', ''))
                 st.subheader(p.get('title', 'Project'))
                 st.caption(f"📂 {p.get('category', 'General')}")
                 
-                st.markdown("---") # Divider for cleanliness
+                st.markdown("---")
                 
-                # Details - VISIBLE (No Expanders)
+                # FIXED: Removed raw HTML strings. Using native expanders for cleanliness.
+                # This fixes the issue of "<div class..." text appearing.
                 if p.get('problem'):
-                    st.markdown(f"**🚨 Problem:** {p['problem']}")
-                    st.write("") # Spacer
+                    with st.expander("🚨 **Problem**", expanded=True):
+                        st.write(p['problem'])
                 
                 if p.get('solution'):
-                    st.markdown(f"**💡 Solution:** {p['solution']}")
-                    st.write("")
+                    with st.expander("💡 **Solution**"):
+                        st.write(p['solution'])
                 
                 if p.get('impact'):
-                    st.markdown(f"**🚀 Impact:** {p['impact']}")
+                    with st.expander("🚀 **Impact**"):
+                        st.write(p['impact'])
 
-# --- SKILLS ---
+# --- SKILLS (FIXED: Chart Top, List Bottom) ---
 elif selected == "Skills":
     st.title("Technical Skills")
     skills = st.session_state.data.get('skills', {})
@@ -267,26 +253,42 @@ elif selected == "Skills":
         if st.button("Delete All", type="primary"): 
             st.session_state.data['skills'] = {}; save_data(st.session_state.data); st.rerun()
 
-    c1, c2 = st.columns([1, 1])
-    
-    # Left: Spider Chart
-    with c1:
-        if skills:
+    # 1. SPIDER CHART (Top Center)
+    if skills:
+        c1, c2, c3 = st.columns([1, 2, 1])
+        with c2:
             fig = go.Figure(data=go.Scatterpolar(
                 r=list(skills.values()), theta=list(skills.keys()), fill='toself',
                 marker=dict(color='#3B82F6')
             ))
-            fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 100])), showlegend=False, margin=dict(l=40, r=40, t=30, b=30))
+            fig.update_layout(
+                polar=dict(radialaxis=dict(visible=True, range=[0, 100])),
+                showlegend=False,
+                margin=dict(l=40, r=40, t=30, b=30),
+                height=300
+            )
             st.plotly_chart(fig, use_container_width=True)
 
-    # Right: List with Percentages
-    with c2:
-        st.markdown("### Proficiency")
-        for s, v in skills.items():
-            st.write(f"**{s}** ({v}%)")
-            st.progress(v)
+    st.markdown("---")
+    
+    # 2. SKILL LIST (Bottom Grid with Percentages)
+    st.subheader("Proficiency Levels")
+    s_cols = st.columns(3)
+    skill_items = list(skills.items())
+    
+    for i, (s, v) in enumerate(skill_items):
+        with s_cols[i % 3]:
+            # Simple clean metric style
+            st.markdown(f"""
+            <div class="skill-metric">
+                <div style="font-weight:bold; color:#334155;">{s}</div>
+                <div style="color:#3B82F6; font-size:1.5rem; font-weight:800;">{v}%</div>
+                <progress value="{v}" max="100" style="width:100%; height:10px;"></progress>
+            </div>
+            <div style="height:15px"></div>
+            """, unsafe_allow_html=True)
 
-# --- CONTACT ---
+# --- CONTACT (FIXED: Professional Cards) ---
 elif selected == "Contact":
     st.title("Get In Touch")
     prof = st.session_state.data.get('profile', {})
@@ -300,16 +302,17 @@ elif selected == "Contact":
             val = item.get('value', '#')
             label = item.get('label', 'Link')
             
+            # Use icon if http, else link symbol
             if icon_url.startswith("http"): 
-                img_tag = f'<img src="{icon_url}" class="contact-icon-big">' 
+                # Inline image styling for card
+                img_html = f'<img src="{icon_url}" style="width:40px; height:40px; margin-bottom:10px;">'
             else:
-                img_tag = '<span style="font-size:40px; display:block; margin-bottom:10px;">🔗</span>'
+                img_html = '<span style="font-size:40px;">🔗</span>'
             
             st.markdown(f"""
             <a href="{val}" target="_blank" class="contact-card-modern">
-                {img_tag}
+                {img_html}
                 <div class="contact-label">{label}</div>
                 <div class="contact-val">{val}</div>
             </a>
-            <br>
             """, unsafe_allow_html=True)
