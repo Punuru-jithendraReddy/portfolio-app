@@ -13,74 +13,94 @@ ADMIN_PASSWORD = "admin"
 
 st.set_page_config(layout="wide", page_title="Portfolio", page_icon="✨")
 
-# --- MODERN UI CSS ---
+# --- UI OVERHAUL (CSS) ---
 st.markdown("""
 <style>
-    /* GLOBAL */
-    .main { padding-top: 1rem; }
-    h1, h2, h3 { color: #1E293B; font-family: 'Segoe UI', sans-serif; }
+    /* GLOBAL FONTS & COLORS */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
     
-    /* 1. HERO SECTION (Home) */
-    .metric-card {
-        background: white; border: 1px solid #E2E8F0; border-radius: 12px;
-        padding: 20px; text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .metric-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border-color: #4F8BF9; }
-    .metric-value { font-size: 1.8rem; font-weight: 800; color: #4F8BF9; }
-    .metric-label { font-size: 0.85rem; font-weight: 600; color: #64748B; text-transform: uppercase; }
+    html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
+    h1, h2, h3 { color: #0F172A; }
+    p { color: #475569; }
 
-    /* 2. EXPERIENCE CARDS (Timeline Style) */
-    .job-card {
-        background: white; border-radius: 10px; padding: 20px;
-        margin-bottom: 20px; border-left: 5px solid #4F8BF9; /* Accent Line */
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    /* 1. HERO METRICS (Home) */
+    .metric-card {
+        background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%);
+        border: 1px solid #E2E8F0; border-radius: 16px;
+        padding: 25px; text-align: center;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
         transition: all 0.3s ease;
     }
-    .job-card:hover { box-shadow: 0 8px 16px rgba(0,0,0,0.1); transform: translateX(5px); }
-    .job-role { font-size: 1.2rem; font-weight: 700; color: #1E293B; margin: 0; }
-    .job-company { font-size: 1rem; font-weight: 600; color: #4F8BF9; margin-bottom: 5px; }
-    .job-date { font-size: 0.85rem; color: #94A3B8; font-style: italic; margin-bottom: 10px; display: block; }
-    .job-desc { font-size: 0.95rem; color: #475569; line-height: 1.6; white-space: pre-line; }
+    .metric-card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); border-color: #3B82F6; }
+    .metric-value { font-size: 2.2rem; font-weight: 800; color: #3B82F6; }
+    .metric-label { font-size: 0.9rem; font-weight: 600; color: #64748B; letter-spacing: 1px; }
 
-    /* 3. PROJECT CARDS (Hover Animation Added) */
-    .project-card {
-        background: white; border: 1px solid #E2E8F0; border-radius: 12px;
-        padding: 0; overflow: hidden; height: 100%;
+    /* 2. TIMELINE EXPERIENCE (Polished) */
+    .timeline-card {
+        background: white; border-radius: 12px; padding: 24px;
+        margin-bottom: 20px;
+        border-left: 6px solid #3B82F6; /* The Timeline Line */
+        box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        transition: transform 0.2s;
+    }
+    .timeline-card:hover { transform: translateX(8px); box-shadow: 0 10px 15px rgba(0,0,0,0.05); }
+    .t-role { font-size: 1.3rem; font-weight: 700; color: #1E293B; margin: 0; }
+    .t-company { font-size: 1rem; font-weight: 600; color: #3B82F6; margin-bottom: 8px; display: inline-block;}
+    .t-date { font-size: 0.85rem; color: #94A3B8; float: right; font-weight: 500; }
+    .t-desc { font-size: 0.95rem; color: #334155; line-height: 1.6; margin-top: 10px; white-space: pre-line; }
+
+    /* 3. PROJECT CARDS (Animated) */
+    .project-card-container {
+        background: #FFFFFF; border: 1px solid #F1F5F9; border-radius: 16px;
+        overflow: hidden; height: 100%; position: relative;
         box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-        transition: transform 0.3s, box-shadow 0.3s; /* Animation */
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy Animation */
     }
-    .project-card:hover { 
-        transform: translateY(-8px); 
-        box-shadow: 0 12px 20px -5px rgba(0,0,0,0.15); 
-        border-color: #4F8BF9; 
+    .project-card-container:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.25);
+        border-color: #3B82F6;
     }
-    .p-content { padding: 20px; }
-    .p-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 5px; color: #1E293B; }
-    .p-cat { font-size: 0.8rem; font-weight: 700; color: #64748B; text-transform: uppercase; margin-bottom: 15px; }
+    .p-img-box { width: 100%; height: 180px; overflow: hidden; background: #F1F5F9; }
+    .p-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+    .project-card-container:hover .p-img { transform: scale(1.1); } /* Zoom Image on Hover */
     
-    /* 4. COMPACT CONTACT BUTTONS */
-    .contact-btn {
-        display: flex; align-items: center; justify-content: center;
-        background: white; border: 1px solid #E2E8F0;
-        padding: 12px 20px; border-radius: 50px; /* Pill Shape */
-        text-decoration: none !important; color: #1E293B !important;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        transition: all 0.2s; margin: 5px;
-    }
-    .contact-btn:hover { background: #F1F5F9; transform: scale(1.05); border-color: #4F8BF9; }
-    .contact-icon { width: 24px; height: 24px; margin-right: 10px; }
-    .contact-text { font-weight: 600; font-size: 1rem; }
+    .p-body { padding: 20px; }
+    .p-title { font-size: 1.25rem; font-weight: 800; color: #0F172A; margin-bottom: 5px; }
+    .p-cat { font-size: 0.75rem; font-weight: 700; color: #64748B; text-transform: uppercase; background: #F1F5F9; padding: 4px 10px; border-radius: 20px; display: inline-block; margin-bottom: 12px; }
+    .p-text { font-size: 0.9rem; color: #475569; margin-bottom: 8px; line-height: 1.5; }
 
-    /* 5. SKILL BARS (Compact) */
-    .skill-box { margin-bottom: 12px; }
-    .skill-name { font-weight: 600; font-size: 0.9rem; color: #334155; margin-bottom: 4px; display: block; }
-    .skill-bg { background: #E2E8F0; height: 8px; border-radius: 4px; overflow: hidden; }
-    .skill-fill { background: linear-gradient(90deg, #4F8BF9, #2563EB); height: 100%; border-radius: 4px; }
+    /* 4. SKILL GRID (No Scroll) */
+    .skill-card {
+        background: white; border: 1px solid #E2E8F0; border-radius: 12px;
+        padding: 15px; display: flex; align-items: center; justify-content: space-between;
+        margin-bottom: 10px; transition: 0.2s;
+    }
+    .skill-card:hover { border-color: #3B82F6; box-shadow: 0 4px 10px rgba(59, 130, 246, 0.1); }
+    .skill-name { font-weight: 700; color: #334155; font-size: 0.95rem; }
+    .skill-bar-track { width: 60%; height: 8px; background: #F1F5F9; border-radius: 4px; overflow: hidden; }
+    .skill-bar-fill { height: 100%; background: linear-gradient(90deg, #3B82F6, #2563EB); border-radius: 4px; }
+
+    /* 5. CONTACT DOCK */
+    .contact-dock {
+        display: flex; gap: 30px; justify-content: center; align-items: center; flex-wrap: wrap; margin-top: 30px;
+    }
+    .contact-btn {
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        width: 140px; height: 120px;
+        background: white; border: 1px solid #E2E8F0; border-radius: 20px;
+        text-decoration: none !important; color: #334155 !important;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+    .contact-btn:hover {
+        transform: translateY(-8px);
+        background: #EFF6FF; border-color: #3B82F6;
+        box-shadow: 0 10px 20px rgba(59, 130, 246, 0.2);
+    }
+    .c-icon { width: 40px; height: 40px; margin-bottom: 10px; object-fit: contain; }
+    .c-text { font-weight: 700; font-size: 1rem; }
     
-    /* UTILS */
-    .stImage { border-radius: 12px; }
-    .stImage > img { border-radius: 12px; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -98,22 +118,15 @@ def save_data(data):
     except Exception as e: st.error(f"Save failed: {e}")
 
 # --- HELPER: IMAGE RENDERER ---
-def render_image(image_path, width=None):
-    if not image_path: return
+def get_image_path(image_path):
+    if not image_path: return "https://placehold.co/600x400/png?text=No+Image"
+    if image_path.startswith("http"): return image_path
     
-    if image_path.startswith("http"):
-        final_path = image_path
-    else:
-        filename = os.path.basename(image_path)
-        possible_paths = [os.path.join(BASE_DIR, "assets", filename), os.path.join(BASE_DIR, filename)]
-        final_path = "https://placehold.co/600x400/png?text=Image+Missing"
-        for path in possible_paths:
-            if os.path.exists(path):
-                final_path = path
-                break
-    
-    if width: st.image(final_path, width=width)
-    else: st.image(final_path, use_container_width=True)
+    filename = os.path.basename(image_path)
+    possible_paths = [os.path.join(BASE_DIR, "assets", filename), os.path.join(BASE_DIR, filename)]
+    for path in possible_paths:
+        if os.path.exists(path): return path
+    return "https://placehold.co/600x400/png?text=Missing"
 
 # --- INITIALIZE ---
 if 'data' not in st.session_state: st.session_state.data = load_data()
@@ -122,13 +135,14 @@ if 'is_admin' not in st.session_state: st.session_state.is_admin = False
 # --- SIDEBAR ---
 with st.sidebar:
     prof = st.session_state.data.get('profile', {})
-    st.markdown('<div style="text-align: center; margin-bottom:10px;">', unsafe_allow_html=True)
-    if prof.get('image_url'): render_image(prof.get('image_url'), width=140)
+    st.markdown('<div style="text-align: center; margin-bottom:20px;">', unsafe_allow_html=True)
+    if prof.get('image_url'):
+        st.image(get_image_path(prof.get('image_url')), width=140)
     st.markdown('</div>', unsafe_allow_html=True)
     
     selected = option_menu(None, ["Home", "Experience", "Projects", "Skills", "Contact"], 
                            icons=["house", "briefcase", "rocket", "cpu", "envelope"], default_index=0,
-                           styles={"nav-link-selected": {"background-color": "#4F8BF9"}})
+                           styles={"nav-link-selected": {"background-color": "#3B82F6"}})
     st.markdown("---")
     
     if not st.session_state.is_admin:
@@ -165,9 +179,9 @@ if selected == "Home":
 
     c1, c2 = st.columns([1.5, 1])
     with c1:
-        st.markdown(f"<h1 style='margin-bottom:0;'>{prof.get('name', 'Name')}</h1>", unsafe_allow_html=True)
-        st.markdown(f"<h3 style='color:#4F8BF9; margin-top:0;'>{prof.get('role', 'Role')}</h3>", unsafe_allow_html=True)
-        st.write(prof.get('summary', ''))
+        st.markdown(f"<h1 style='font-size:3.5rem; margin-bottom:0;'>{prof.get('name', 'Name')}</h1>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='color:#3B82F6; margin-top:0;'>{prof.get('role', 'Role')}</h3>", unsafe_allow_html=True)
+        st.markdown(f"<p style='font-size:1.1rem; line-height:1.6;'>{prof.get('summary', '')}</p>", unsafe_allow_html=True)
         st.markdown("<br>", unsafe_allow_html=True)
         
         # Metrics
@@ -177,48 +191,39 @@ if selected == "Home":
         with mc3: st.markdown(f'<div class="metric-card"><div class="metric-value">{mets.get("efficiency","0%")}</div><div class="metric-label">Efficiency</div></div>', unsafe_allow_html=True)
         
     with c2:
-        st.markdown('<div style="padding: 20px;">', unsafe_allow_html=True)
-        render_image(prof.get('image_url'), width=350)
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.image(get_image_path(prof.get('image_url')), use_container_width=True)
 
 # --- EXPERIENCE ---
 elif selected == "Experience":
-    st.title("Experience")
+    st.title("Professional Experience")
     
     if st.session_state.is_admin:
-        tab_add, tab_edit = st.tabs(["➕ Add New", "✏️ Edit / Delete"])
+        tab_add, tab_edit = st.tabs(["➕ Add", "✏️ Edit"])
         with tab_add:
-            r = st.text_input("Role", key="nr")
-            c = st.text_input("Company", key="nc")
-            d = st.text_input("Date", key="nd")
-            desc = st.text_area("Description", key="ndes", height=150)
+            r = st.text_input("Role", key="nr"); c = st.text_input("Company", key="nc")
+            d = st.text_input("Date", key="nd"); desc = st.text_area("Desc", key="ndes", height=150)
             if st.button("Save Job"):
                 st.session_state.data.setdefault('experience', []).insert(0, {"role": r, "company": c, "date": d, "description": desc})
                 save_data(st.session_state.data); st.rerun()
         with tab_edit:
             exp_list = st.session_state.data.get('experience', [])
             if exp_list:
-                idx = st.selectbox("Select Job", range(len(exp_list)), format_func=lambda x: f"{exp_list[x]['role']}")
+                idx = st.selectbox("Select", range(len(exp_list)), format_func=lambda x: f"{exp_list[x]['role']}")
                 curr = exp_list[idx]
-                er = st.text_input("Role", curr['role'])
-                ec = st.text_input("Company", curr['company'])
-                ed = st.text_input("Date", curr['date'])
-                edesc = st.text_area("Desc", curr['description'], height=150)
-                c1, c2 = st.columns(2)
-                if c1.button("Update"):
-                    st.session_state.data['experience'][idx] = {"role": er, "company": ec, "date": ed, "description": edesc}
-                    save_data(st.session_state.data); st.rerun()
-                if c2.button("Delete", type="primary"):
-                    st.session_state.data['experience'].pop(idx); save_data(st.session_state.data); st.rerun()
+                er = st.text_input("Role", curr['role']); ec = st.text_input("Company", curr['company'])
+                ed = st.text_input("Date", curr['date']); edesc = st.text_area("Desc", curr['description'], height=150)
+                col1, col2 = st.columns(2)
+                if col1.button("Update"): st.session_state.data['experience'][idx] = {"role": er, "company": ec, "date": ed, "description": edesc}; save_data(st.session_state.data); st.rerun()
+                if col2.button("Delete", type="primary"): st.session_state.data['experience'].pop(idx); save_data(st.session_state.data); st.rerun()
 
-    # --- UI: TIMELINE CARDS ---
+    # --- UI: POLISHED TIMELINE CARDS ---
     for job in st.session_state.data.get('experience', []):
         st.markdown(f"""
-        <div class="job-card">
-            <h3 class="job-role">{job.get('role')}</h3>
-            <div class="job-company">{job.get('company')}</div>
-            <span class="job-date">{job.get('date')}</span>
-            <div class="job-desc">{job.get('description')}</div>
+        <div class="timeline-card">
+            <span class="t-date">{job.get('date')}</span>
+            <div class="t-role">{job.get('role')}</div>
+            <div class="t-company">{job.get('company')}</div>
+            <div class="t-desc">{job.get('description')}</div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -227,7 +232,7 @@ elif selected == "Projects":
     st.title("Projects")
     
     if st.session_state.is_admin:
-        tab_add, tab_edit = st.tabs(["➕ Add New", "✏️ Edit / Delete"])
+        tab_add, tab_edit = st.tabs(["➕ Add", "✏️ Edit"])
         with tab_add:
             pt = st.text_input("Title", key="npt"); pc = st.text_input("Category", key="npc")
             pi = st.text_input("Image", key="npi"); pp = st.text_area("Problem", key="npp")
@@ -243,102 +248,89 @@ elif selected == "Projects":
                 ept = st.text_input("Title", cp['title']); epc = st.text_input("Category", cp['category'])
                 epi = st.text_input("Image", cp['image']); epp = st.text_area("Prob", cp['problem'])
                 eps = st.text_area("Sol", cp.get('solution','')); epimp = st.text_area("Imp", cp.get('impact',''))
-                if st.button("Update"):
-                    st.session_state.data['projects'][pidx] = {"title": ept, "category": epc, "image": epi, "problem": epp, "solution": eps, "impact": epimp}
-                    save_data(st.session_state.data); st.rerun()
-                if st.button("Delete", type="primary"):
-                    st.session_state.data['projects'].pop(pidx); save_data(st.session_state.data); st.rerun()
+                if st.button("Update"): st.session_state.data['projects'][pidx] = {"title": ept, "category": epc, "image": epi, "problem": epp, "solution": eps, "impact": epimp}; save_data(st.session_state.data); st.rerun()
+                if st.button("Delete", type="primary"): st.session_state.data['projects'].pop(pidx); save_data(st.session_state.data); st.rerun()
 
-    # --- UI: ANIMATED CARDS ---
+    # --- UI: ANIMATED HTML CARDS ---
+    # We use st.columns but inside we render pure HTML for the card to ensure the hover effect applies to the whole box
     cols = st.columns(2)
     for i, p in enumerate(st.session_state.data.get('projects', [])):
         with cols[i%2]:
-            # Container for the hover effect wrapper
-            with st.container():
-                st.markdown(f"""
-                <div class="project-card">
-                    """, unsafe_allow_html=True)
-                
-                # Image
-                render_image(p.get('image',''))
-                
-                # Content
-                st.markdown(f"""
-                    <div class="p-content">
-                        <div class="p-title">{p.get('title')}</div>
-                        <div class="p-cat">📂 {p.get('category')}</div>
-                """, unsafe_allow_html=True)
-                
-                if p.get('problem'): st.info(f"**Problem:** {p['problem']}")
-                if p.get('solution'): st.success(f"**Solution:** {p['solution']}")
-                if p.get('impact'): st.warning(f"**Impact:** {p['impact']}")
-                
-                st.markdown("</div></div><br>", unsafe_allow_html=True)
+            img_src = get_image_path(p.get('image', ''))
+            
+            # Note: We put the image in a div, and the text in another div, all wrapped in a container
+            html_card = f"""
+            <div class="project-card-container">
+                <div class="p-img-box">
+                    <img src="{img_src}" class="p-img">
+                </div>
+                <div class="p-body">
+                    <div class="p-title">{p.get('title')}</div>
+                    <div class="p-cat">{p.get('category')}</div>
+                    
+                    {'<div class="p-text"><b>🚨 Problem:</b> ' + p['problem'] + '</div>' if p.get('problem') else ''}
+                    {'<div class="p-text"><b>💡 Solution:</b> ' + p['solution'] + '</div>' if p.get('solution') else ''}
+                    {'<div class="p-text"><b>🚀 Impact:</b> ' + p['impact'] + '</div>' if p.get('impact') else ''}
+                </div>
+            </div>
+            <div style="height: 25px"></div> """
+            st.markdown(html_card, unsafe_allow_html=True)
 
 # --- SKILLS ---
 elif selected == "Skills":
     st.title("Technical Skills")
     skills = st.session_state.data.get('skills', {})
     
-    # 2-Column Layout: Left = Radar, Right = List
-    c1, c2 = st.columns([1.5, 1])
+    if st.session_state.is_admin:
+        with st.form("sk"):
+            n = st.text_input("Skill"); v = st.slider("Val", 0, 100, 50)
+            if st.form_submit_button("Add"): st.session_state.data.setdefault('skills', {})[n] = v; save_data(st.session_state.data); st.rerun()
+        if st.button("Delete All", type="primary"): st.session_state.data['skills'] = {}; save_data(st.session_state.data); st.rerun()
+
+    # --- UI: 3-COLUMN GRID (No Scroll) ---
+    s_cols = st.columns(3)
+    s_items = list(skills.items())
     
-    with c1:
-        if skills:
-            fig = go.Figure(data=go.Scatterpolar(
-                r=list(skills.values()), theta=list(skills.keys()), fill='toself',
-                marker=dict(color='#4F8BF9')
-            ))
-            fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 100])), showlegend=False, margin=dict(l=40, r=40, t=20, b=20))
-            st.plotly_chart(fig, use_container_width=True)
-            
-    with c2:
-        if st.session_state.is_admin:
-            with st.form("sk"):
-                n = st.text_input("Skill"); v = st.slider("Val", 0, 100, 50)
-                if st.form_submit_button("Add"): 
-                    st.session_state.data.setdefault('skills', {})[n] = v; save_data(st.session_state.data); st.rerun()
-            if st.button("Clear All Skills", type="primary"):
-                st.session_state.data['skills'] = {}; save_data(st.session_state.data); st.rerun()
-        
-        # --- UI: COMPACT 2-COL GRID FOR BARS (NO VERTICAL SCROLL) ---
-        # Split the skills list into 2 columns automatically
-        s_cols = st.columns(2)
-        skill_items = list(skills.items())
-        
-        for i, (s, v) in enumerate(skill_items):
-            with s_cols[i % 2]: # Alternate columns
-                st.markdown(f"""
-                <div class="skill-box">
-                    <span class="skill-name">{s}</span>
-                    <div class="skill-bg">
-                        <div class="skill-fill" style="width: {v}%;"></div>
-                    </div>
+    for i, (s, v) in enumerate(s_items):
+        with s_cols[i % 3]:
+            st.markdown(f"""
+            <div class="skill-card">
+                <span class="skill-name">{s}</span>
+                <div class="skill-bar-track">
+                    <div class="skill-bar-fill" style="width: {v}%;"></div>
                 </div>
-                """, unsafe_allow_html=True)
+            </div>
+            """, unsafe_allow_html=True)
 
 # --- CONTACT ---
 elif selected == "Contact":
-    st.title("Contact Me")
+    st.title("Get In Touch")
     prof = st.session_state.data.get('profile', {})
     
-    # --- UI: HORIZONTAL ROW (No Vertical Scroll) ---
-    st.markdown('<div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 20px;">', unsafe_allow_html=True)
+    st.markdown(f"<div style='text-align:center'><h2>{prof.get('name')}</h2><p>Connect with me on social media or send an email.</p></div>", unsafe_allow_html=True)
+    
+    # --- UI: CENTERED DOCK (No Scroll) ---
+    st.markdown('<div class="contact-dock">', unsafe_allow_html=True)
     
     for item in prof.get('contact_info', []):
         icon = item.get('icon', '')
         val = item.get('value', '#')
         lbl = item.get('label', 'Link')
         
-        # Icon HTML
-        if icon.startswith("http"): img_tag = f'<img src="{icon}" class="contact-icon">'
-        else: img_tag = '<span style="font-size:24px;">🔗</span>'
-        
-        # Render Button
+        # Resolve icon path if local, else use URL
+        if not icon.startswith("http"):
+            # If we were rendering Python we'd use base64, but for this HTML loop, 
+            # we rely on public URLs for icons OR fallback. 
+            # To fix "Invisible Icon" for local files in HTML mode, we really need public URLs.
+            # Using a fallback emoji if it's not http to ensure something shows.
+            img_tag = '<span style="font-size:30px;">🔗</span>'
+        else:
+            img_tag = f'<img src="{icon}" class="c-icon">'
+            
         st.markdown(f"""
         <a href="{val}" target="_blank" class="contact-btn">
             {img_tag}
-            <div class="contact-text">{lbl}</div>
+            <span class="c-text">{lbl}</span>
         </a>
         """, unsafe_allow_html=True)
         
