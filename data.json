@@ -1,0 +1,26 @@
+{
+    "profile": {
+        "name": "Jithendra Reddy Punuru",
+        "role": "Software Engineer",
+        "summary": "I'm a Software Engineer specializing in the Microsoft Power Platform...",
+        "image": "profile.png",
+        "contact_info": [
+            {
+                "label": "Email",
+                "value": "mailto:jithendrareddypunuru@gmail.com",
+                "icon_file": "gmail.png"
+            },
+            {
+                "label": "LinkedIn",
+                "value": "https://www.linkedin.com/in/jithendrareddypunuru/",
+                "icon_file": "linkedin.png"
+            }
+        ]
+    },
+    "skills": {
+        "Power BI": 90,
+        "Python": 85
+    },
+    "experience": [],
+    "projects": []
+}
