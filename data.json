@@ -44,7 +44,7 @@
     ],
     "projects": [
         
-        {
+       {
             "title": "Executive Command Center",
             "category": "Finance",
             "image": "https://placehold.co/600x350/222/FFF?text=Executive+Dashboard",
@@ -139,4 +139,5 @@
         "efficiency": "30%"
     }
 }
+
 
