@@ -13,98 +13,53 @@ ADMIN_PASSWORD = "admin"
 
 st.set_page_config(layout="wide", page_title="Portfolio", page_icon="✨")
 
-# --- UI OVERHAUL (CSS) ---
+# --- CUSTOM CSS ---
 st.markdown("""
 <style>
-    /* GLOBAL FONTS & COLORS */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+    /* GLOBAL */
+    .main { padding-top: 1rem; }
+    h1, h2, h3 { font-family: 'Segoe UI', sans-serif; color: #0F172A; }
     
-    html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
-    h1, h2, h3 { color: #0F172A; }
-    p { color: #475569; }
-
-    /* 1. HERO METRICS (Home) */
-    .metric-card {
-        background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%);
-        border: 1px solid #E2E8F0; border-radius: 16px;
-        padding: 25px; text-align: center;
-        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-        transition: all 0.3s ease;
-    }
-    .metric-card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); border-color: #3B82F6; }
-    .metric-value { font-size: 2.2rem; font-weight: 800; color: #3B82F6; }
-    .metric-label { font-size: 0.9rem; font-weight: 600; color: #64748B; letter-spacing: 1px; }
-
-    /* 2. TIMELINE EXPERIENCE (Polished) */
-    .timeline-card {
-        background: white; border-radius: 12px; padding: 24px;
+    /* PROJECT CARDS */
+    .project-container {
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         margin-bottom: 20px;
-        border-left: 6px solid #3B82F6; /* The Timeline Line */
-        box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-        transition: transform 0.2s;
     }
-    .timeline-card:hover { transform: translateX(8px); box-shadow: 0 10px 15px rgba(0,0,0,0.05); }
-    .t-role { font-size: 1.3rem; font-weight: 700; color: #1E293B; margin: 0; }
-    .t-company { font-size: 1rem; font-weight: 600; color: #3B82F6; margin-bottom: 8px; display: inline-block;}
-    .t-date { font-size: 0.85rem; color: #94A3B8; float: right; font-weight: 500; }
-    .t-desc { font-size: 0.95rem; color: #334155; line-height: 1.6; margin-top: 10px; white-space: pre-line; }
-
-    /* 3. PROJECT CARDS (Animated) */
-    .project-card-container {
-        background: #FFFFFF; border: 1px solid #F1F5F9; border-radius: 16px;
-        overflow: hidden; height: 100%; position: relative;
-        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy Animation */
-    }
-    .project-card-container:hover {
-        transform: translateY(-10px) scale(1.02);
-        box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.25);
-        border-color: #3B82F6;
-    }
-    .p-img-box { width: 100%; height: 180px; overflow: hidden; background: #F1F5F9; }
-    .p-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
-    .project-card-container:hover .p-img { transform: scale(1.1); } /* Zoom Image on Hover */
     
-    .p-body { padding: 20px; }
-    .p-title { font-size: 1.25rem; font-weight: 800; color: #0F172A; margin-bottom: 5px; }
-    .p-cat { font-size: 0.75rem; font-weight: 700; color: #64748B; text-transform: uppercase; background: #F1F5F9; padding: 4px 10px; border-radius: 20px; display: inline-block; margin-bottom: 12px; }
-    .p-text { font-size: 0.9rem; color: #475569; margin-bottom: 8px; line-height: 1.5; }
-
-    /* 4. SKILL GRID (No Scroll) */
-    .skill-card {
-        background: white; border: 1px solid #E2E8F0; border-radius: 12px;
-        padding: 15px; display: flex; align-items: center; justify-content: space-between;
-        margin-bottom: 10px; transition: 0.2s;
-    }
-    .skill-card:hover { border-color: #3B82F6; box-shadow: 0 4px 10px rgba(59, 130, 246, 0.1); }
-    .skill-name { font-weight: 700; color: #334155; font-size: 0.95rem; }
-    .skill-bar-track { width: 60%; height: 8px; background: #F1F5F9; border-radius: 4px; overflow: hidden; }
-    .skill-bar-fill { height: 100%; background: linear-gradient(90deg, #3B82F6, #2563EB); border-radius: 4px; }
-
-    /* 5. CONTACT DOCK */
-    .contact-dock {
-        display: flex; gap: 30px; justify-content: center; align-items: center; flex-wrap: wrap; margin-top: 30px;
-    }
-    .contact-btn {
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
-        width: 140px; height: 120px;
-        background: white; border: 1px solid #E2E8F0; border-radius: 20px;
-        text-decoration: none !important; color: #334155 !important;
-        transition: all 0.3s ease;
+    /* SKILL BARS */
+    .skill-text { font-weight: 600; color: #334155; margin-bottom: 5px; display: flex; justify-content: space-between; }
+    
+    /* CONTACT CARDS */
+    .contact-card-modern {
+        background-color: white;
+        padding: 30px;
+        border-radius: 15px;
+        border: 1px solid #e2e8f0;
+        text-align: center;
+        text-decoration: none !important;
+        color: inherit !important;
         box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        transition: transform 0.2s, border-color 0.2s;
+        height: 100%;
+        display: block;
     }
-    .contact-btn:hover {
-        transform: translateY(-8px);
-        background: #EFF6FF; border-color: #3B82F6;
-        box-shadow: 0 10px 20px rgba(59, 130, 246, 0.2);
+    .contact-card-modern:hover {
+        transform: translateY(-5px);
+        border-color: #3B82F6;
+        box-shadow: 0 10px 15px rgba(59, 130, 246, 0.15);
     }
-    .c-icon { width: 40px; height: 40px; margin-bottom: 10px; object-fit: contain; }
-    .c-text { font-weight: 700; font-size: 1rem; }
-    
+    .contact-icon-big { width: 50px; height: 50px; margin-bottom: 15px; object-fit: contain; }
+    .contact-label { font-size: 1.2rem; font-weight: 700; color: #1E293B; margin-bottom: 5px; }
+    .contact-val { font-size: 0.9rem; color: #3B82F6; word-break: break-all; }
+
 </style>
 """, unsafe_allow_html=True)
 
-# --- HELPER: DATA MANAGER ---
+# --- DATA MANAGER ---
 def load_data():
     if not os.path.exists(DATA_FILE): return {}
     try:
@@ -117,16 +72,28 @@ def save_data(data):
         st.toast("Saved! Download JSON to update GitHub.", icon="💾")
     except Exception as e: st.error(f"Save failed: {e}")
 
-# --- HELPER: IMAGE RENDERER ---
-def get_image_path(image_path):
-    if not image_path: return "https://placehold.co/600x400/png?text=No+Image"
-    if image_path.startswith("http"): return image_path
+# --- IMAGE RENDERER (With Auto-Fix for GitHub Links) ---
+def render_image(image_path, width=None):
+    if not image_path: return
     
-    filename = os.path.basename(image_path)
-    possible_paths = [os.path.join(BASE_DIR, "assets", filename), os.path.join(BASE_DIR, filename)]
-    for path in possible_paths:
-        if os.path.exists(path): return path
-    return "https://placehold.co/600x400/png?text=Missing"
+    # AUTO-FIX: Convert GitHub Blob link to Raw link if user pastes wrong one
+    if "github.com" in image_path and "/blob/" in image_path:
+        image_path = image_path.replace("github.com", "raw.githubusercontent.com").replace("/blob/", "/")
+    
+    if image_path.startswith("http"):
+        st.image(image_path, width=width)
+    else:
+        # Local file fallback
+        filename = os.path.basename(image_path)
+        possible_paths = [os.path.join(BASE_DIR, "assets", filename), os.path.join(BASE_DIR, filename)]
+        found = False
+        for path in possible_paths:
+            if os.path.exists(path):
+                st.image(path, width=width)
+                found = True
+                break
+        if not found:
+            st.image("https://placehold.co/600x400/png?text=Image+Not+Found", width=width)
 
 # --- INITIALIZE ---
 if 'data' not in st.session_state: st.session_state.data = load_data()
@@ -136,8 +103,7 @@ if 'is_admin' not in st.session_state: st.session_state.is_admin = False
 with st.sidebar:
     prof = st.session_state.data.get('profile', {})
     st.markdown('<div style="text-align: center; margin-bottom:20px;">', unsafe_allow_html=True)
-    if prof.get('image_url'):
-        st.image(get_image_path(prof.get('image_url')), width=140)
+    if prof.get('image_url'): render_image(prof.get('image_url'), width=140)
     st.markdown('</div>', unsafe_allow_html=True)
     
     selected = option_menu(None, ["Home", "Experience", "Projects", "Skills", "Contact"], 
@@ -164,13 +130,10 @@ if selected == "Home":
     
     if st.session_state.is_admin:
         with st.expander("✏️ Edit Profile"):
-            n_name = st.text_input("Name", prof.get('name', ''))
-            n_role = st.text_input("Role", prof.get('role', ''))
-            n_sum = st.text_area("Summary", prof.get('summary', ''), height=150)
-            n_img = st.text_input("Image URL", prof.get('image_url', ''))
+            n_name = st.text_input("Name", prof.get('name', '')); n_role = st.text_input("Role", prof.get('role', ''))
+            n_sum = st.text_area("Summary", prof.get('summary', ''), height=150); n_img = st.text_input("Image URL", prof.get('image_url', ''))
             c1, c2, c3 = st.columns(3)
-            m1 = c1.text_input("Dashboards", mets.get('dashboards', ''))
-            m2 = c2.text_input("Reduction", mets.get('manual_reduction', ''))
+            m1 = c1.text_input("Dashboards", mets.get('dashboards', '')); m2 = c2.text_input("Reduction", mets.get('manual_reduction', ''))
             m3 = c3.text_input("Efficiency", mets.get('efficiency', ''))
             if st.button("Save Home"):
                 st.session_state.data['profile'].update({"name": n_name, "role": n_role, "summary": n_sum, "image_url": n_img})
@@ -181,28 +144,26 @@ if selected == "Home":
     with c1:
         st.markdown(f"<h1 style='font-size:3.5rem; margin-bottom:0;'>{prof.get('name', 'Name')}</h1>", unsafe_allow_html=True)
         st.markdown(f"<h3 style='color:#3B82F6; margin-top:0;'>{prof.get('role', 'Role')}</h3>", unsafe_allow_html=True)
-        st.markdown(f"<p style='font-size:1.1rem; line-height:1.6;'>{prof.get('summary', '')}</p>", unsafe_allow_html=True)
+        st.write(prof.get('summary', ''))
         st.markdown("<br>", unsafe_allow_html=True)
-        
-        # Metrics
         mc1, mc2, mc3 = st.columns(3)
-        with mc1: st.markdown(f'<div class="metric-card"><div class="metric-value">{mets.get("dashboards","0")}</div><div class="metric-label">Dashboards</div></div>', unsafe_allow_html=True)
-        with mc2: st.markdown(f'<div class="metric-card"><div class="metric-value">{mets.get("manual_reduction","0%")}</div><div class="metric-label">Reduction</div></div>', unsafe_allow_html=True)
-        with mc3: st.markdown(f'<div class="metric-card"><div class="metric-value">{mets.get("efficiency","0%")}</div><div class="metric-label">Efficiency</div></div>', unsafe_allow_html=True)
-        
+        mc1.metric("Dashboards", mets.get('dashboards', '0'))
+        mc2.metric("Work Reduced", mets.get('manual_reduction', '0%'))
+        mc3.metric("Efficiency", mets.get('efficiency', '0%'))
     with c2:
-        st.image(get_image_path(prof.get('image_url')), use_container_width=True)
+        st.markdown('<div style="padding: 20px;">', unsafe_allow_html=True)
+        render_image(prof.get('image_url'), width=350)
+        st.markdown('</div>', unsafe_allow_html=True)
 
 # --- EXPERIENCE ---
 elif selected == "Experience":
     st.title("Professional Experience")
-    
     if st.session_state.is_admin:
         tab_add, tab_edit = st.tabs(["➕ Add", "✏️ Edit"])
         with tab_add:
             r = st.text_input("Role", key="nr"); c = st.text_input("Company", key="nc")
             d = st.text_input("Date", key="nd"); desc = st.text_area("Desc", key="ndes", height=150)
-            if st.button("Save Job"):
+            if st.button("Save"):
                 st.session_state.data.setdefault('experience', []).insert(0, {"role": r, "company": c, "date": d, "description": desc})
                 save_data(st.session_state.data); st.rerun()
         with tab_edit:
@@ -212,20 +173,15 @@ elif selected == "Experience":
                 curr = exp_list[idx]
                 er = st.text_input("Role", curr['role']); ec = st.text_input("Company", curr['company'])
                 ed = st.text_input("Date", curr['date']); edesc = st.text_area("Desc", curr['description'], height=150)
-                col1, col2 = st.columns(2)
-                if col1.button("Update"): st.session_state.data['experience'][idx] = {"role": er, "company": ec, "date": ed, "description": edesc}; save_data(st.session_state.data); st.rerun()
-                if col2.button("Delete", type="primary"): st.session_state.data['experience'].pop(idx); save_data(st.session_state.data); st.rerun()
+                c1, c2 = st.columns(2)
+                if c1.button("Update"): st.session_state.data['experience'][idx] = {"role": er, "company": ec, "date": ed, "description": edesc}; save_data(st.session_state.data); st.rerun()
+                if c2.button("Delete", type="primary"): st.session_state.data['experience'].pop(idx); save_data(st.session_state.data); st.rerun()
 
-    # --- UI: POLISHED TIMELINE CARDS ---
     for job in st.session_state.data.get('experience', []):
-        st.markdown(f"""
-        <div class="timeline-card">
-            <span class="t-date">{job.get('date')}</span>
-            <div class="t-role">{job.get('role')}</div>
-            <div class="t-company">{job.get('company')}</div>
-            <div class="t-desc">{job.get('description')}</div>
-        </div>
-        """, unsafe_allow_html=True)
+        with st.container(border=True):
+            st.markdown(f"### {job.get('role', 'Role')}")
+            st.caption(f"**{job.get('company', 'Company')}** | {job.get('date', 'Date')}")
+            st.markdown(job.get('description', ''))
 
 # --- PROJECTS ---
 elif selected == "Projects":
@@ -234,10 +190,10 @@ elif selected == "Projects":
     if st.session_state.is_admin:
         tab_add, tab_edit = st.tabs(["➕ Add", "✏️ Edit"])
         with tab_add:
-            pt = st.text_input("Title", key="npt"); pc = st.text_input("Category", key="npc")
-            pi = st.text_input("Image", key="npi"); pp = st.text_area("Problem", key="npp")
-            ps = st.text_area("Solution", key="nps"); pimp = st.text_area("Impact", key="npimp")
-            if st.button("Save Project"):
+            pt = st.text_input("Title"); pc = st.text_input("Category")
+            pi = st.text_input("Image"); pp = st.text_area("Problem")
+            ps = st.text_area("Solution"); pimp = st.text_area("Impact")
+            if st.button("Save"):
                 st.session_state.data.setdefault('projects', []).append({"title": pt, "category": pc, "image": pi, "problem": pp, "solution": ps, "impact": pimp})
                 save_data(st.session_state.data); st.rerun()
         with tab_edit:
@@ -251,30 +207,25 @@ elif selected == "Projects":
                 if st.button("Update"): st.session_state.data['projects'][pidx] = {"title": ept, "category": epc, "image": epi, "problem": epp, "solution": eps, "impact": epimp}; save_data(st.session_state.data); st.rerun()
                 if st.button("Delete", type="primary"): st.session_state.data['projects'].pop(pidx); save_data(st.session_state.data); st.rerun()
 
-    # --- UI: ANIMATED HTML CARDS ---
-    # We use st.columns but inside we render pure HTML for the card to ensure the hover effect applies to the whole box
+    # --- UI: FIXED HTML BUG & REDUCED CONGESTION ---
     cols = st.columns(2)
     for i, p in enumerate(st.session_state.data.get('projects', [])):
         with cols[i%2]:
-            img_src = get_image_path(p.get('image', ''))
-            
-            # Note: We put the image in a div, and the text in another div, all wrapped in a container
-            html_card = f"""
-            <div class="project-card-container">
-                <div class="p-img-box">
-                    <img src="{img_src}" class="p-img">
-                </div>
-                <div class="p-body">
-                    <div class="p-title">{p.get('title')}</div>
-                    <div class="p-cat">{p.get('category')}</div>
-                    
-                    {'<div class="p-text"><b>🚨 Problem:</b> ' + p['problem'] + '</div>' if p.get('problem') else ''}
-                    {'<div class="p-text"><b>💡 Solution:</b> ' + p['solution'] + '</div>' if p.get('solution') else ''}
-                    {'<div class="p-text"><b>🚀 Impact:</b> ' + p['impact'] + '</div>' if p.get('impact') else ''}
-                </div>
-            </div>
-            <div style="height: 25px"></div> """
-            st.markdown(html_card, unsafe_allow_html=True)
+            with st.container():
+                st.markdown('<div class="project-container">', unsafe_allow_html=True)
+                render_image(p.get('image', ''), width=None)
+                st.subheader(p.get('title', 'Project'))
+                st.caption(f"📂 {p.get('category', 'General')}")
+                
+                # Using native Streamlit elements to avoid "text displaying html code" bug
+                if p.get('problem'):
+                    st.info(f"**Problem:** {p['problem']}")
+                if p.get('solution'):
+                    st.success(f"**Solution:** {p['solution']}")
+                if p.get('impact'):
+                    st.warning(f"**Impact:** {p['impact']}")
+                
+                st.markdown('</div>', unsafe_allow_html=True)
 
 # --- SKILLS ---
 elif selected == "Skills":
@@ -284,20 +235,36 @@ elif selected == "Skills":
     if st.session_state.is_admin:
         with st.form("sk"):
             n = st.text_input("Skill"); v = st.slider("Val", 0, 100, 50)
-            if st.form_submit_button("Add"): st.session_state.data.setdefault('skills', {})[n] = v; save_data(st.session_state.data); st.rerun()
-        if st.button("Delete All", type="primary"): st.session_state.data['skills'] = {}; save_data(st.session_state.data); st.rerun()
+            if st.form_submit_button("Add"): 
+                st.session_state.data.setdefault('skills', {})[n] = v; save_data(st.session_state.data); st.rerun()
+        if st.button("Delete All", type="primary"): 
+            st.session_state.data['skills'] = {}; save_data(st.session_state.data); st.rerun()
 
-    # --- UI: 3-COLUMN GRID (No Scroll) ---
+    # --- UI: SPIDER CHART TOP CENTER ---
+    if skills:
+        col_chart1, col_chart2, col_chart3 = st.columns([1, 2, 1])
+        with col_chart2:
+            fig = go.Figure(data=go.Scatterpolar(
+                r=list(skills.values()), theta=list(skills.keys()), fill='toself',
+                marker=dict(color='#3B82F6')
+            ))
+            fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 100])), showlegend=False, margin=dict(l=40, r=40, t=30, b=30), height=300)
+            st.plotly_chart(fig, use_container_width=True)
+
+    # --- UI: SKILLS LIST DOWN WITH PERCENTAGES ---
+    st.markdown("### Proficiency Levels")
     s_cols = st.columns(3)
-    s_items = list(skills.items())
-    
-    for i, (s, v) in enumerate(s_items):
+    skill_items = list(skills.items())
+    for i, (s, v) in enumerate(skill_items):
         with s_cols[i % 3]:
             st.markdown(f"""
-            <div class="skill-card">
-                <span class="skill-name">{s}</span>
-                <div class="skill-bar-track">
-                    <div class="skill-bar-fill" style="width: {v}%;"></div>
+            <div style="margin-bottom:15px;">
+                <div class="skill-text">
+                    <span>{s}</span>
+                    <span>{v}%</span>
+                </div>
+                <div style="background:#E2E8F0; border-radius:6px; height:8px; width:100%;">
+                    <div style="background:linear-gradient(90deg, #3B82F6, #2563EB); border-radius:6px; height:100%; width:{v}%;"></div>
                 </div>
             </div>
             """, unsafe_allow_html=True)
@@ -307,31 +274,24 @@ elif selected == "Contact":
     st.title("Get In Touch")
     prof = st.session_state.data.get('profile', {})
     
-    st.markdown(f"<div style='text-align:center'><h2>{prof.get('name')}</h2><p>Connect with me on social media or send an email.</p></div>", unsafe_allow_html=True)
+    st.markdown("<br>", unsafe_allow_html=True)
+    c1, c2 = st.columns(2)
     
-    # --- UI: CENTERED DOCK (No Scroll) ---
-    st.markdown('<div class="contact-dock">', unsafe_allow_html=True)
-    
-    for item in prof.get('contact_info', []):
-        icon = item.get('icon', '')
-        val = item.get('value', '#')
-        lbl = item.get('label', 'Link')
-        
-        # Resolve icon path if local, else use URL
-        if not icon.startswith("http"):
-            # If we were rendering Python we'd use base64, but for this HTML loop, 
-            # we rely on public URLs for icons OR fallback. 
-            # To fix "Invisible Icon" for local files in HTML mode, we really need public URLs.
-            # Using a fallback emoji if it's not http to ensure something shows.
-            img_tag = '<span style="font-size:30px;">🔗</span>'
-        else:
-            img_tag = f'<img src="{icon}" class="c-icon">'
+    for i, item in enumerate(prof.get('contact_info', [])):
+        # Alternate columns for grid look
+        with (c1 if i % 2 == 0 else c2):
+            icon_url = item.get('icon', '')
+            val = item.get('value', '#')
+            label = item.get('label', 'Link')
             
-        st.markdown(f"""
-        <a href="{val}" target="_blank" class="contact-btn">
-            {img_tag}
-            <span class="c-text">{lbl}</span>
-        </a>
-        """, unsafe_allow_html=True)
-        
-    st.markdown('</div>', unsafe_allow_html=True)
+            # Icon HTML
+            img_tag = f'<img src="{icon_url}" class="contact-icon-big">' if icon_url.startswith("http") else '<span style="font-size:40px; display:block; margin-bottom:10px;">🔗</span>'
+            
+            st.markdown(f"""
+            <a href="{val}" target="_blank" class="contact-card-modern">
+                {img_tag}
+                <div class="contact-label">{label}</div>
+                <div class="contact-val">{val}</div>
+            </a>
+            <br>
+            """, unsafe_allow_html=True)
