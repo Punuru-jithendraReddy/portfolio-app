@@ -21,92 +21,81 @@ st.markdown("""
     .main { padding-top: 1rem; }
     h1, h2, h3 { font-family: 'Segoe UI', sans-serif; color: #0F172A; }
     
-    /* PROJECT CARDS (With Animation) */
+    /* 1. HERO METRIC CARDS (With Animation) */
+    .metric-card {
+        background: white; border: 1px solid #E2E8F0; border-radius: 12px;
+        padding: 20px; text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease; /* ANIMATION ADDED */
+    }
+    .metric-card:hover { 
+        transform: translateY(-5px); 
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); 
+        border-color: #3B82F6; 
+    }
+    .metric-value { font-size: 1.8rem; font-weight: 800; color: #3B82F6; }
+    .metric-label { font-size: 0.85rem; font-weight: 600; color: #64748B; text-transform: uppercase; }
+
+    /* 2. TIMELINE CARDS (With Animation) */
+    .timeline-card {
+        background: white; border-radius: 12px; padding: 24px;
+        margin-bottom: 20px;
+        border-left: 6px solid #3B82F6;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease; /* ANIMATION ADDED */
+    }
+    .timeline-card:hover { 
+        transform: translateX(8px); 
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1); 
+    }
+    .t-role { font-size: 1.3rem; font-weight: 700; color: #1E293B; margin: 0; }
+    .t-company { font-size: 1rem; font-weight: 600; color: #3B82F6; margin-bottom: 8px; display: inline-block;}
+    .t-date { font-size: 0.85rem; color: #94A3B8; float: right; font-weight: 500; }
+    .t-desc { font-size: 0.95rem; color: #334155; line-height: 1.6; margin-top: 10px; white-space: pre-line; }
+
+    /* 3. PROJECT CARDS (Untouched - Good Design) */
     .project-card {
         background-color: #ffffff;
         border: 1px solid #e2e8f0;
         border-radius: 12px;
-        padding: 0; /* Image touches edges */
+        padding: 0;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         margin-bottom: 25px;
         overflow: hidden;
-        transition: transform 0.3s ease, box-shadow 0.3s ease; /* SMOOTH ANIMATION */
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
         height: 100%;
     }
-    
-    /* HOVER EFFECT */
     .project-card:hover {
-        transform: translateY(-8px); /* LIFT UP */
-        box-shadow: 0 12px 20px -5px rgba(59, 130, 246, 0.25); /* GLOW */
+        transform: translateY(-8px);
+        box-shadow: 0 12px 20px -5px rgba(59, 130, 246, 0.25);
         border-color: #3B82F6;
     }
+    .p-img-container { width: 100%; height: 200px; overflow: hidden; border-bottom: 1px solid #e2e8f0; }
+    .p-img { width: 100%; height: 100%; object-fit: cover; }
+    .p-content { padding: 20px; }
+    .p-title { font-size: 1.25rem; font-weight: 800; color: #1E293B; margin-bottom: 5px; }
+    .p-cat { font-size: 0.8rem; font-weight: 700; color: #64748B; text-transform: uppercase; margin-bottom: 15px; }
+    .p-detail { font-size: 0.95rem; color: #475569; margin-bottom: 10px; line-height: 1.5; }
 
-    .p-img-container {
-        width: 100%;
-        height: 200px;
-        overflow: hidden;
-        border-bottom: 1px solid #e2e8f0;
-    }
-    
-    .p-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .p-content {
-        padding: 20px;
-    }
-
-    .p-title {
-        font-size: 1.25rem;
-        font-weight: 800;
-        color: #1E293B;
-        margin-bottom: 5px;
-    }
-
-    .p-cat {
-        font-size: 0.8rem;
-        font-weight: 700;
-        color: #64748B;
-        text-transform: uppercase;
-        margin-bottom: 15px;
-    }
-
-    .p-detail {
-        font-size: 0.95rem;
-        color: #475569;
-        margin-bottom: 10px;
-        line-height: 1.5;
-    }
-
-    /* SKILL METRICS */
+    /* 4. SKILL METRICS (Compact) */
     .skill-metric {
         background-color: #F8FAFC;
         border-radius: 8px;
-        padding: 15px;
+        padding: 10px; /* Reduced padding */
         text-align: center;
         border: 1px solid #E2E8F0;
+        margin-bottom: 10px;
     }
 
-    /* CONTACT CARDS */
+    /* 5. CONTACT CARDS */
     .contact-card-modern {
-        background-color: white;
-        padding: 25px;
-        border-radius: 12px;
-        border: 1px solid #e2e8f0;
-        text-align: center;
-        text-decoration: none !important;
-        color: inherit !important;
+        background-color: white; padding: 25px; border-radius: 12px;
+        border: 1px solid #e2e8f0; text-align: center;
+        text-decoration: none !important; color: inherit !important;
         box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         transition: transform 0.2s, border-color 0.2s;
         display: block;
     }
-    .contact-card-modern:hover {
-        transform: translateY(-5px);
-        border-color: #3B82F6;
-        box-shadow: 0 8px 15px rgba(59, 130, 246, 0.1);
-    }
+    .contact-card-modern:hover { transform: translateY(-5px); border-color: #3B82F6; box-shadow: 0 8px 15px rgba(59, 130, 246, 0.1); }
     .contact-icon-big { width: 40px; height: 40px; margin-bottom: 10px; object-fit: contain; }
     .contact-label { font-size: 1.1rem; font-weight: 700; color: #1E293B; margin-bottom: 5px; }
     .contact-val { font-size: 0.9rem; color: #3B82F6; }
@@ -127,34 +116,24 @@ def save_data(data):
         st.toast("Saved! Download JSON to update GitHub.", icon="💾")
     except Exception as e: st.error(f"Save failed: {e}")
 
-# --- HELPER: GET IMAGE SOURCE (For HTML Injection) ---
+# --- HELPER: GET IMAGE SOURCE ---
 def get_img_src(image_path):
     if not image_path: return "https://placehold.co/600x400/png?text=No+Image"
-    
-    # Auto-Fix GitHub Blob Links
     if "github.com" in image_path and "/blob/" in image_path:
         image_path = image_path.replace("github.com", "raw.githubusercontent.com").replace("/blob/", "/")
+    if image_path.startswith("http"): return image_path
     
-    if image_path.startswith("http"):
-        return image_path
-    
-    # Local File -> Base64
     filename = os.path.basename(image_path)
     possible_paths = [os.path.join(BASE_DIR, "assets", filename), os.path.join(BASE_DIR, filename)]
-    
     for path in possible_paths:
         if os.path.exists(path):
             with open(path, "rb") as f:
-                data = f.read()
-                b64 = base64.b64encode(data).decode()
-                return f"data:image/png;base64,{b64}"
-    
+                return f"data:image/png;base64,{base64.b64encode(f.read()).decode()}"
     return "https://placehold.co/600x400/png?text=Missing"
 
-# --- HELPER: STREAMLIT IMAGE RENDERER ---
+# --- HELPER: RENDERER ---
 def render_image(image_path, width=None):
     src = get_img_src(image_path)
-    # Using container width prevents the "InvalidWidthError"
     if width: st.image(src, width=width)
     else: st.image(src, use_container_width=True)
 
@@ -186,7 +165,7 @@ with st.sidebar:
             st.session_state.is_admin = False
             st.rerun()
 
-# --- HOME ---
+# --- HOME (Animation Added) ---
 if selected == "Home":
     prof = st.session_state.data.get('profile', {})
     mets = st.session_state.data.get('metrics', {})
@@ -209,16 +188,17 @@ if selected == "Home":
         st.markdown(f"<h3 style='color:#3B82F6; margin-top:0;'>{prof.get('role', 'Role')}</h3>", unsafe_allow_html=True)
         st.write(prof.get('summary', ''))
         st.markdown("<br>", unsafe_allow_html=True)
+        # METRIC CARDS (Now Animated via CSS)
         mc1, mc2, mc3 = st.columns(3)
-        mc1.metric("Dashboards", mets.get('dashboards', '0'))
-        mc2.metric("Work Reduced", mets.get('manual_reduction', '0%'))
-        mc3.metric("Efficiency", mets.get('efficiency', '0%'))
+        with mc1: st.markdown(f'<div class="metric-card"><div class="metric-value">{mets.get("dashboards","0")}</div><div class="metric-label">Dashboards</div></div>', unsafe_allow_html=True)
+        with mc2: st.markdown(f'<div class="metric-card"><div class="metric-value">{mets.get("manual_reduction","0%")}</div><div class="metric-label">Reduction</div></div>', unsafe_allow_html=True)
+        with mc3: st.markdown(f'<div class="metric-card"><div class="metric-value">{mets.get("efficiency","0%")}</div><div class="metric-label">Efficiency</div></div>', unsafe_allow_html=True)
     with c2:
         st.markdown('<div style="padding: 20px;">', unsafe_allow_html=True)
         render_image(prof.get('image_url'), width=350)
         st.markdown('</div>', unsafe_allow_html=True)
 
-# --- EXPERIENCE ---
+# --- EXPERIENCE (Animation Added) ---
 elif selected == "Experience":
     st.title("Professional Experience")
     if st.session_state.is_admin:
@@ -240,13 +220,18 @@ elif selected == "Experience":
                 if c1.button("Update"): st.session_state.data['experience'][idx] = {"role": er, "company": ec, "date": ed, "description": edesc}; save_data(st.session_state.data); st.rerun()
                 if c2.button("Delete", type="primary"): st.session_state.data['experience'].pop(idx); save_data(st.session_state.data); st.rerun()
 
+    # TIMELINE CARDS (Now Animated via CSS)
     for job in st.session_state.data.get('experience', []):
-        with st.container(border=True):
-            st.markdown(f"### {job.get('role', 'Role')}")
-            st.caption(f"**{job.get('company', 'Company')}** | {job.get('date', 'Date')}")
-            st.markdown(job.get('description', ''))
+        st.markdown(f"""
+        <div class="timeline-card">
+            <span class="t-date">{job.get('date')}</span>
+            <div class="t-role">{job.get('role')}</div>
+            <div class="t-company">{job.get('company')}</div>
+            <div class="t-desc">{job.get('description')}</div>
+        </div>
+        """, unsafe_allow_html=True)
 
-# --- PROJECTS (FIXED: ANIMATED HTML CARDS) ---
+# --- PROJECTS (Untouched - Perfect) ---
 elif selected == "Projects":
     st.title("Projects")
     
@@ -270,19 +255,18 @@ elif selected == "Projects":
                 if st.button("Update"): st.session_state.data['projects'][pidx] = {"title": ept, "category": epc, "image": epi, "problem": epp, "solution": eps, "impact": epimp}; save_data(st.session_state.data); st.rerun()
                 if st.button("Delete", type="primary"): st.session_state.data['projects'].pop(pidx); save_data(st.session_state.data); st.rerun()
 
-    # --- UI: ANIMATED CARDS (No Expander) ---
+    # ANIMATED HTML CARDS
     cols = st.columns(2)
     for i, p in enumerate(st.session_state.data.get('projects', [])):
         with cols[i%2]:
             img_src = get_img_src(p.get('image', ''))
             
-            # Construct Content Block
+            # Details Block
             details = ""
             if p.get('problem'): details += f"<div class='p-detail'><b>🚨 Problem:</b> {p['problem']}</div>"
             if p.get('solution'): details += f"<div class='p-detail'><b>💡 Solution:</b> {p['solution']}</div>"
             if p.get('impact'): details += f"<div class='p-detail'><b>🚀 Impact:</b> {p['impact']}</div>"
 
-            # HTML CARD
             st.markdown(f"""
             <div class="project-card">
                 <div class="p-img-container">
@@ -296,7 +280,7 @@ elif selected == "Projects":
             </div>
             """, unsafe_allow_html=True)
 
-# --- SKILLS ---
+# --- SKILLS (Fixed Scrolling - 4 Columns) ---
 elif selected == "Skills":
     st.title("Technical Skills")
     skills = st.session_state.data.get('skills', {})
@@ -317,20 +301,19 @@ elif selected == "Skills":
             fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 100])), showlegend=False, margin=dict(l=40, r=40, t=30, b=30), height=250)
             st.plotly_chart(fig, use_container_width=True)
 
-    # 2. Grid List
+    # 2. Dense Grid (4 Columns to prevent Scrolling)
     st.markdown("### Proficiency")
-    s_cols = st.columns(3)
+    s_cols = st.columns(4) # INCREASED TO 4
     skill_items = list(skills.items())
     
     for i, (s, v) in enumerate(skill_items):
-        with s_cols[i % 3]:
+        with s_cols[i % 4]:
             st.markdown(f"""
             <div class="skill-metric">
-                <div style="font-weight:bold; color:#334155;">{s}</div>
-                <div style="color:#3B82F6; font-size:1.5rem; font-weight:800;">{v}%</div>
-                <progress value="{v}" max="100" style="width:100%; height:10px;"></progress>
+                <div style="font-weight:bold; color:#334155; font-size:0.9rem;">{s}</div>
+                <div style="color:#3B82F6; font-size:1.2rem; font-weight:800;">{v}%</div>
+                <progress value="{v}" max="100" style="width:100%; height:6px;"></progress>
             </div>
-            <div style="height:15px"></div>
             """, unsafe_allow_html=True)
 
 # --- CONTACT ---
@@ -347,10 +330,8 @@ elif selected == "Contact":
             val = item.get('value', '#')
             label = item.get('label', 'Link')
             
-            if icon_url.startswith("http"): 
-                img_tag = f'<img src="{icon_url}" class="contact-icon-big">' 
-            else:
-                img_tag = '<span style="font-size:40px; display:block; margin-bottom:10px;">🔗</span>'
+            if icon_url.startswith("http"): img_tag = f'<img src="{icon_url}" class="contact-icon-big">' 
+            else: img_tag = '<span style="font-size:40px; display:block; margin-bottom:10px;">🔗</span>'
             
             st.markdown(f"""
             <a href="{val}" target="_blank" class="contact-card-modern">
