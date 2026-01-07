@@ -14,14 +14,12 @@ ADMIN_PASSWORD = "admin"
 st.set_page_config(layout="wide", page_title="Portfolio", page_icon="💼")
 
 # --- 1. THE SAFETY NET DATA (Fallback if JSON is missing) ---
-# This ensures your app is NEVER blank.
 DEFAULT_DATA = {
     "profile": {
         "name": "Jithendra Reddy Punuru",
         "role": "Software Engineer",
         "summary": "I'm a Software Engineer specializing in the Microsoft Power Platform...",
-        # Using a public placeholder so it always shows up
-        "image_url": "https://placehold.co/400x400/png?text=Profile+Pic", 
+        "image_url": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/Profile.jpg", 
         "contact_info": [
             {
                 "label": "Email",
@@ -66,7 +64,6 @@ def load_data():
     try:
         with open(DATA_FILE, 'r', encoding='utf-8') as f:
             data = json.load(f)
-            # Merge with default to ensure no keys are missing
             if not data: return DEFAULT_DATA
             return data
     except:
@@ -81,32 +78,43 @@ def save_data(data):
     except Exception as e:
         st.error(f"Save failed: {e}")
 
-# --- HELPER: IMAGE RENDERER ---
+# --- HELPER: IMAGE RENDERER (FIXED) ---
 def render_image(image_path, width=None):
-    # If no path, use the default placeholder from DEFAULT_DATA
+    """
+    Renders an image safely. 
+    Fixes StreamlitInvalidWidthError by not passing width=None explicitly.
+    """
+    # 1. Handle Empty Path (Use Default)
     if not image_path:
         image_path = DEFAULT_DATA['profile']['image_url']
     
-    # 1. Web URL (Always works)
-    if image_path.startswith("http"):
-        st.image(image_path, width=width)
-        return
+    final_path = None
 
-    # 2. Local File (Only works if file exists)
-    # We strip any folder names and look directly in current directory or assets
-    filename = os.path.basename(image_path)
-    possible_paths = [
-        os.path.join(BASE_DIR, "assets", filename),
-        os.path.join(BASE_DIR, filename)
-    ]
-    
-    for path in possible_paths:
-        if os.path.exists(path):
-            st.image(path, width=width)
-            return
-            
-    # 3. Fallback if local file missing
-    st.image("https://placehold.co/400x400/png?text=Image+Missing", width=width)
+    # 2. Determine Source (Web vs Local)
+    if image_path.startswith("http"):
+        final_path = image_path
+    else:
+        # Check local file existence
+        filename = os.path.basename(image_path)
+        possible_paths = [
+            os.path.join(BASE_DIR, "assets", filename),
+            os.path.join(BASE_DIR, filename)
+        ]
+        for path in possible_paths:
+            if os.path.exists(path):
+                final_path = path
+                break
+        
+        # Fallback if local file not found
+        if not final_path:
+            final_path = "https://placehold.co/400x400/png?text=Image+Missing"
+
+    # 3. Render with Correct Width Logic
+    if width is not None:
+        st.image(final_path, width=width)
+    else:
+        # If no width specified, fill the container (avoids 'None' error)
+        st.image(final_path, use_container_width=True)
 
 # --- MAIN APP LOGIC ---
 if 'data' not in st.session_state:
@@ -134,7 +142,7 @@ with st.sidebar:
                 st.rerun()
     else:
         st.success("Admin Mode")
-        # DOWNLOAD BUTTON (Required for Streamlit Cloud persistence)
+        # DOWNLOAD BUTTON
         st.download_button(
             label="📥 Download Updated data.json",
             data=json.dumps(st.session_state.data, indent=4),
@@ -199,9 +207,9 @@ elif selected == "Experience":
                 st.rerun()
                 
     for job in st.session_state.data.get('experience', []):
-        st.subheader(job['role'])
-        st.caption(f"{job['company']} | {job['date']}")
-        st.write(job['description'])
+        st.subheader(job.get('role', 'Role'))
+        st.caption(f"{job.get('company', 'Company')} | {job.get('date', 'Date')}")
+        st.write(job.get('description', ''))
         st.divider()
 
 # --- PROJECTS ---
@@ -223,7 +231,8 @@ elif selected == "Projects":
     for i, p in enumerate(st.session_state.data.get('projects', [])):
         with cols[i%2]:
             with st.container(border=True):
-                render_image(p.get('image', ''), width=None)
+                # FIXED: removed width=None to use default behavior
+                render_image(p.get('image', ''))
                 st.subheader(p.get('title', 'Project'))
                 st.caption(p.get('category', 'General'))
                 st.write(p.get('problem', ''))
@@ -266,7 +275,6 @@ elif selected == "Contact":
             val = item.get('value', '#')
             label = item.get('label', 'Link')
             
-            # Simple Image Tag for Icon
             icon_html = f'<img src="{icon_url}" class="contact-icon-img">' if icon_url else "🔗"
             
             st.markdown(f"""
