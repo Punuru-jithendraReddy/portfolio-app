@@ -13,32 +13,6 @@ ADMIN_PASSWORD = "admin"
 
 st.set_page_config(layout="wide", page_title="Portfolio Admin", page_icon="⚙️")
 
-# --- 1. SAFETY NET DATA ---
-DEFAULT_DATA = {
-    "profile": {
-        "name": "Jithendra Reddy Punuru",
-        "role": "Software Engineer",
-        "summary": "Software Engineer specializing in Power BI and Automation...",
-        "image_url": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/Profile.jpg", 
-        "contact_info": [
-            {
-                "label": "Email",
-                "value": "mailto:jithendrareddypunuru@gmail.com",
-                "icon": "https://img.icons8.com/color/48/gmail-new.png"
-            },
-            {
-                "label": "LinkedIn",
-                "value": "https://www.linkedin.com/in/jithendrareddypunuru/",
-                "icon": "https://img.icons8.com/color/48/linkedin.png"
-            }
-        ]
-    },
-    "experience": [],
-    "projects": [],
-    "skills": {"Power BI": 90, "Python": 85},
-    "metrics": {"dashboards": "8+", "efficiency": "30%", "manual_reduction": "40%"}
-}
-
 # --- CUSTOM CSS ---
 st.markdown("""
 <style>
@@ -56,43 +30,39 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --- HELPERS ---
+# --- HELPER: DATA MANAGER ---
 def load_data():
-    if not os.path.exists(DATA_FILE): return DEFAULT_DATA
+    if not os.path.exists(DATA_FILE): return {}
     try:
         with open(DATA_FILE, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-            if not data: return DEFAULT_DATA
-            return data
-    except: return DEFAULT_DATA
+            return json.load(f)
+    except: return {}
 
 def save_data(data):
     try:
         with open(DATA_FILE, 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=4)
-        st.toast("Saved! Remember to Download JSON to update GitHub.", icon="💾")
+        st.toast("Saved! Download JSON to update GitHub.", icon="💾")
     except Exception as e:
         st.error(f"Save failed: {e}")
 
+# --- HELPER: IMAGE RENDERER ---
 def render_image(image_path, width=None):
-    if not image_path: image_path = DEFAULT_DATA['profile']['image_url']
+    if not image_path: return
     
-    # Logic to handle paths
+    # Clean logic for both URL and Local
     if image_path.startswith("http"):
-        final_path = image_path
+        st.image(image_path, width=width)
     else:
-        # Check local
+        # Check local assets
         filename = os.path.basename(image_path)
         possible_paths = [os.path.join(BASE_DIR, "assets", filename), os.path.join(BASE_DIR, filename)]
-        final_path = "https://placehold.co/400x400/png?text=Image+Missing"
         for path in possible_paths:
             if os.path.exists(path):
-                final_path = path
-                break
-    
-    # Safe Render (Fixes InvalidWidthError)
-    if width: st.image(final_path, width=width)
-    else: st.image(final_path, use_container_width=True)
+                st.image(path, width=width)
+                return
+        # Fallback if missing
+        st.image("https://placehold.co/600x400/png?text=Image+Missing", width=width)
 
 # --- INITIALIZE ---
 if 'data' not in st.session_state: st.session_state.data = load_data()
@@ -132,7 +102,7 @@ if selected == "Home":
         with st.expander("✏️ Edit Profile"):
             n_name = st.text_input("Name", prof.get('name', ''))
             n_role = st.text_input("Role", prof.get('role', ''))
-            n_sum = st.text_area("Summary", prof.get('summary', ''))
+            n_sum = st.text_area("Summary", prof.get('summary', ''), height=150)
             n_img = st.text_input("Image URL", prof.get('image_url', ''))
             
             c1, c2, c3 = st.columns(3)
@@ -170,7 +140,7 @@ elif selected == "Experience":
             r = st.text_input("Role", key="new_r")
             c = st.text_input("Company", key="new_c")
             d = st.text_input("Date", key="new_d")
-            desc = st.text_area("Description", key="new_desc")
+            desc = st.text_area("Description (Use • for bullets)", key="new_desc", height=200)
             if st.button("Save Job"):
                 st.session_state.data.setdefault('experience', []).insert(0, {"role": r, "company": c, "date": d, "description": desc})
                 save_data(st.session_state.data)
@@ -188,7 +158,7 @@ elif selected == "Experience":
                 er = st.text_input("Edit Role", curr_job['role'])
                 ec = st.text_input("Edit Company", curr_job['company'])
                 ed = st.text_input("Edit Date", curr_job['date'])
-                edesc = st.text_area("Edit Description", curr_job['description'])
+                edesc = st.text_area("Edit Description", curr_job['description'], height=200)
                 
                 c1, c2 = st.columns(2)
                 if c1.button("Update Job"):
@@ -218,9 +188,12 @@ elif selected == "Projects":
             pt = st.text_input("Title", key="np_t")
             pc = st.text_input("Category", key="np_c")
             pi = st.text_input("Image URL", key="np_i")
-            pp = st.text_area("Problem", key="np_p")
+            pp = st.text_area("Problem", key="np_p", height=100)
+            ps = st.text_area("Solution", key="np_s", height=100)
+            pimp = st.text_area("Impact", key="np_imp", height=100)
+            
             if st.button("Save Project"):
-                st.session_state.data.setdefault('projects', []).append({"title": pt, "category": pc, "image": pi, "problem": pp})
+                st.session_state.data.setdefault('projects', []).append({"title": pt, "category": pc, "image": pi, "problem": pp, "solution": ps, "impact": pimp})
                 save_data(st.session_state.data)
                 st.rerun()
         
@@ -236,11 +209,13 @@ elif selected == "Projects":
                 ep_t = st.text_input("Edit Title", curr_p.get('title', ''))
                 ep_c = st.text_input("Edit Category", curr_p.get('category', ''))
                 ep_i = st.text_input("Edit Image URL", curr_p.get('image', ''))
-                ep_p = st.text_area("Edit Problem", curr_p.get('problem', ''))
+                ep_p = st.text_area("Edit Problem", curr_p.get('problem', ''), height=100)
+                ep_s = st.text_area("Edit Solution", curr_p.get('solution', ''), height=100)
+                ep_imp = st.text_area("Edit Impact", curr_p.get('impact', ''), height=100)
                 
                 c1, c2 = st.columns(2)
                 if c1.button("Update Project"):
-                    st.session_state.data['projects'][sel_p_idx] = {"title": ep_t, "category": ep_c, "image": ep_i, "problem": ep_p}
+                    st.session_state.data['projects'][sel_p_idx] = {"title": ep_t, "category": ep_c, "image": ep_i, "problem": ep_p, "solution": ep_s, "impact": ep_imp}
                     save_data(st.session_state.data)
                     st.rerun()
                 if c2.button("Delete Project", type="primary"):
@@ -255,13 +230,15 @@ elif selected == "Projects":
                 render_image(p.get('image', ''), width=None)
                 st.subheader(p.get('title', 'Project'))
                 st.caption(p.get('category', 'General'))
-                st.write(p.get('problem', ''))
+                if p.get('problem'): st.info(f"**Problem:** {p['problem']}")
+                if p.get('solution'): st.success(f"**Solution:** {p['solution']}")
+                if p.get('impact'): st.warning(f"**Impact:** {p['impact']}")
 
-# --- SKILLS ---
+# --- SKILLS & CONTACT ---
+# (Standard display logic for Skills and Contact remains the same for brevity)
 elif selected == "Skills":
     st.header("Skills")
     skills = st.session_state.data.get('skills', {})
-    
     c1, c2 = st.columns(2)
     with c1:
         if skills:
@@ -270,48 +247,24 @@ elif selected == "Skills":
     with c2:
         if st.session_state.is_admin:
             with st.form("sk"):
-                n = st.text_input("Skill Name")
-                v = st.slider("Value", 0, 100, 50)
-                if st.form_submit_button("Add / Update Skill"):
+                n = st.text_input("Skill Name"); v = st.slider("Value", 0, 100, 50)
+                if st.form_submit_button("Add/Update"):
                     st.session_state.data.setdefault('skills', {})[n] = v
                     save_data(st.session_state.data)
                     st.rerun()
-            
-            del_sk = st.selectbox("Select to Delete", ["-"] + list(skills.keys()))
-            if del_sk != "-" and st.button("Delete Skill", type="primary"):
+            del_sk = st.selectbox("Delete", ["-"] + list(skills.keys()))
+            if del_sk != "-" and st.button("Delete"):
                 del st.session_state.data['skills'][del_sk]
-                save_data(st.session_state.data)
-                st.rerun()
-                
-        for s, v in skills.items():
-            st.write(f"**{s}**")
-            st.progress(v)
+                save_data(st.session_state.data); st.rerun()
+        for s, v in skills.items(): st.write(f"**{s}**"); st.progress(v)
 
-# --- CONTACT ---
 elif selected == "Contact":
     st.header("Contact")
     prof = st.session_state.data.get('profile', {})
-    
     c1, c2 = st.columns([1, 2])
     with c1: render_image(prof.get('image_url'), width=150)
-    
     with c2:
         for item in prof.get('contact_info', []):
-            icon_url = item.get('icon', '')
-            val = item.get('value', '#')
-            label = item.get('label', 'Link')
-            
-            icon_html = f'<img src="{icon_url}" class="contact-icon-img">' if icon_url else "🔗"
-            
-            st.markdown(f"""
-            <a href="{val}" target="_blank" style="text-decoration:none;">
-                <div class="contact-card">
-                    <div class="contact-icon-box">{icon_html}</div>
-                    <div>
-                        <div style="font-weight:bold; color:#555">{label}</div>
-                        <div style="color:#0077b5">{val}</div>
-                    </div>
-                </div>
-            </a>
-            """, unsafe_allow_html=True)
-
+            icon, val, lbl = item.get('icon', ''), item.get('value', '#'), item.get('label', 'Link')
+            icon_html = f'<img src="{icon}" class="contact-icon-img">' if icon else "🔗"
+            st.markdown(f"""<a href="{val}" target="_blank" style="text-decoration:none;"><div class="contact-card"><div class="contact-icon-box">{icon_html}</div><div><div style="font-weight:bold; color:#555">{lbl}</div><div style="color:#0077b5">{val}</div></div></div></a>""", unsafe_allow_html=True)
