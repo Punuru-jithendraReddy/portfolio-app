@@ -21,14 +21,6 @@ st.markdown("""
     .main { padding-top: 1rem; }
     h1, h2, h3 { font-family: 'Segoe UI', sans-serif; color: #0F172A; }
     
-    /* 0. COLUMN POSITIONING - The Secret Sauce */
-    /* We make the column relative so we can pin the button to its bottom-right */
-    [data-testid="column"] {
-        position: relative !important;
-        display: flex;
-        flex-direction: column;
-    }
-
     /* 1. HERO METRIC CARDS */
     .metric-card {
         background: white; border: 1px solid #E2E8F0; border-radius: 12px;
@@ -72,8 +64,8 @@ st.markdown("""
         height: 100%;
         min-height: 540px; 
         
-        /* Padding at the bottom provides whitespace for the button inside the card */
-        padding-bottom: 60px; 
+        /* IMPORTANT: This bottom padding reserves space for the button */
+        padding-bottom: 70px; 
     }
     .project-card:hover {
         transform: translateY(-5px);
@@ -117,26 +109,32 @@ st.markdown("""
     .p-title { font-size: 1.25rem; font-weight: 800; color: #1E293B; margin-bottom: 10px; }
     .p-detail { font-size: 0.90rem; color: #475569; margin-bottom: 8px; line-height: 1.4; }
 
-    /* 6. BUTTON STYLING: Pin to bottom-right inside the card */
-    [data-testid="column"] .stButton {
-        position: absolute !important;
-        bottom: 20px !important;
-        right: 20px !important;
+    /* 6. BUTTON STYLING: Logic to place inside card */
+    
+    /* Target only buttons inside the nested columns (The Project Grid) */
+    div[data-testid="column"] div[data-testid="column"] .stButton {
+        margin-top: -65px !important; /* Pull button UP into the card padding */
+        float: right !important;      /* Align to right */
+        margin-right: 20px !important;/* Spacing from right edge */
+        position: relative !important;
         z-index: 99 !important;
+        text-align: right !important;
+        width: auto !important;
     }
 
-    [data-testid="column"] .stButton button {
+    /* Style the actual button to look nice */
+    div[data-testid="column"] div[data-testid="column"] .stButton button {
         background-color: #F0F9FF !important; /* Light Blue */
         color: #0284C7 !important; /* Dark Blue Text */
         border: 1px solid #BAE6FD !important; /* Light Blue Border */
-        border-radius: 8px !important;
+        border-radius: 20px !important; /* Pill shape */
         padding: 0.4rem 1.0rem !important;
         font-weight: 600 !important;
         font-size: 0.85rem !important;
         transition: all 0.2s ease !important;
     }
 
-    [data-testid="column"] .stButton button:hover {
+    div[data-testid="column"] div[data-testid="column"] .stButton button:hover {
         background-color: #E0F2FE !important;
         border-color: #0284C7 !important;
         color: #0369A1 !important;
@@ -261,7 +259,8 @@ elif selected == "Projects":
                         </div>
                     </div>
                     """, unsafe_allow_html=True)
-                    # BUTTON WIDGET (Pinned via CSS)
+                    
+                    # BUTTON WIDGET (Positions itself inside the card due to CSS margins)
                     if st.button(f"View Case Study ➡", key=f"btn_{actual_idx}"):
                         st.session_state.selected_project = actual_idx
                         st.rerun()
