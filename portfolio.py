@@ -36,14 +36,18 @@ st.markdown("""
         border-radius: 12px;
         padding: 20px;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        position: relative; /* Needed for absolute category positioning */
+        position: relative; 
         
         display: flex;
         flex-direction: column;
-        height: 100%;
         
-        /* INCREASED BOTTOM PADDING: Creates the gap between text and button */
-        padding-bottom: 110px; 
+        /* ADJUSTMENT: Replaced height:100% with min-height to reduce empty space */
+        height: auto; 
+        min-height: 420px; /* Ensures consistency without forcing huge gaps */
+        
+        /* ADJUSTMENT: Reduced padding-bottom (was 110px) to pull button closer to text */
+        padding-bottom: 80px; 
+        
         transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
     
@@ -67,7 +71,7 @@ st.markdown("""
     /* CATEGORY OVERLAY (Top Left) */
     .p-cat-overlay {
         position: absolute;
-        top: 30px; /* Offset to sit inside the padding */
+        top: 30px; 
         left: 30px;
         background-color: rgba(255, 255, 255, 0.95);
         color: #3B82F6;
@@ -81,27 +85,28 @@ st.markdown("""
         border: 1px solid #e2e8f0;
     }
 
-    /* PROJECT TEXT SPACING (Reduced) */
+    /* PROJECT TEXT */
     .p-title { 
         font-size: 1.2rem; 
         font-weight: 700; 
         color: #1E293B; 
-        margin-bottom: 5px; /* Reduced */
+        margin-bottom: 5px; 
         line-height: 1.2;
     }
     
     .p-detail { 
         font-size: 0.85rem; 
         color: #475569; 
-        margin-bottom: 4px; /* Reduced space after each line */
+        margin-bottom: 4px; 
         line-height: 1.4; 
     }
     .p-label { font-weight: 600; color: #334155; }
 
-    /* 2. BUTTON STYLING (Full Width, Pinned Bottom) */
+    /* 2. BUTTON STYLING */
     div[data-testid="column"] .stButton {
         position: absolute !important;
-        bottom: 25px !important;
+        /* ADJUSTMENT: Moves button up slightly from the absolute bottom edge */
+        bottom: 20px !important; 
         left: 20px !important;
         right: 20px !important;
         width: auto !important; 
@@ -132,7 +137,7 @@ st.markdown("""
         box-shadow: none !important;
     }
 
-    /* 3. EXPERIENCE CARD & BULLET ALIGNMENT */
+    /* 3. EXPERIENCE CARD */
     .timeline-card {
         background: white; border-radius: 12px; padding: 24px;
         margin-bottom: 20px;
@@ -145,9 +150,8 @@ st.markdown("""
         box-shadow: 0 10px 20px rgba(0,0,0,0.1); 
     }
     
-    /* This fixes the bullet point alignment */
     .timeline-desc {
-        white-space: pre-line; /* Respects new lines in JSON */
+        white-space: pre-line;
         color: #475569;
         margin-top: 10px;
         line-height: 1.6;
@@ -266,7 +270,6 @@ elif selected == "Projects":
                     img_src = get_img_src(p.get('image', ''))
                     
                     # 1. CARD HTML
-                    # Note the use of p-cat-overlay for Top-Left positioning
                     st.markdown(f"""
                     <div class="project-card">
                         <div class="p-cat-overlay">{p.get('category')}</div>
@@ -307,7 +310,6 @@ elif selected == "Skills":
 elif selected == "Experience":
     st.title("Experience")
     for job in st.session_state.data.get('experience', []):
-        # Added 'timeline-desc' class to handle bullet point alignment
         st.markdown(f"""
         <div class="timeline-card">
             <b>{job.get("role")}</b> @ {job.get("company")}<br>
