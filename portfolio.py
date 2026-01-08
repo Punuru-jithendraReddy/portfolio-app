@@ -22,11 +22,11 @@ st.markdown("""
     .main { padding-top: 1rem; }
     h1, h2, h3 { font-family: 'Segoe UI', sans-serif; color: #0F172A; }
     
-    /* 0. COLUMN SETUP - FORCE EQUAL HEIGHT */
+    /* 0. COLUMN SETUP */
     [data-testid="column"] {
         display: flex;
         flex-direction: column;
-        height: 100%; /* Ensures the column container fills the row height */
+        height: 100%;
     }
 
     /* 1. PROJECT CARD DESIGN */
@@ -41,9 +41,9 @@ st.markdown("""
         display: flex;
         flex-direction: column;
         
-        /* FORCE EQUAL HEIGHT */
-        flex: 1;       /* Grow to fill the column height */
-        height: 100%;  /* Take up 100% of available space */
+        /* Force equal height */
+        flex: 1;
+        height: 100%; 
         min-height: 450px; 
         
         /* Padding bottom reserves space for button */
@@ -128,9 +128,9 @@ st.markdown("""
     div[data-testid="column"] .stButton {
         position: absolute !important;
         bottom: 20px !important; 
-        right: 20px !important;      /* Pin to right */
-        left: unset !important;      /* Release left pin */
-        width: auto !important;      /* Allow shrink wrap */
+        right: 20px !important;      
+        left: unset !important;      
+        width: auto !important;      
         text-align: right !important;
         z-index: 10 !important;
     }
@@ -146,7 +146,7 @@ st.markdown("""
         padding: 0.5rem 1.0rem !important;
         box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
         transition: all 0.2s ease !important;
-        float: right !important; /* Extra safety to float right */
+        float: right !important; 
     }
 
     div[data-testid="column"] .stButton button:hover {
@@ -202,9 +202,16 @@ if 'is_admin' not in st.session_state: st.session_state.is_admin = False
 # --- SIDEBAR ---
 with st.sidebar:
     prof = st.session_state.data.get('profile', {})
-    st.markdown('<div style="text-align: center; margin-bottom:20px;">', unsafe_allow_html=True)
-    if prof.get('image_url'): render_image(prof.get('image_url'), width=140)
-    st.markdown('</div>', unsafe_allow_html=True)
+    
+    # --- FIXED: CENTERED PROFILE IMAGE USING HTML ---
+    if prof.get('image_url'):
+        img_src = get_img_src(prof.get('image_url'))
+        # Using simple HTML with margin: 0 auto to force centering
+        st.markdown(f"""
+            <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+                <img src="{img_src}" style="width: 140px; border-radius: 10px; object-fit: cover;">
+            </div>
+        """, unsafe_allow_html=True)
     
     selected = option_menu(None, ["Home", "Experience", "Projects", "Skills", "Contact"], 
                            icons=["house", "briefcase", "rocket", "cpu", "envelope"], default_index=0,
