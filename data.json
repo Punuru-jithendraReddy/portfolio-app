@@ -91,7 +91,7 @@
             "problem": "Relying on intuition to assess performance caused leaders to overlook top talent.",
             "solution": "Automated rankings and trend insights to recognize high performers instantly.",
             "impact": "Data-driven performance reviews without manual reporting.",
-            "details": "This gamified dashboard tracks individual sales representative performance against quotas. It features a 'Leaderboard' matrix that updates daily, ranking reps by revenue, new logos, and upsell percentage. Drill-through capabilities allow managers to click on a specific rep and see their specific deal mix, call activity, and win-rate trends over the last 12 months."
+            "details": "This dashboard delivers a holistic view of sales performance and revenue trends across time, regions, products, and ownership. It enables stakeholders to track sales growth, contribution patterns, and performance drivers through interactive comparisons and drill-down analysis.\n\nThe solution highlights the ability to structure complex sales data into meaningful KPIs, enable multi-dimensional analysis, and present insights in a way that supports strategic planning, performance monitoring, and informed business decisions."
         },
         {
             "title": "Supply Chain Intelligence",
@@ -165,5 +165,3 @@
         }
     ]
 }
-
-
