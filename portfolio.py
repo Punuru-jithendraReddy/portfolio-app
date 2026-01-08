@@ -62,15 +62,15 @@ st.markdown("""
         margin-bottom: 0px; 
         overflow: hidden;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
-        position: relative; /* Essential for absolute positioning of category */
+        position: relative; 
         
         /* Layout Strategy */
         display: flex;
         flex-direction: column;
         height: 100%;
-        min-height: 540px; /* Increased height to accommodate bottom space */
+        min-height: 520px; 
         
-        /* IMPORTANT: Extra padding at bottom to hold the button inside */
+        /* CRITICAL: Create whitespace at the bottom for the button to inhabit */
         padding-bottom: 85px; 
     }
     .project-card:hover {
@@ -138,22 +138,23 @@ st.markdown("""
     .contact-label { font-size: 1.1rem; font-weight: 700; color: #1E293B; margin-bottom: 5px; }
     .contact-val { font-size: 0.9rem; color: #3B82F6; }
 
-    /* 6. BUTTON STYLING (Fixed Positioning inside Card) */
+    /* 6. BUTTON STYLING (THE FIX) */
     
-    /* Target buttons inside columns. 
-       Use !important to ensure we override default Streamlit layout spacing. */
+    /* Target the container wrapping the button inside columns */
     [data-testid="column"] .stButton {
-        margin-top: -85px !important; /* Pulls button UP into the card's padding */
-        margin-right: 15px !important; /* Space from right edge */
-        padding-bottom: 10px !important;
+        margin-top: -95px !important; /* Pull button UP into the white space created by padding-bottom */
+        width: 100% !important;
         display: flex !important;
-        justify-content: flex-end !important; /* Force Right Alignment */
+        justify-content: flex-end !important; /* Force Alignment to RIGHT */
         position: relative !important;
-        z-index: 20 !important; /* Ensure it's on top */
+        z-index: 99 !important; /* Ensure it sits on top of the card background */
+        pointer-events: none !important; /* Allow clicks to pass through wrapper... */
     }
 
-    /* Style the actual button element */
+    /* Target the button itself to re-enable clicks and style it */
     [data-testid="column"] .stButton button {
+        pointer-events: auto !important; /* ...but catch clicks on the button */
+        margin-right: 20px !important; /* Right margin spacing inside the card */
         background-color: #F0F9FF !important; /* Light Blue Background */
         color: #0284C7 !important; /* Dark Blue Text */
         border: 1px solid #BAE6FD !important; /* Light Blue Border */
@@ -424,7 +425,7 @@ elif selected == "Projects":
                     """, unsafe_allow_html=True)
                     
                     # 2. Add the "View Case Study" Button
-                    # The CSS 'margin-top: -85px' pulls this button UP into the card
+                    # The CSS 'margin-top: -95px' pulls this button UP into the card
                     if st.button(f"View Case Study ➡", key=f"btn_{actual_idx}"):
                         st.session_state.selected_project = actual_idx
                         st.rerun()
