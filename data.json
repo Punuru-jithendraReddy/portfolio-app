@@ -55,90 +55,112 @@
         {
             "title": "Executive Command Center",
             "category": "Finance",
-            "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800",
+            "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80",
+            "dashboard_image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1920&q=80",
             "problem": "Executives lacked a clear, real-time view of business performance across regions.",
             "solution": "Centralized 'Single Source of Truth' hub for Sales, Profit Margin, and Deal Size.",
-            "impact": "25% improvement in financial visibility."
+            "impact": "25% improvement in financial visibility.",
+            "details": "This Executive Command Center serves as the primary daily touchpoint for C-suite leadership. Integrating data from Oracle ERP and Salesforce, the dashboard features a dynamic 'War Room' view that allows leaders to filter by region, product line, and fiscal quarter instantly. We utilized complex DAX measures to calculate Year-over-Year (YoY) growth and EBITDA margins on the fly. The dashboard includes a decomposition tree to analyze the root causes of margin slippage."
         },
         {
             "title": "Financial Budget Tracking",
             "category": "Finance",
-            "image": "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=800",
+            "image": "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=800&q=80",
+            "dashboard_image": "https://images.unsplash.com/photo-1543286386-2e659306cd6c?auto=format&fit=crop&w=1920&q=80",
             "problem": "Lack of clear visibility into budget variances made it difficult to track overspending.",
             "solution": "Real-time comparison of Actuals vs Budget vs Forecast with drill-down capabilities.",
-            "impact": "Enabled timely corrective actions on budget deviations."
+            "impact": "Enabled timely corrective actions on budget deviations.",
+            "details": "This report replaced a manual monthly Excel process that took 4 days to compile. It connects directly to the General Ledger and provides a daily refresh of Actuals vs. Budget. Key features include conditional formatting to highlight cost centers exceeding 90% of their budget and a 'What-If' parameter allowing finance managers to adjust forecast assumptions and see the potential impact on year-end landing."
         },
         {
             "title": "Sales Forecasting & Pipeline",
             "category": "Sales",
-            "image": "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&w=800",
+            "image": "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&w=800&q=80",
+            "dashboard_image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1920&q=80",
             "problem": "Unreliable forecasts and unclear pipeline visibility made resource planning hard.",
             "solution": "Bridges past results with current pipeline data to deliver accurate revenue forecasts.",
-            "impact": "Improved reliability of revenue projections for investors."
+            "impact": "Improved reliability of revenue projections for investors.",
+            "details": "Designed to support the CRO, this dashboard blends historical invoice data with live CRM opportunity data. We implemented a weighted forecast logic (Deal Value * Probability) to give a realistic revenue projection. The visualization includes a funnel chart to identify where deals are dropping off and a trend line comparing this quarter's pipeline velocity against the previous four quarters."
         },
         {
             "title": "Performance Leaderboard",
             "category": "Sales",
-            "image": "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800",
+            "image": "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&q=80",
+            "dashboard_image": "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1920&q=80",
             "problem": "Relying on intuition to assess performance caused leaders to overlook top talent.",
             "solution": "Automated rankings and trend insights to recognize high performers instantly.",
-            "impact": "Data-driven performance reviews without manual reporting."
+            "impact": "Data-driven performance reviews without manual reporting.",
+            "details": "This gamified dashboard tracks individual sales representative performance against quotas. It features a 'Leaderboard' matrix that updates daily, ranking reps by revenue, new logos, and upsell percentage. Drill-through capabilities allow managers to click on a specific rep and see their specific deal mix, call activity, and win-rate trends over the last 12 months."
         },
         {
-            "title": "Supply Chain Intelligence (PO)",
+            "title": "Supply Chain Intelligence",
             "category": "Logistics",
-            "image": "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800",
+            "image": "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800&q=80",
+            "dashboard_image": "https://images.unsplash.com/photo-1494412574643-35d324688182?auto=format&fit=crop&w=1920&q=80",
             "problem": "Frequent PO changes raised costs and hid supplier inefficiencies.",
             "solution": "Root Cause Analysis dashboard categorizing reasons for order revisions.",
-            "impact": "Identified bottlenecks and improved supplier performance."
+            "impact": "Identified bottlenecks and improved supplier performance.",
+            "details": "Focused on procurement efficiency, this tool analyzes Purchase Order (PO) lifecycle data. It highlights 'PO Churn'—orders that are modified more than 3 times. By visualizing the 'Reason for Change' (e.g., Vendor Out of Stock, Price Change, Internal Request), the procurement team was able to renegotiate terms with vendors causing 80% of the disruptions."
         },
         {
             "title": "Live Operations Monitor",
             "category": "Logistics",
-            "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800",
+            "image": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80",
+            "dashboard_image": "https://videos.pexels.com/video-files/3129671/3129671-uhd_2560_1440_30fps.mp4",
             "problem": "Delays and workflow issues were often noticed only after affecting customers.",
             "solution": "Real-time tracking of orders and pipeline stages with live metric tickers.",
-            "impact": "Proactive removal of blockers before escalation."
+            "impact": "Proactive removal of blockers before escalation.",
+            "details": "This dashboard is displayed on large monitors in the operations floor. It uses DirectQuery to fetch live data, showing a ticking count of orders in 'Pending', 'Processing', and 'Shipped' states. Conditional formatting turns cards red if an order sits in a specific stage for longer than 4 hours (SLA breach warning), alerting the floor manager immediately. (Note: The video above demonstrates the real-time ticker concept)."
         },
         {
             "title": "Workflow Process Monitoring",
             "category": "Logistics",
-            "image": "https://images.unsplash.com/photo-1507925921958-8a62f3d1a50d?auto=format&fit=crop&w=800",
+            "image": "https://images.unsplash.com/photo-1507925921958-8a62f3d1a50d?auto=format&fit=crop&w=800&q=80",
+            "dashboard_image": "https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=1920&q=80",
             "problem": "Inefficiencies in key multi-step processes often went unnoticed.",
             "solution": "Granular visibility into every stage of a workflow, highlighting stuck items.",
-            "impact": "Instant identification of process bottlenecks."
+            "impact": "Instant identification of process bottlenecks.",
+            "details": "By connecting to the Power Automate run history and Logic Apps logs, this dashboard visualizes the health of automated business processes. It tracks success/failure rates of workflows and calculates the average duration of each step. This visibility helped identify that the 'Approval' step was the major bottleneck, leading to a process redesign."
         },
         {
             "title": "Advanced Benchmarking",
             "category": "Sales",
-            "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800",
+            "image": "https://images.unsplash.com/photo-1535957998253-26ae1ef29506?auto=format&fit=crop&w=800&q=80",
+            "dashboard_image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1920&q=80",
             "problem": "Measuring performance only in the present hides improvement or decline.",
             "solution": "Compares present activity to historical benchmarks (Last 3 Months/Year).",
-            "impact": "Reveals true performance direction (positive/negative trends)."
+            "impact": "Reveals true performance direction (positive/negative trends).",
+            "details": "This analytical tool moves beyond simple 'Month-to-Date' reporting. It uses time-intelligence functions to create rolling averages (3-month and 12-month) and compares current performance against those benchmarks. It answers the question: 'Are we doing better than our usual average?' rather than just 'Did we hit the target?'"
         },
         {
             "title": "Flat File Comparison Tool",
             "category": "Tools",
-            "image": "https://images.unsplash.com/photo-1587620962725-abab7fe55159?auto=format&fit=crop&w=800",
+            "image": "https://images.unsplash.com/photo-1587620962725-abab7fe55159?auto=format&fit=crop&w=800&q=80",
+            "dashboard_image": "https://images.unsplash.com/photo-1555099962-4199c345e5dd?auto=format&fit=crop&w=1920&q=80",
             "problem": "Manual validation of large Excel/CSV files is error-prone.",
             "solution": "Browser-based Python Streamlit tool for comparing Source vs Target files.",
-            "impact": "Supports 100k+ rows with auto-normalization."
+            "impact": "Supports 100k+ rows with auto-normalization.",
+            "details": "A custom Python tool built with Pandas and Streamlit. Users upload two datasets (e.g., a migration Source file and a Destination file). The tool automatically normalizes headers, identifies added/removed rows, and highlights specific cell-value mismatches. It exports a detailed 'Delta Report' excel file for the QA team."
         },
         {
             "title": "AI Invoice Automation",
             "category": "Automation",
-            "image": "https://images.unsplash.com/photo-1618044733300-9472054094ee?auto=format&fit=crop&w=800",
+            "image": "https://images.unsplash.com/photo-1618044733300-9472054094ee?auto=format&fit=crop&w=800&q=80",
+            "dashboard_image": "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=1920&q=80",
             "problem": "Manual extraction of chemical specs from PDFs was time-consuming.",
             "solution": "Automated flow using Copilot Studio, AI Builder, and Power Automate.",
-            "impact": "50% reduction in manual data entry."
+            "impact": "50% reduction in manual data entry.",
+            "details": "This project utilized Microsoft's AI Builder to train a custom form-processing model. It automatically extracts key fields (Invoice Number, Date, Line Items, Total) from incoming PDF emails. The data is then validated against the ERP system via an API call, and if it matches, the invoice is posted automatically without human intervention."
         },
         {
             "title": "Recruitment Management App",
             "category": "Apps",
-            "image": "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=800",
+            "image": "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=800&q=80",
+            "dashboard_image": "https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=1920&q=80",
             "problem": "Hiring process was lost in disjointed email chains.",
             "solution": "Custom Power App with automated approval workflows.",
-            "impact": "40% reduction in HR coordination effort."
+            "impact": "40% reduction in HR coordination effort.",
+            "details": "A Canvas Power App designed for the HR team. It provides a mobile-friendly interface for hiring managers to submit requisitions. Once submitted, an approval flow triggers in Microsoft Teams for the Department Head. The app tracks the candidate's journey from 'Applied' to 'Offer Sent' and generates a weekly status report for HR leadership."
         }
     ]
 }
