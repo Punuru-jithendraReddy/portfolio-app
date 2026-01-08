@@ -291,33 +291,33 @@ elif selected == "Projects":
                 with cols[j]:
                     img_src = get_img_src(p.get('image', ''))
                     
-                    # 1. CARD HTML
-                    # Using Flexbox Rows (.p-row) to align text correctly if it wraps
-                    st.markdown(f"""
-                    <div class="project-card">
-                        <div class="p-cat-overlay">{p.get('category')}</div>
-                        <div class="p-img-container">
-                            <img src="{img_src}" class="p-img">
-                        </div>
-                        <div class="p-title">{p.get('title')}</div>
-                        
-                        <div class="p-row">
-                            <div class="p-label">🚨 Problem:</div>
-                            <div class="p-val">{p.get('problem')}</div>
-                        </div>
-                        
-                        <div class="p-row">
-                            <div class="p-label">💡 Solution:</div>
-                            <div class="p-val">{p.get('solution')}</div>
-                        </div>
-                        
-                        <div class="p-row">
-                            <div class="p-label">🚀 Impact:</div>
-                            <div class="p-val">{p.get('impact')}</div>
-                        </div>
-
-                    </div>
-                    """, unsafe_allow_html=True)
+                    # 1. CARD HTML - FIXED INDENTATION
+                    # We remove indentation here to prevent Markdown from treating it as a code block
+                    html_content = f"""
+<div class="project-card">
+    <div class="p-cat-overlay">{p.get('category')}</div>
+    <div class="p-img-container">
+        <img src="{img_src}" class="p-img">
+    </div>
+    <div class="p-title">{p.get('title')}</div>
+    
+    <div class="p-row">
+        <div class="p-label">🚨 Problem:</div>
+        <div class="p-val">{p.get('problem')}</div>
+    </div>
+    
+    <div class="p-row">
+        <div class="p-label">💡 Solution:</div>
+        <div class="p-val">{p.get('solution')}</div>
+    </div>
+    
+    <div class="p-row">
+        <div class="p-label">🚀 Impact:</div>
+        <div class="p-val">{p.get('impact')}</div>
+    </div>
+</div>
+"""
+                    st.markdown(html_content, unsafe_allow_html=True)
                     
                     # 2. BUTTON (Full Width)
                     if st.button("More Information", key=f"btn_{actual_idx}"):
