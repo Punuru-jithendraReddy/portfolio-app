@@ -21,8 +21,7 @@ st.markdown("""
     .main { padding-top: 1rem; }
     h1, h2, h3 { font-family: 'Segoe UI', sans-serif; color: #0F172A; }
     
-    /* 0. COLUMN SETUP */
-    /* This allows absolute positioning of the button inside the column */
+    /* 0. COLUMN SETUP - CRITICAL FOR POSITIONING */
     [data-testid="column"] {
         position: relative !important;
         display: flex;
@@ -30,7 +29,31 @@ st.markdown("""
         height: 100%;
     }
 
-    /* 1. PROJECT CARD */
+    /* 1. ANIMATIONS & CARDS FOR OTHER PAGES (Home/Experience/Skills) */
+    .metric-card {
+        background: white; border: 1px solid #E2E8F0; border-radius: 12px;
+        padding: 20px; text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease; /* Animation restored */
+    }
+    .metric-card:hover { 
+        transform: translateY(-5px); 
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); 
+        border-color: #3B82F6; 
+    }
+    
+    .timeline-card {
+        background: white; border-radius: 12px; padding: 24px;
+        margin-bottom: 20px;
+        border-left: 6px solid #3B82F6;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease; /* Animation restored */
+    }
+    .timeline-card:hover { 
+        transform: translateX(8px); 
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1); 
+    }
+
+    /* 2. PROJECT CARD DESIGN */
     .project-card {
         background-color: #ffffff;
         border: 1px solid #E2E8F0;
@@ -42,8 +65,8 @@ st.markdown("""
         flex-direction: column;
         height: 100%;
         
-        /* Space for the bottom button */
-        padding-bottom: 80px; 
+        /* INCREASED SPACE: More bottom padding so text doesn't hit button */
+        padding-bottom: 100px; 
         transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
     
@@ -53,7 +76,7 @@ st.markdown("""
         border-color: #3B82F6;
     }
 
-    /* CARD IMAGES */
+    /* PROJECT IMAGES */
     .p-img-container { 
         width: 100%; 
         height: 180px; 
@@ -64,7 +87,7 @@ st.markdown("""
     }
     .p-img { width: 100%; height: 100%; object-fit: cover; }
     
-    /* TEXT STYLES */
+    /* PROJECT TEXT */
     .p-title { 
         font-size: 1.2rem; 
         font-weight: 700; 
@@ -72,50 +95,39 @@ st.markdown("""
         margin-bottom: 8px; 
         line-height: 1.3;
     }
-    
     .p-cat {
-        font-size: 0.75rem;
-        font-weight: 700;
-        color: #3B82F6;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 10px;
+        font-size: 0.75rem; font-weight: 700; color: #3B82F6;
+        text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;
     }
-
     .p-detail { 
-        font-size: 0.85rem; 
-        color: #475569; 
-        margin-bottom: 6px; 
-        line-height: 1.5; 
+        font-size: 0.85rem; color: #475569; margin-bottom: 6px; line-height: 1.5; 
     }
     .p-label { font-weight: 600; color: #334155; }
 
-    /* 2. BUTTON POSITIONING & STYLING (Full Width Fix) */
+    /* 3. BUTTON STYLING - FULL WIDTH FIX */
     
-    /* Target the container of the button inside columns */
+    /* The Container: Stretches from left:20px to right:20px */
     div[data-testid="column"] .stButton {
         position: absolute !important;
-        bottom: 20px !important;
-        left: 20px !important;
-        /* Calculate width: 100% of column minus 20px left padding and 20px right padding */
-        width: calc(100% - 40px) !important; 
+        bottom: 25px !important;   /* Pinned to bottom */
+        left: 20px !important;     /* Match card padding */
+        right: 20px !important;    /* Match card padding */
+        width: auto !important;    /* Auto width allows left/right to dictate size */
         z-index: 10 !important;
     }
 
-    /* Style the actual button (Rectangle) */
+    /* The Button Itself: Fills the container */
     div[data-testid="column"] .stButton button {
-        background: #EFF6FF !important; /* Light blue bg */
-        color: #2563EB !important;      /* Blue text */
+        background: #EFF6FF !important;
+        color: #2563EB !important;
         border: 1px solid #DBEAFE !important;
         border-radius: 8px !important;
-        width: 100% !important;         /* Force button to fill the container calculated above */
-        height: auto !important;
+        
+        width: 100% !important; /* Force Full Width */
+        
         font-size: 1rem !important;
         font-weight: 600 !important;
         padding: 0.6rem 1rem !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
         box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
         transition: all 0.2s ease !important;
     }
@@ -127,20 +139,10 @@ st.markdown("""
         box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2) !important;
     }
     
-    div[data-testid="column"] .stButton button p {
-        font-size: 1rem !important;
-        font-weight: 600 !important;
-    }
-
+    /* Hide Focus Outline */
     div[data-testid="column"] .stButton button:focus {
         outline: none !important;
         box-shadow: none !important;
-    }
-    
-    /* OTHER CARDS */
-    .metric-card, .timeline-card {
-        background: white; border: 1px solid #E2E8F0; border-radius: 12px;
-        padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
 
 </style>
@@ -261,7 +263,7 @@ elif selected == "Projects":
                     </div>
                     """, unsafe_allow_html=True)
                     
-                    # 2. BUTTON (FULL WIDTH FIX)
+                    # 2. BUTTON (Positions Full-Width Bottom via CSS)
                     if st.button("More Information", key=f"btn_{actual_idx}"):
                         st.session_state.selected_project = actual_idx
                         st.rerun()
@@ -288,7 +290,7 @@ elif selected == "Skills":
 elif selected == "Experience":
     st.title("Experience")
     for job in st.session_state.data.get('experience', []):
-        st.markdown(f'<div class="timeline-card" style="border-left: 6px solid #3B82F6;"><b>{job.get("role")}</b> @ {job.get("company")}<br><small>{job.get("date")}</small><p>{job.get("description")}</p></div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="timeline-card"><b>{job.get("role")}</b> @ {job.get("company")}<br><small>{job.get("date")}</small><p>{job.get("description")}</p></div>', unsafe_allow_html=True)
 
 # --- CONTACT ---
 elif selected == "Contact":
