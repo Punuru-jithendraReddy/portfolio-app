@@ -29,7 +29,7 @@ st.markdown("""
         height: 100%;
     }
 
-    /* 1. PROJECT CARD DESIGN (GRID VIEW) */
+    /* 1. PROJECT CARD DESIGN */
     .project-card {
         background-color: #ffffff;
         border: 1px solid #E2E8F0;
@@ -41,7 +41,6 @@ st.markdown("""
         display: flex;
         flex-direction: column;
         
-        /* Force equal height */
         flex: 1;
         height: 100%; 
         min-height: 450px; 
@@ -87,11 +86,11 @@ st.markdown("""
         border: 1px solid #e2e8f0;
     }
 
-    /* PROJECT TEXT */
+    /* PROJECT TEXT - IMPROVED CONTRAST */
     .p-title { 
         font-size: 1.2rem; 
         font-weight: 700; 
-        color: #1E293B; 
+        color: #0F172A; /* Darker Navy */
         margin-bottom: 15px; 
         line-height: 1.3;
         flex-grow: 0; 
@@ -111,17 +110,17 @@ st.markdown("""
         min-width: 85px;    
         flex-shrink: 0;     
         font-weight: 700;
-        color: #334155;
+        color: #1E293B; /* Darker Slate */
         font-size: 0.85rem;
     }
     
     .p-val {
         font-size: 0.85rem;
-        color: #475569;
+        color: #334155; /* Darker text for better readability */
         line-height: 1.5;
     }
 
-    /* 2. BUTTON STYLING (RIGHT ALIGNED) */
+    /* 2. BUTTON STYLING */
     div[data-testid="column"] .stButton {
         position: absolute !important;
         bottom: 20px !important; 
@@ -158,43 +157,52 @@ st.markdown("""
         box-shadow: none !important;
     }
 
-    /* 3. DETAILED VIEW BOXES (EQUAL HEIGHT) */
+    /* 3. DETAILED VIEW BOXES (DARKER TEXT FOR CONTRAST) */
     .detail-row {
         display: flex;
         flex-direction: row;
         gap: 20px;
         width: 100%;
         margin-bottom: 20px;
-        flex-wrap: wrap; /* Wraps on mobile */
+        flex-wrap: wrap; 
     }
     
     .detail-box {
-        flex: 1; /* This forces equal width */
+        flex: 1; 
         display: flex;
         flex-direction: column;
         padding: 20px;
         border-radius: 10px;
         min-width: 200px;
-        /* Flex parent aligns items stretch by default, making heights equal */
     }
 
     .box-title {
-        font-weight: 700;
+        font-weight: 800;
         margin-bottom: 8px;
         display: flex;
         align-items: center;
         gap: 8px;
+        font-size: 1rem;
     }
 
     .box-content {
         font-size: 0.95rem;
-        line-height: 1.5;
+        line-height: 1.6;
+        font-weight: 500;
     }
 
-    /* Colors for Detailed View */
-    .d-blue { background-color: #EFF6FF; border: 1px solid #DBEAFE; color: #1E3A8A; }
-    .d-green { background-color: #F0FDF4; border: 1px solid #DCFCE7; color: #14532D; }
-    .d-yellow { background-color: #FEFCE8; border: 1px solid #FEF9C3; color: #713F12; }
+    /* Darkened text colors for better contrast */
+    .d-blue { background-color: #EFF6FF; border: 1px solid #DBEAFE; color: #172554; } /* Dark Navy on Light Blue */
+    .d-green { background-color: #F0FDF4; border: 1px solid #DCFCE7; color: #14532D; } /* Dark Green on Light Green */
+    .d-yellow { background-color: #FEFCE8; border: 1px solid #FEF9C3; color: #78350F; } /* Dark Brown on Light Yellow */
+
+    /* 4. PROGRESS BAR COLOR FIX */
+    progress {
+        accent-color: #3B82F6; /* For Chrome/Edge/Safari */
+    }
+    /* Webkit fallback */
+    progress::-webkit-progress-value { background-color: #3B82F6 !important; }
+    progress::-moz-progress-bar { background-color: #3B82F6 !important; }
 
     /* OTHER CARDS */
     .timeline-card, .metric-card {
@@ -238,7 +246,6 @@ if 'is_admin' not in st.session_state: st.session_state.is_admin = False
 with st.sidebar:
     prof = st.session_state.data.get('profile', {})
     
-    # --- CENTERED PROFILE IMAGE ---
     if prof.get('image_url'):
         img_src = get_img_src(prof.get('image_url'))
         st.markdown(f"""
@@ -301,8 +308,7 @@ elif selected == "Projects":
         st.write(p.get('details', 'Description coming soon.'))
         st.markdown("---")
         
-        # --- FIXED DETAILED VIEW (EQUAL HEIGHT BOXES) ---
-        # Using Flexbox layout to ensure all 3 boxes stretch to the same height
+        # --- DETAILED VIEW BOXES (DARKER TEXT) ---
         html_details = textwrap.dedent(f"""
             <div class="detail-row">
                 <div class="detail-box d-blue">
@@ -331,7 +337,7 @@ elif selected == "Projects":
                 with cols[j]:
                     img_src = get_img_src(p.get('image', ''))
                     
-                    # --- HTML CARD (GRID VIEW) ---
+                    # --- PROJECT CARD (GRID VIEW) ---
                     html_content = textwrap.dedent(f"""
                         <div class="project-card">
                             <div class="p-cat-overlay">{p.get('category')}</div>
@@ -346,7 +352,6 @@ elif selected == "Projects":
                     """)
                     st.markdown(html_content, unsafe_allow_html=True)
                     
-                    # BUTTON
                     if st.button("More Information ➜", key=f"btn_{actual_idx}"):
                         st.session_state.selected_project = actual_idx
                         st.rerun()
@@ -387,7 +392,7 @@ elif selected == "Skills":
             )
             st.plotly_chart(fig, use_container_width=True)
 
-    # PROFICIENCY BARS
+    # PROFICIENCY BARS (BLUE THEMED)
     st.markdown("### Proficiency")
     s_cols = st.columns(4)
     skill_items = list(skills.items())
