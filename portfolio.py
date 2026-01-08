@@ -43,7 +43,7 @@ st.markdown("""
         height: 100%;
         
         /* Space for the bottom button */
-        padding-bottom: 70px; 
+        padding-bottom: 80px; 
         transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
     
@@ -90,15 +90,15 @@ st.markdown("""
     }
     .p-label { font-weight: 600; color: #334155; }
 
-    /* 2. BUTTON POSITIONING & STYLING (Full Width Bottom) */
+    /* 2. BUTTON POSITIONING & STYLING (Full Width Fix) */
     
     /* Target the container of the button inside columns */
     div[data-testid="column"] .stButton {
         position: absolute !important;
-        bottom: 20px !important;   /* Distance from bottom */
-        left: 20px !important;     /* Anchor to left padding */
-        right: 20px !important;    /* Anchor to right padding */
-        width: auto !important;    /* Auto width lets left/right anchors define width */
+        bottom: 20px !important;
+        left: 20px !important;
+        /* Calculate width: 100% of column minus 20px left padding and 20px right padding */
+        width: calc(100% - 40px) !important; 
         z-index: 10 !important;
     }
 
@@ -107,12 +107,12 @@ st.markdown("""
         background: #EFF6FF !important; /* Light blue bg */
         color: #2563EB !important;      /* Blue text */
         border: 1px solid #DBEAFE !important;
-        border-radius: 8px !important;  /* Rounded rectangle */
-        width: 100% !important;         /* Fill container */
+        border-radius: 8px !important;
+        width: 100% !important;         /* Force button to fill the container calculated above */
         height: auto !important;
         font-size: 1rem !important;
         font-weight: 600 !important;
-        padding: 0.6rem 1rem !important; /* Standard padding */
+        padding: 0.6rem 1rem !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
@@ -123,11 +123,15 @@ st.markdown("""
     div[data-testid="column"] .stButton button:hover {
         background: #2563EB !important;
         color: white !important;
-        transform: translateY(-2px) !important; /* Slight lift */
+        transform: translateY(-2px) !important; 
         box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2) !important;
     }
     
-    /* Hide focus outline */
+    div[data-testid="column"] .stButton button p {
+        font-size: 1rem !important;
+        font-weight: 600 !important;
+    }
+
     div[data-testid="column"] .stButton button:focus {
         outline: none !important;
         box-shadow: none !important;
@@ -244,7 +248,6 @@ elif selected == "Projects":
                     img_src = get_img_src(p.get('image', ''))
                     
                     # 1. CARD HTML
-                    # Note: padding-bottom in CSS handles the space for the button
                     st.markdown(f"""
                     <div class="project-card">
                         <div class="p-img-container">
@@ -258,8 +261,7 @@ elif selected == "Projects":
                     </div>
                     """, unsafe_allow_html=True)
                     
-                    # 2. BUTTON (Positions Full-Width Bottom via CSS)
-                    # Changed text to "More Information"
+                    # 2. BUTTON (FULL WIDTH FIX)
                     if st.button("More Information", key=f"btn_{actual_idx}"):
                         st.session_state.selected_project = actual_idx
                         st.rerun()
