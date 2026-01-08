@@ -68,9 +68,10 @@ st.markdown("""
         display: flex;
         flex-direction: column;
         height: 100%;
-        min-height: 520px; /* Consistent Height */
+        min-height: 540px; /* Increased height to accommodate bottom space */
+        
         /* IMPORTANT: Extra padding at bottom to hold the button inside */
-        padding-bottom: 80px; 
+        padding-bottom: 85px; 
     }
     .project-card:hover {
         transform: translateY(-5px);
@@ -93,17 +94,17 @@ st.markdown("""
         flex-direction: column; 
     }
     
-    /* CATEGORY OVERLAY: Floating on top of the image */
+    /* CATEGORY OVERLAY: Floating on top of the image (Top-Left) */
     .p-cat-overlay { 
         position: absolute;
-        top: 12px;
-        left: 12px;
+        top: 15px;
+        left: 15px;
         z-index: 10;
         background-color: rgba(255, 255, 255, 0.95);
         color: #3B82F6;
         padding: 5px 12px;
         border-radius: 20px;
-        font-size: 0.7rem; 
+        font-size: 0.75rem; 
         font-weight: 800; 
         text-transform: uppercase; 
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -137,16 +138,18 @@ st.markdown("""
     .contact-label { font-size: 1.1rem; font-weight: 700; color: #1E293B; margin-bottom: 5px; }
     .contact-val { font-size: 0.9rem; color: #3B82F6; }
 
-    /* 6. BUTTON STYLING (Fixed Positioning) */
+    /* 6. BUTTON STYLING (Fixed Positioning inside Card) */
     
-    /* Target buttons specifically inside the columns layout */
+    /* Target buttons inside columns. 
+       Use !important to ensure we override default Streamlit layout spacing. */
     [data-testid="column"] .stButton {
-        margin-top: -75px; /* AGGRESSIVE NEGATIVE MARGIN to pull it inside */
-        margin-right: 15px;
-        display: flex;
-        justify-content: flex-end; /* Align right */
-        position: relative;
-        z-index: 99;
+        margin-top: -85px !important; /* Pulls button UP into the card's padding */
+        margin-right: 15px !important; /* Space from right edge */
+        padding-bottom: 10px !important;
+        display: flex !important;
+        justify-content: flex-end !important; /* Force Right Alignment */
+        position: relative !important;
+        z-index: 20 !important; /* Ensure it's on top */
     }
 
     /* Style the actual button element */
@@ -409,7 +412,7 @@ elif selected == "Projects":
                     # MODIFIED: Added p-cat-overlay ABOVE image
                     st.markdown(f"""
                     <div class="project-card">
-                        <div class="p-cat-overlay">📂 {p.get('category')}</div>
+                        <div class="p-cat-overlay">{p.get('category')}</div>
                         <div class="p-img-container">
                             <img src="{img_src}" class="p-img">
                         </div>
@@ -421,7 +424,7 @@ elif selected == "Projects":
                     """, unsafe_allow_html=True)
                     
                     # 2. Add the "View Case Study" Button
-                    # The CSS 'margin-top: -75px' pulls this button UP into the card
+                    # The CSS 'margin-top: -85px' pulls this button UP into the card
                     if st.button(f"View Case Study ➡", key=f"btn_{actual_idx}"):
                         st.session_state.selected_project = actual_idx
                         st.rerun()
