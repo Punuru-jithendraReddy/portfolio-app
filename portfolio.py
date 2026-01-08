@@ -17,128 +17,134 @@ st.set_page_config(layout="wide", page_title="Portfolio", page_icon="✨")
 # --- CUSTOM CSS ---
 st.markdown("""
 <style>
-    /* GLOBAL */
+    /* GLOBAL FONTS & SETTINGS */
     .main { padding-top: 1rem; }
     h1, h2, h3 { font-family: 'Segoe UI', sans-serif; color: #0F172A; }
     
-    /* 0. COLUMN POSITIONING - CRITICAL FOR CLICKABLE CARDS */
-    /* This makes the column the "anchor" for the invisible button */
+    /* 0. COLUMN CONTAINER SETUP */
+    /* This allows us to pin the button to the bottom-right of the column */
     [data-testid="column"] {
         position: relative !important;
+        background-color: transparent !important;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
     }
 
-    /* 1. HERO METRIC CARDS */
-    .metric-card {
-        background: white; border: 1px solid #E2E8F0; border-radius: 12px;
-        padding: 20px; text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .metric-card:hover { 
-        transform: translateY(-5px); 
-        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); 
-        border-color: #3B82F6; 
-    }
-    .metric-value { font-size: 1.8rem; font-weight: 800; color: #3B82F6; }
-    .metric-label { font-size: 0.85rem; font-weight: 600; color: #64748B; text-transform: uppercase; }
-
-    /* 2. TIMELINE CARDS */
-    .timeline-card {
-        background: white; border-radius: 12px; padding: 24px;
-        margin-bottom: 20px;
-        border-left: 6px solid #3B82F6;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    /* 3. PROJECT CARDS */
+    /* 1. PROJECT CARD DESIGN (The White Box) */
     .project-card {
         background-color: #ffffff;
-        border: 1px solid #e2e8f0;
+        border: 1px solid #E2E8F0;
+        border-top: 4px solid #3B82F6; /* Blue Accent Top */
         border-radius: 12px;
-        padding: 0;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        margin-bottom: 0px; 
-        overflow: hidden;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        padding: 20px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         
         display: flex;
         flex-direction: column;
         height: 100%;
-        min-height: 500px; 
+        min-height: 520px; /* Ensure cards are same height */
+        
+        /* Important: Padding at bottom to make room for the button */
+        padding-bottom: 70px; 
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
     
-    /* HOVER EFFECT: When hovering the COLUMN (which includes the invisible button), animate the card */
-    [data-testid="column"]:hover .project-card {
+    .project-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 12px 20px -5px rgba(59, 130, 246, 0.25);
+        box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.1);
         border-color: #3B82F6;
     }
 
+    /* IMAGES */
     .p-img-container { 
         width: 100%; 
-        height: 200px; 
+        height: 180px; 
         overflow: hidden; 
-        border-bottom: 1px solid #e2e8f0; 
-        flex-shrink: 0;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        border: 1px solid #f1f5f9;
     }
     .p-img { width: 100%; height: 100%; object-fit: cover; }
     
-    .p-content { 
-        padding: 20px; 
-        flex-grow: 1;
-        display: flex; 
-        flex-direction: column; 
+    /* TYPOGRAPHY */
+    .p-title { 
+        font-size: 1.3rem; 
+        font-weight: 700; 
+        color: #1E293B; 
+        margin-bottom: 12px; 
+        line-height: 1.3;
     }
     
-    .p-cat-overlay { 
-        position: absolute;
-        top: 15px;
-        left: 15px;
-        z-index: 10;
-        background-color: white;
-        color: #3B82F6;
-        padding: 4px 12px;
+    .p-tag {
+        display: inline-block;
+        background: #F1F5F9;
+        color: #64748B;
+        padding: 4px 10px;
         border-radius: 20px;
-        font-size: 0.75rem; 
-        font-weight: 800; 
-        text-transform: uppercase; 
-        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-        letter-spacing: 0.5px;
-        border: 1px solid #E2E8F0;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-bottom: 12px;
     }
 
-    .p-title { font-size: 1.25rem; font-weight: 800; color: #1E293B; margin-bottom: 10px; }
-    .p-detail { font-size: 0.90rem; color: #475569; margin-bottom: 8px; line-height: 1.4; }
-
-    /* --- THE INVISIBLE CLICK LAYER --- */
-    /* This targets the button inside the project columns */
-    div[data-testid="column"] .stButton button {
-        position: absolute !important;
-        top: 0 !important;
-        left: 0 !important;
-        width: 100% !important;
-        height: 100% !important;
-        
-        /* Make it invisible */
-        opacity: 0 !important; 
-        background-color: transparent !important;
-        border: none !important;
-        color: transparent !important;
-        
-        /* Ensure it captures the click */
-        z-index: 5 !important; 
-        cursor: pointer !important;
+    .p-detail { 
+        font-size: 0.9rem; 
+        color: #475569; 
+        margin-bottom: 8px; 
+        line-height: 1.5; 
     }
     
-    /* Remove padding around the button container so it fits perfectly */
+    .p-label {
+        font-weight: 600;
+        color: #334155;
+    }
+
+    /* 2. BUTTON STYLING (The "Arrow" Circle) */
+    
+    /* Target the button container inside the column */
     div[data-testid="column"] .stButton {
         position: absolute !important;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        margin: 0 !important;
+        bottom: 25px !important;
+        right: 25px !important;
+        width: auto !important;
+        z-index: 100 !important;
+    }
+
+    /* Style the actual button element */
+    div[data-testid="column"] .stButton button {
+        background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 50% !important; /* Make it a circle */
+        width: 45px !important;
+        height: 45px !important;
+        font-size: 1.2rem !important;
         padding: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3) !important;
+        transition: all 0.3s ease !important;
+    }
+
+    /* Hover Effect */
+    div[data-testid="column"] .stButton button:hover {
+        transform: scale(1.1) !important;
+        box-shadow: 0 6px 15px rgba(37, 99, 235, 0.5) !important;
+        background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%) !important;
+    }
+    
+    /* Remove default focus outline */
+    div[data-testid="column"] .stButton button:focus {
+        box-shadow: none !important;
+        outline: none !important;
+    }
+    
+    /* OTHER CARDS (Skills, etc) */
+    .metric-card, .timeline-card {
+        background: white; border: 1px solid #E2E8F0; border-radius: 12px;
+        padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
 
 </style>
@@ -205,9 +211,9 @@ if selected == "Home":
         st.markdown(f"<h3 style='color:#3B82F6; margin-top:0;'>{prof.get('role', 'Role')}</h3>", unsafe_allow_html=True)
         st.write(prof.get('summary', ''))
         mc1, mc2, mc3 = st.columns(3)
-        with mc1: st.markdown(f'<div class="metric-card"><div class="metric-value">{mets.get("dashboards","0")}</div><div class="metric-label">Dashboards</div></div>', unsafe_allow_html=True)
-        with mc2: st.markdown(f'<div class="metric-card"><div class="metric-value">{mets.get("manual_reduction","0%")}</div><div class="metric-label">Reduction</div></div>', unsafe_allow_html=True)
-        with mc3: st.markdown(f'<div class="metric-card"><div class="metric-value">{mets.get("efficiency","0%")}</div><div class="metric-label">Efficiency</div></div>', unsafe_allow_html=True)
+        with mc1: st.markdown(f'<div class="metric-card"><div style="font-size:1.8rem; font-weight:800; color:#3B82F6;">{mets.get("dashboards","0")}</div><div style="font-size:0.85rem; color:#64748B;">DASHBOARDS</div></div>', unsafe_allow_html=True)
+        with mc2: st.markdown(f'<div class="metric-card"><div style="font-size:1.8rem; font-weight:800; color:#3B82F6;">{mets.get("manual_reduction","0%")}</div><div style="font-size:0.85rem; color:#64748B;">REDUCTION</div></div>', unsafe_allow_html=True)
+        with mc3: st.markdown(f'<div class="metric-card"><div style="font-size:1.8rem; font-weight:800; color:#3B82F6;">{mets.get("efficiency","0%")}</div><div style="font-size:0.85rem; color:#64748B;">EFFICIENCY</div></div>', unsafe_allow_html=True)
     with c2: render_image(prof.get('image_url'), width=350)
 
 # --- PROJECTS ---
@@ -237,6 +243,7 @@ elif selected == "Projects":
         c3.warning(f"**🚀 Impact**\n{p.get('impact')}")
     else:
         st.title("Projects")
+        # Loop through projects in pairs
         for i in range(0, len(projects), 2):
             cols = st.columns(2)
             batch = projects[i : i+2]
@@ -244,29 +251,30 @@ elif selected == "Projects":
                 actual_idx = i + j
                 with cols[j]:
                     img_src = get_img_src(p.get('image', ''))
-                    # 1. RENDER THE CARD VISUALS
+                    
+                    # 1. RENDER CARD HTML
+                    # Note: We added padding-bottom: 70px in CSS to make room for the button
                     st.markdown(f"""
                     <div class="project-card">
-                        <div class="p-cat-overlay">{p.get('category')}</div>
                         <div class="p-img-container">
                             <img src="{img_src}" class="p-img">
                         </div>
-                        <div class="p-content">
-                            <div class="p-title">{p.get('title')}</div>
-                            <div class='p-detail'><b>🚨 Problem:</b> {p.get('problem')}</div>
-                            <div class='p-detail'><b>💡 Solution:</b> {p.get('solution')}</div>
-                            <div class='p-detail'><b>🚀 Impact:</b> {p.get('impact')}</div>
-                        </div>
+                        <span class="p-tag">{p.get('category')}</span>
+                        <div class="p-title">{p.get('title')}</div>
+                        <div class='p-detail'><span class='p-label'>🚨 Problem:</span> {p.get('problem')}</div>
+                        <div class='p-detail'><span class='p-label'>💡 Solution:</span> {p.get('solution')}</div>
+                        <div class='p-detail'><span class='p-label'>🚀 Impact:</span> {p.get('impact')}</div>
                     </div>
                     """, unsafe_allow_html=True)
                     
-                    # 2. INVISIBLE CLICK LAYER
-                    # We use a button with whitespace " " as the label.
-                    # The CSS above forces this button to be transparent and cover the whole column.
-                    if st.button(" ", key=f"btn_{actual_idx}"):
+                    # 2. RENDER BUTTON
+                    # The CSS forces this to the Bottom-Right of the column
+                    if st.button("➜", key=f"btn_{actual_idx}"):
                         st.session_state.selected_project = actual_idx
                         st.rerun()
-            st.markdown("<div style='height: 25px;'></div>", unsafe_allow_html=True)
+            
+            # Spacer between rows
+            st.markdown("<div style='height: 30px;'></div>", unsafe_allow_html=True)
 
 # --- SKILLS ---
 elif selected == "Skills":
@@ -283,13 +291,13 @@ elif selected == "Skills":
     skill_items = list(skills.items())
     for i, (s, v) in enumerate(skill_items):
         with s_cols[i % 4]:
-            st.markdown(f'<div class="skill-metric"><b>{s}</b><div style="color:#3B82F6; font-size:1.2rem; font-weight:800;">{v}%</div><progress value="{v}" max="100" style="width:100%;"></progress></div>', unsafe_allow_html=True)
+            st.markdown(f'<div class="metric-card"><b>{s}</b><div style="color:#3B82F6; font-size:1.2rem; font-weight:800;">{v}%</div><progress value="{v}" max="100" style="width:100%;"></progress></div>', unsafe_allow_html=True)
 
 # --- EXPERIENCE ---
 elif selected == "Experience":
     st.title("Experience")
     for job in st.session_state.data.get('experience', []):
-        st.markdown(f'<div class="timeline-card"><b>{job.get("role")}</b> @ {job.get("company")}<br><small>{job.get("date")}</small><p>{job.get("description")}</p></div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="timeline-card" style="border-left: 6px solid #3B82F6;"><b>{job.get("role")}</b> @ {job.get("company")}<br><small>{job.get("date")}</small><p>{job.get("description")}</p></div>', unsafe_allow_html=True)
 
 # --- CONTACT ---
 elif selected == "Contact":
