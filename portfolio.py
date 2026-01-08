@@ -258,6 +258,11 @@ with st.sidebar:
     selected = option_menu(None, ["Home", "Experience", "Projects", "Skills", "Contact"], 
                            icons=["house", "briefcase", "rocket", "cpu", "envelope"], default_index=0,
                            styles={"nav-link-selected": {"background-color": "#3B82F6"}})
+    
+    # --- RESET PROJECT STATE ON NAVIGATION ---
+    if selected != "Projects":
+        st.session_state.selected_project = None
+        
     st.markdown("---")
     
     # --- ADMIN ACCESS & DOWNLOAD ---
@@ -593,5 +598,3 @@ elif selected == "Contact":
     for i, item in enumerate(prof.get('contact_info', [])):
         with (c1 if i % 2 == 0 else c2):
             st.markdown(f'<a href="{item.get("value")}" target="_blank" style="text-decoration:none;"><div class="metric-card"><img src="{item.get("icon")}" width="40"><br><b>{item.get("label")}</b></div></a>', unsafe_allow_html=True)
-
-
