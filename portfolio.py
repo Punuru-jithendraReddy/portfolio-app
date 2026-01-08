@@ -21,12 +21,11 @@ st.markdown("""
     .main { padding-top: 1rem; }
     h1, h2, h3 { font-family: 'Segoe UI', sans-serif; color: #0F172A; }
     
-    /* 0. REMOVE STREAMLIT GAPS - CRITICAL FIX */
-    /* This removes the default space between the HTML card and the Button */
-    [data-testid="column"] > div > div > div {
+    /* CRITICAL: REMOVE SPACE BETWEEN HTML AND BUTTON */
+    [data-testid="column"] [data-testid="stVerticalBlock"] {
         gap: 0rem !important;
     }
-    
+
     /* 1. HERO METRIC CARDS */
     .metric-card {
         background: white; border: 1px solid #E2E8F0; border-radius: 12px;
@@ -70,14 +69,13 @@ st.markdown("""
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         position: relative;
         
-        /* Layout Strategy */
         display: flex;
         flex-direction: column;
         height: 100%;
-        min-height: 520px; 
+        min-height: 540px; 
         
-        /* CRITICAL: Space at bottom inside the border for the button */
-        padding-bottom: 85px; 
+        /* Padding at the bottom provides space for the button inside the card */
+        padding-bottom: 75px; 
     }
     .project-card:hover {
         transform: translateY(-5px);
@@ -100,67 +98,42 @@ st.markdown("""
         flex-direction: column; 
     }
     
-    /* CATEGORY OVERLAY: Top-Left */
+    /* CATEGORY OVERLAY: Top-Left corner of the card over the image */
     .p-cat-overlay { 
         position: absolute;
         top: 15px;
         left: 15px;
         z-index: 10;
-        background-color: rgba(255, 255, 255, 0.95);
+        background-color: white;
         color: #3B82F6;
-        padding: 5px 12px;
+        padding: 4px 12px;
         border-radius: 20px;
         font-size: 0.75rem; 
         font-weight: 800; 
         text-transform: uppercase; 
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         letter-spacing: 0.5px;
+        border: 1px solid #E2E8F0;
     }
 
     .p-title { font-size: 1.25rem; font-weight: 800; color: #1E293B; margin-bottom: 10px; }
     .p-detail { font-size: 0.90rem; color: #475569; margin-bottom: 8px; line-height: 1.4; }
 
-    /* 4. SKILL METRICS */
-    .skill-metric {
-        background-color: #F8FAFC;
-        border-radius: 8px;
-        padding: 10px;
-        text-align: center;
-        border: 1px solid #E2E8F0;
-        margin-bottom: 10px;
-    }
-
-    /* 5. CONTACT CARDS */
-    .contact-card-modern {
-        background-color: white; padding: 25px; border-radius: 12px;
-        border: 1px solid #e2e8f0; text-align: center;
-        text-decoration: none !important; color: inherit !important;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        transition: transform 0.2s, border-color 0.2s;
-        display: block;
-    }
-    .contact-card-modern:hover { transform: translateY(-5px); border-color: #3B82F6; box-shadow: 0 8px 15px rgba(59, 130, 246, 0.1); }
-    .contact-icon-big { width: 40px; height: 40px; margin-bottom: 10px; object-fit: contain; }
-    .contact-label { font-size: 1.1rem; font-weight: 700; color: #1E293B; margin-bottom: 5px; }
-    .contact-val { font-size: 0.9rem; color: #3B82F6; }
-
-    /* 6. BUTTON STYLING - FINAL FIX */
-    
-    /* Target the button wrapper inside the columns */
+    /* 6. BUTTON STYLING: PULL INSIDE BOTTOM-RIGHT */
     [data-testid="column"] .stButton {
-        margin-top: -75px !important; /* Move UP into the 85px padding space */
-        width: auto !important;
-        float: right !important; /* Force right alignment */
-        margin-right: 15px !important; /* Right padding inside card */
+        margin-top: -65px !important; /* Move button UP into the card padding */
+        padding-bottom: 15px !important;
+        display: flex !important;
+        justify-content: flex-end !important; /* Align to the RIGHT */
         position: relative !important;
-        z-index: 100 !important; /* Ensure it's clickable */
+        z-index: 99 !important;
     }
 
-    /* Target the button element */
     [data-testid="column"] .stButton button {
+        margin-right: 15px !important; /* Space from the right edge */
         background-color: #F0F9FF !important; /* Light Blue */
-        color: #0284C7 !important; 
-        border: 1px solid #BAE6FD !important; 
+        color: #0284C7 !important; /* Dark Blue Text */
+        border: 1px solid #BAE6FD !important; /* Light Blue Border */
         border-radius: 8px !important;
         padding: 0.4rem 1.0rem !important;
         font-weight: 600 !important;
@@ -174,12 +147,15 @@ st.markdown("""
         color: #0369A1 !important;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
     }
-    
-    /* FIX: Clear floats so layout doesn't break after rows */
-    [data-testid="column"]::after {
-        content: "";
-        display: table;
-        clear: both;
+
+    /* 4. SKILL METRICS */
+    .skill-metric {
+        background-color: #F8FAFC;
+        border-radius: 8px;
+        padding: 10px;
+        text-align: center;
+        border: 1px solid #E2E8F0;
+        margin-bottom: 10px;
     }
 
 </style>
@@ -198,7 +174,6 @@ def save_data(data):
         st.toast("Saved! Download JSON to update GitHub.", icon="💾")
     except Exception as e: st.error(f"Save failed: {e}")
 
-# --- HELPER: GET IMAGE SOURCE ---
 def get_img_src(image_path):
     if not image_path: return "https://placehold.co/600x400/png?text=No+Image"
     if "github.com" in image_path and "/blob/" in image_path:
@@ -213,7 +188,6 @@ def get_img_src(image_path):
                 return f"data:image/png;base64,{base64.b64encode(f.read()).decode()}"
     return "https://placehold.co/600x400/png?text=Missing"
 
-# --- HELPER: RENDERER ---
 def render_image(image_path, width=None):
     src = get_img_src(image_path)
     if width: st.image(src, width=width)
@@ -269,158 +243,49 @@ if selected == "Home":
         st.markdown(f"<h1 style='font-size:3.5rem; margin-bottom:0;'>{prof.get('name', 'Name')}</h1>", unsafe_allow_html=True)
         st.markdown(f"<h3 style='color:#3B82F6; margin-top:0;'>{prof.get('role', 'Role')}</h3>", unsafe_allow_html=True)
         st.write(prof.get('summary', ''))
-        st.markdown("<br>", unsafe_allow_html=True)
         mc1, mc2, mc3 = st.columns(3)
         with mc1: st.markdown(f'<div class="metric-card"><div class="metric-value">{mets.get("dashboards","0")}</div><div class="metric-label">Dashboards</div></div>', unsafe_allow_html=True)
         with mc2: st.markdown(f'<div class="metric-card"><div class="metric-value">{mets.get("manual_reduction","0%")}</div><div class="metric-label">Reduction</div></div>', unsafe_allow_html=True)
         with mc3: st.markdown(f'<div class="metric-card"><div class="metric-value">{mets.get("efficiency","0%")}</div><div class="metric-label">Efficiency</div></div>', unsafe_allow_html=True)
     with c2:
-        st.markdown('<div style="padding: 20px;">', unsafe_allow_html=True)
         render_image(prof.get('image_url'), width=350)
-        st.markdown('</div>', unsafe_allow_html=True)
-
-# --- EXPERIENCE ---
-elif selected == "Experience":
-    st.title("Professional Experience")
-    if st.session_state.is_admin:
-        tab_add, tab_edit = st.tabs(["➕ Add", "✏️ Edit"])
-        with tab_add:
-            r = st.text_input("Role", key="nr"); c = st.text_input("Company", key="nc")
-            d = st.text_input("Date", key="nd"); desc = st.text_area("Desc", key="ndes", height=150)
-            if st.button("Save"):
-                st.session_state.data.setdefault('experience', []).insert(0, {"role": r, "company": c, "date": d, "description": desc})
-                save_data(st.session_state.data); st.rerun()
-        with tab_edit:
-            exp_list = st.session_state.data.get('experience', [])
-            if exp_list:
-                idx = st.selectbox("Select", range(len(exp_list)), format_func=lambda x: f"{exp_list[x]['role']}")
-                curr = exp_list[idx]
-                er = st.text_input("Role", curr['role']); ec = st.text_input("Company", curr['company'])
-                ed = st.text_input("Date", curr['date']); edesc = st.text_area("Desc", curr['description'], height=150)
-                c1, c2 = st.columns(2)
-                if c1.button("Update"): st.session_state.data['experience'][idx] = {"role": er, "company": ec, "date": ed, "description": edesc}; save_data(st.session_state.data); st.rerun()
-                if c2.button("Delete", type="primary"): st.session_state.data['experience'].pop(idx); save_data(st.session_state.data); st.rerun()
-
-    for job in st.session_state.data.get('experience', []):
-        st.markdown(f"""
-        <div class="timeline-card">
-            <span class="t-date">{job.get('date')}</span>
-            <div class="t-role">{job.get('role')}</div>
-            <div class="t-company">{job.get('company')}</div>
-            <div class="t-desc">{job.get('description')}</div>
-        </div>
-        """, unsafe_allow_html=True)
 
 # --- PROJECTS ---
 elif selected == "Projects":
-    # 1. Initialize Session State for Project Selection
     if 'selected_project' not in st.session_state:
         st.session_state.selected_project = None
 
-    # --- ADMIN: ADD/EDIT PROJECTS (Only show in List View) ---
-    if st.session_state.is_admin and st.session_state.selected_project is None:
-        st.title("Projects Manager")
-        tab_add, tab_edit = st.tabs(["➕ Add", "✏️ Edit"])
-        with tab_add:
-            pt = st.text_input("Title"); pc = st.text_input("Category")
-            pi = st.text_input("Thumbnail Image"); pdi = st.text_input("Dashboard Image (Detail)"); 
-            pp = st.text_area("Problem"); ps = st.text_area("Solution"); pimp = st.text_area("Impact")
-            pdet = st.text_area("Long Description (Detail)")
-            if st.button("Save"):
-                new_proj = {
-                    "title": pt, "category": pc, "image": pi, "dashboard_image": pdi,
-                    "problem": pp, "solution": ps, "impact": pimp, "details": pdet
-                }
-                st.session_state.data.setdefault('projects', []).append(new_proj)
-                save_data(st.session_state.data); st.rerun()
-        
-        with tab_edit:
-            pl = st.session_state.data.get('projects', [])
-            if pl:
-                pidx = st.selectbox("Select Project to Edit", range(len(pl)), format_func=lambda x: pl[x]['title'])
-                cp = pl[pidx]
-                ept = st.text_input("Title", cp['title'], key="ept"); epc = st.text_input("Category", cp['category'], key="epc")
-                epi = st.text_input("Thumbnail", cp['image'], key="epi"); epdi = st.text_input("Dashboard Img", cp.get('dashboard_image',''), key="epdi")
-                epp = st.text_area("Prob", cp['problem'], key="epp"); eps = st.text_area("Sol", cp.get('solution',''), key="eps")
-                epimp = st.text_area("Imp", cp.get('impact',''), key="epimp"); epdet = st.text_area("Long Desc", cp.get('details',''), key="epdet")
-                
-                c1, c2 = st.columns(2)
-                if c1.button("Update"): 
-                    st.session_state.data['projects'][pidx] = {
-                        "title": ept, "category": epc, "image": epi, "dashboard_image": epdi, 
-                        "problem": epp, "solution": eps, "impact": epimp, "details": epdet
-                    }
-                    save_data(st.session_state.data); st.rerun()
-                if c2.button("Delete", type="primary"): 
-                    st.session_state.data['projects'].pop(pidx); save_data(st.session_state.data); st.rerun()
-        st.markdown("---")
-
-    # --- VIEW LOGIC ---
     projects = st.session_state.data.get('projects', [])
 
-    # VIEW A: DETAILED PROJECT VIEW
     if st.session_state.selected_project is not None:
         idx = st.session_state.selected_project
-        if 0 <= idx < len(projects):
-            p = projects[idx]
-            
-            # Back Button
-            if st.button("← Back to Projects"):
-                st.session_state.selected_project = None
-                st.rerun()
-
-            # Header
-            st.title(p.get('title'))
-            st.caption(f"📂 {p.get('category')} | 🚧 Problem Solved: {p.get('problem')}")
-            
-            # Main Dashboard Display (Image or Video)
-            dash_img = p.get('dashboard_image') or p.get('image') # Fallback to thumbnail if no dashboard img
-            if dash_img:
-                if dash_img.endswith('.mp4'):
-                    st.video(dash_img)
-                else:
-                    st.image(get_img_src(dash_img), use_container_width=True)
-            
-            # Deep Dive Content
-            st.markdown("### 📝 Project Details")
-            st.write(p.get('details', 'No detailed description available.'))
-            
-            # Summary Metrics (Reused from card data)
-            st.markdown("---")
-            c1, c2, c3 = st.columns(3)
-            with c1: 
-                st.info(f"**🚨 The Problem**\n\n{p.get('problem')}")
-            with c2: 
-                st.success(f"**💡 The Solution**\n\n{p.get('solution')}")
-            with c3: 
-                st.warning(f"**🚀 The Impact**\n\n{p.get('impact')}")
-
-        else:
-            st.error("Project not found.")
-            if st.button("Go Back"):
-                st.session_state.selected_project = None
-                st.rerun()
-
-    # VIEW B: MAIN GALLERY (LIST VIEW)
+        p = projects[idx]
+        if st.button("← Back to Projects"):
+            st.session_state.selected_project = None
+            st.rerun()
+        st.title(p.get('title'))
+        st.caption(f"📂 {p.get('category')}")
+        
+        dash_img = p.get('dashboard_image') or p.get('image')
+        if dash_img.endswith('.mp4'): st.video(dash_img)
+        else: st.image(get_img_src(dash_img), use_container_width=True)
+        
+        st.markdown("### 📝 Detailed Description")
+        st.write(p.get('details', 'Description coming soon.'))
+        st.markdown("---")
+        c1, c2, c3 = st.columns(3)
+        c1.info(f"**🚨 Problem**\n{p.get('problem')}")
+        c2.success(f"**💡 Solution**\n{p.get('solution')}")
+        c3.warning(f"**🚀 Impact**\n{p.get('impact')}")
     else:
         st.title("Projects")
-        # Loop through projects
         for i in range(0, len(projects), 2):
             cols = st.columns(2)
             batch = projects[i : i+2]
-            
             for j, p in enumerate(batch):
                 actual_idx = i + j
                 with cols[j]:
-                    # 1. Render The Visual Card
                     img_src = get_img_src(p.get('image', ''))
-                    
-                    details_html = ""
-                    if p.get('problem'): details_html += f"<div class='p-detail'><b>🚨 Problem:</b> {p['problem']}</div>"
-                    if p.get('solution'): details_html += f"<div class='p-detail'><b>💡 Solution:</b> {p['solution']}</div>"
-                    if p.get('impact'): details_html += f"<div class='p-detail'><b>🚀 Impact:</b> {p['impact']}</div>"
-
-                    # MODIFIED: Added p-cat-overlay ABOVE image
                     st.markdown(f"""
                     <div class="project-card">
                         <div class="p-cat-overlay">{p.get('category')}</div>
@@ -429,77 +294,44 @@ elif selected == "Projects":
                         </div>
                         <div class="p-content">
                             <div class="p-title">{p.get('title')}</div>
-                            {details_html}
+                            <div class='p-detail'><b>🚨 Problem:</b> {p.get('problem')}</div>
+                            <div class='p-detail'><b>💡 Solution:</b> {p.get('solution')}</div>
+                            <div class='p-detail'><b>🚀 Impact:</b> {p.get('impact')}</div>
                         </div>
                     </div>
                     """, unsafe_allow_html=True)
-                    
-                    # 2. Add the "View Case Study" Button
-                    # The CSS 'margin-top: -75px' pulls this button UP into the card
                     if st.button(f"View Case Study ➡", key=f"btn_{actual_idx}"):
                         st.session_state.selected_project = actual_idx
                         st.rerun()
-            
-            # Spacer between rows
-            st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
+            st.markdown("<div style='height: 25px;'></div>", unsafe_allow_html=True)
 
 # --- SKILLS ---
 elif selected == "Skills":
     st.title("Technical Skills")
     skills = st.session_state.data.get('skills', {})
-    
-    if st.session_state.is_admin:
-        with st.form("sk"):
-            n = st.text_input("Skill"); v = st.slider("Val", 0, 100, 50)
-            if st.form_submit_button("Add"): 
-                st.session_state.data.setdefault('skills', {})[n] = v; save_data(st.session_state.data); st.rerun()
-        if st.button("Delete All", type="primary"): 
-            st.session_state.data['skills'] = {}; save_data(st.session_state.data); st.rerun()
-
-    # 1. Chart Centered
     if skills:
         c1, c2, c3 = st.columns([1, 2, 1])
         with c2:
             fig = go.Figure(data=go.Scatterpolar(r=list(skills.values()), theta=list(skills.keys()), fill='toself', marker=dict(color='#3B82F6')))
-            fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 100])), showlegend=False, margin=dict(l=40, r=40, t=30, b=30), height=250)
+            fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 100])), showlegend=False, height=350)
             st.plotly_chart(fig, use_container_width=True)
-
-    # 2. Dense Grid (4 Cols)
     st.markdown("### Proficiency")
     s_cols = st.columns(4)
     skill_items = list(skills.items())
-    
     for i, (s, v) in enumerate(skill_items):
         with s_cols[i % 4]:
-            st.markdown(f"""
-            <div class="skill-metric">
-                <div style="font-weight:bold; color:#334155; font-size:0.9rem;">{s}</div>
-                <div style="color:#3B82F6; font-size:1.2rem; font-weight:800;">{v}%</div>
-                <progress value="{v}" max="100" style="width:100%; height:6px;"></progress>
-            </div>
-            """, unsafe_allow_html=True)
+            st.markdown(f'<div class="skill-metric"><div style="font-weight:bold;">{s}</div><div style="color:#3B82F6; font-size:1.2rem; font-weight:800;">{v}%</div><progress value="{v}" max="100" style="width:100%;"></progress></div>', unsafe_allow_html=True)
 
-# --- CONTACT ---
+# --- REMAINING SECTIONS (Experience/Contact) ---
+elif selected == "Experience":
+    st.title("Experience")
+    for job in st.session_state.data.get('experience', []):
+        st.markdown(f'<div class="timeline-card"><span class="t-date">{job.get("date")}</span><div class="t-role">{job.get("role")}</div><div class="t-company">{job.get("company")}</div><div class="t-desc">{job.get("description")}</div></div>', unsafe_allow_html=True)
+
 elif selected == "Contact":
-    st.title("Get In Touch")
+    st.title("Contact")
     prof = st.session_state.data.get('profile', {})
-    
-    st.markdown("<br>", unsafe_allow_html=True)
     c1, c2 = st.columns(2)
-    
     for i, item in enumerate(prof.get('contact_info', [])):
         with (c1 if i % 2 == 0 else c2):
-            icon_url = item.get('icon', '')
-            val = item.get('value', '#')
-            label = item.get('label', 'Link')
-            
-            if icon_url.startswith("http"): img_tag = f'<img src="{icon_url}" class="contact-icon-big">' 
-            else: img_tag = '<span style="font-size:40px; display:block; margin-bottom:10px;">🔗</span>'
-            
-            st.markdown(f"""
-            <a href="{val}" target="_blank" class="contact-card-modern">
-                {img_tag}
-                <div class="contact-label">{label}</div>
-                <div class="contact-val">{val}</div>
-            </a>
-            """, unsafe_allow_html=True)
+            st.markdown(f'<a href="{item.get("value")}" target="_blank" style="text-decoration:none;"><div class="metric-card"><img src="{item.get("icon")}" width="40"><br><b>{item.get("label")}</b><br>{item.get("value")}</div></a>', unsafe_allow_html=True)
