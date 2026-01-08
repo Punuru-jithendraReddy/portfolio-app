@@ -21,12 +21,12 @@ st.markdown("""
     .main { padding-top: 1rem; }
     h1, h2, h3 { font-family: 'Segoe UI', sans-serif; color: #0F172A; }
     
-    /* REMOVE DEFAULT STREAMLIT GAPS in Columns */
-    [data-testid="column"] > div {
-        row-gap: 0 !important;
-        gap: 0 !important;
+    /* 0. REMOVE STREAMLIT GAPS - CRITICAL FIX */
+    /* This removes the default space between the HTML card and the Button */
+    [data-testid="column"] > div > div > div {
+        gap: 0rem !important;
     }
-
+    
     /* 1. HERO METRIC CARDS */
     .metric-card {
         background: white; border: 1px solid #E2E8F0; border-radius: 12px;
@@ -76,7 +76,7 @@ st.markdown("""
         height: 100%;
         min-height: 520px; 
         
-        /* IMPORTANT: Create 85px of white space at bottom for the button */
+        /* CRITICAL: Space at bottom inside the border for the button */
         padding-bottom: 85px; 
     }
     .project-card:hover {
@@ -100,7 +100,7 @@ st.markdown("""
         flex-direction: column; 
     }
     
-    /* CATEGORY OVERLAY: Floating on top of the image (Top-Left) */
+    /* CATEGORY OVERLAY: Top-Left */
     .p-cat-overlay { 
         position: absolute;
         top: 15px;
@@ -144,23 +144,23 @@ st.markdown("""
     .contact-label { font-size: 1.1rem; font-weight: 700; color: #1E293B; margin-bottom: 5px; }
     .contact-val { font-size: 0.9rem; color: #3B82F6; }
 
-    /* 6. BUTTON STYLING (FIXED) */
+    /* 6. BUTTON STYLING - FINAL FIX */
     
-    /* Target the container wrapping the button inside columns */
+    /* Target the button wrapper inside the columns */
     [data-testid="column"] .stButton {
-        margin-top: -85px !important; /* Pull it up exactly into the padding space */
+        margin-top: -75px !important; /* Move UP into the 85px padding space */
         width: auto !important;
-        float: right !important; /* Force it to the right */
-        padding-right: 20px !important; /* Spacing from right edge */
+        float: right !important; /* Force right alignment */
+        margin-right: 15px !important; /* Right padding inside card */
         position: relative !important;
-        z-index: 99 !important; /* Ensure it's on top of the card */
+        z-index: 100 !important; /* Ensure it's clickable */
     }
 
-    /* Style the actual button element */
+    /* Target the button element */
     [data-testid="column"] .stButton button {
-        background-color: #F0F9FF !important; /* Light Blue Background */
-        color: #0284C7 !important; /* Dark Blue Text */
-        border: 1px solid #BAE6FD !important; /* Light Blue Border */
+        background-color: #F0F9FF !important; /* Light Blue */
+        color: #0284C7 !important; 
+        border: 1px solid #BAE6FD !important; 
         border-radius: 8px !important;
         padding: 0.4rem 1.0rem !important;
         font-weight: 600 !important;
@@ -173,6 +173,13 @@ st.markdown("""
         border-color: #0284C7 !important;
         color: #0369A1 !important;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+    }
+    
+    /* FIX: Clear floats so layout doesn't break after rows */
+    [data-testid="column"]::after {
+        content: "";
+        display: table;
+        clear: both;
     }
 
 </style>
@@ -428,7 +435,7 @@ elif selected == "Projects":
                     """, unsafe_allow_html=True)
                     
                     # 2. Add the "View Case Study" Button
-                    # The CSS 'margin-top: -85px' pulls this button UP into the card
+                    # The CSS 'margin-top: -75px' pulls this button UP into the card
                     if st.button(f"View Case Study ➡", key=f"btn_{actual_idx}"):
                         st.session_state.selected_project = actual_idx
                         st.rerun()
