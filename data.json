@@ -77,7 +77,7 @@
             "title": "Sales Forecasting & Pipeline",
             "category": "Sales",
             "image": "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&w=800&q=80",
-            "dashboard_image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1920&q=80",
+            "dashboard_image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/OpensalesOrder.png",
             "problem": "Unreliable forecasts and unclear pipeline visibility made resource planning hard.",
             "solution": "Bridges past results with current pipeline data to deliver accurate revenue forecasts.",
             "impact": "Improved reliability of revenue projections for investors.",
@@ -165,3 +165,4 @@
         }
     ]
 }
+
