@@ -42,8 +42,8 @@ st.markdown("""
         flex-direction: column;
         height: 100%;
         
-        /* ADJUSTED: Reduced padding so there isn't too much whitespace */
-        padding-bottom: 55px; 
+        /* Space for the bottom button */
+        padding-bottom: 70px; 
         transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
     
@@ -90,28 +90,29 @@ st.markdown("""
     }
     .p-label { font-weight: 600; color: #334155; }
 
-    /* 2. BUTTON POSITIONING (Bottom-Right) */
+    /* 2. BUTTON POSITIONING & STYLING (Full Width Bottom) */
     
     /* Target the container of the button inside columns */
     div[data-testid="column"] .stButton {
         position: absolute !important;
         bottom: 20px !important;   /* Distance from bottom */
-        right: 20px !important;    /* Distance from right */
-        left: auto !important;     /* Force right alignment */
-        width: auto !important;    /* prevent full width */
+        left: 20px !important;     /* Anchor to left padding */
+        right: 20px !important;    /* Anchor to right padding */
+        width: auto !important;    /* Auto width lets left/right anchors define width */
         z-index: 10 !important;
     }
 
-    /* Style the actual button (Circle) */
+    /* Style the actual button (Rectangle) */
     div[data-testid="column"] .stButton button {
         background: #EFF6FF !important; /* Light blue bg */
-        color: #2563EB !important;      /* Blue arrow */
+        color: #2563EB !important;      /* Blue text */
         border: 1px solid #DBEAFE !important;
-        border-radius: 50% !important;  /* Circle */
-        width: 40px !important;
-        height: 40px !important;
-        font-size: 1.2rem !important;
-        padding: 0 !important;
+        border-radius: 8px !important;  /* Rounded rectangle */
+        width: 100% !important;         /* Fill container */
+        height: auto !important;
+        font-size: 1rem !important;
+        font-weight: 600 !important;
+        padding: 0.6rem 1rem !important; /* Standard padding */
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
@@ -122,8 +123,8 @@ st.markdown("""
     div[data-testid="column"] .stButton button:hover {
         background: #2563EB !important;
         color: white !important;
-        transform: scale(1.1) !important;
-        box-shadow: 0 4px 6px rgba(37, 99, 235, 0.3) !important;
+        transform: translateY(-2px) !important; /* Slight lift */
+        box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2) !important;
     }
     
     /* Hide focus outline */
@@ -257,8 +258,9 @@ elif selected == "Projects":
                     </div>
                     """, unsafe_allow_html=True)
                     
-                    # 2. BUTTON (Positions Bottom-Right via CSS)
-                    if st.button("➜", key=f"btn_{actual_idx}"):
+                    # 2. BUTTON (Positions Full-Width Bottom via CSS)
+                    # Changed text to "More Information"
+                    if st.button("More Information", key=f"btn_{actual_idx}"):
                         st.session_state.selected_project = actual_idx
                         st.rerun()
             st.markdown("<div style='height: 30px;'></div>", unsafe_allow_html=True)
