@@ -119,7 +119,7 @@ st.markdown("""
     .d-green { background-color: #F0FDF4; border: 1px solid #DCFCE7; color: #14532D; } 
     .d-yellow { background-color: #FEFCE8; border: 1px solid #FEF9C3; color: #78350F; } 
 
-    /* 4. OTHER CARDS */
+    /* 4. OTHER CARDS & TOOLTIP */
     .timeline-card {
         background: white; border: 1px solid #E2E8F0; border-radius: 12px;
         padding: 24px; margin-bottom: 20px; border-left: 6px solid #3B82F6;
@@ -127,12 +127,48 @@ st.markdown("""
         transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     .timeline-card:hover { transform: translateX(5px); }
+    
     .metric-card {
         background: white; border: 1px solid #E2E8F0; border-radius: 12px;
         padding: 20px; text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
         animation: zoomIn 0.5s ease-out; transition: transform 0.3s ease, box-shadow 0.3s ease;
+        position: relative; /* For tooltip */
     }
     .metric-card:hover { transform: translateY(-5px); border-color: #3B82F6; }
+
+    /* --- TOOLTIP STYLES --- */
+    .tooltip-text {
+        visibility: hidden;
+        width: 200px;
+        background-color: #1E293B; /* Dark Slate */
+        color: #fff;
+        text-align: left;
+        border-radius: 8px;
+        padding: 12px;
+        position: absolute;
+        z-index: 100;
+        bottom: 110%; /* Place above the card */
+        left: 50%;
+        transform: translateX(-50%);
+        opacity: 0;
+        transition: opacity 0.3s, bottom 0.3s;
+        font-size: 0.75rem;
+        font-weight: 500;
+        line-height: 1.5;
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2);
+        pointer-events: none;
+    }
+    
+    .tooltip-text::after {
+        content: ""; position: absolute; top: 100%; left: 50%;
+        margin-left: -5px; border-width: 5px; border-style: solid;
+        border-color: #1E293B transparent transparent transparent;
+    }
+
+    .metric-card:hover .tooltip-text {
+        visibility: visible; opacity: 1; bottom: 120%;
+    }
+
     .skill-metric {
         background: white; border: 1px solid #f1f5f9; border-radius: 8px;
         padding: 15px; text-align: center; margin-bottom: 10px; animation: fadeInUp 0.7s ease-out;
@@ -245,7 +281,30 @@ if selected == "Home":
         st.write(prof.get('summary', ''))
         
         mc1, mc2, mc3 = st.columns(3)
-        with mc1: st.markdown(f'<div class="metric-card"><div style="font-size:1.8rem; font-weight:800; color:#3B82F6;">{mets.get("dashboards","0")}</div><div style="font-size:0.85rem; color:#64748B;">DASHBOARDS</div></div>', unsafe_allow_html=True)
+        
+        # --- TOOLTIP CONTENT ---
+        # You can fetch this from JSON if needed, but hardcoded as per request
+        tooltip_html = """
+        <strong>Dashboards Delivered:</strong><br>
+        • Sales Performance<br>
+        • HR Analytics<br>
+        • Financial Budgeting<br>
+        <br>
+        <strong>Details:</strong><br>
+        • 49% Reduction description<br>
+        • Other key descriptions...
+        """
+        
+        # METRIC CARD 1 (WITH TOOLTIP)
+        with mc1: 
+            st.markdown(f'''
+            <div class="metric-card">
+                <div class="tooltip-text">{tooltip_html}</div>
+                <div style="font-size:1.8rem; font-weight:800; color:#3B82F6;">{mets.get("dashboards","0")}</div>
+                <div style="font-size:0.85rem; color:#64748B;">DASHBOARDS</div>
+            </div>
+            ''', unsafe_allow_html=True)
+            
         with mc2: st.markdown(f'<div class="metric-card"><div style="font-size:1.8rem; font-weight:800; color:#3B82F6;">{mets.get("manual_reduction","0%")}</div><div style="font-size:0.85rem; color:#64748B;">REDUCTION</div></div>', unsafe_allow_html=True)
         with mc3: st.markdown(f'<div class="metric-card"><div style="font-size:1.8rem; font-weight:800; color:#3B82F6;">{mets.get("efficiency","0%")}</div><div style="font-size:0.85rem; color:#64748B;">EFFICIENCY</div></div>', unsafe_allow_html=True)
     with c2: render_image(prof.get('image_url'), width=350)
