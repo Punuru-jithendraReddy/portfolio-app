@@ -131,7 +131,7 @@
             "problem": "Measuring performance only in the present hides improvement or decline.",
             "solution": "Compares present activity to historical benchmarks (Last 3 Months/Year).",
             "impact": "Reveals true performance direction (positive/negative trends).",
-            "details": "This analytical tool moves beyond simple 'Month-to-Date' reporting. It uses time-intelligence functions to create rolling averages (3-month and 12-month) and compares current performance against those benchmarks. It answers the question: 'Are we doing better than our usual average?' rather than just 'Did we hit the target?'"
+            "details": "This dashboard enables comparative performance analysis by evaluating current month sales, profit, and volume against rolling 3-, 6-, 12-, and 24-month averages. This approach helps identify short-term momentum, long-term trends, and performance deviations with clarity.\n\nThe solution demonstrates the ability to deliver time-intelligent analytics, support trend benchmarking, and provide context-driven insights that improve sales monitoring, forecasting accuracy, and data-driven decision-making."
         },
         {
             "title": "Flat File Comparison Tool",
@@ -165,5 +165,3 @@
         }
     ]
 }
-
-
