@@ -338,10 +338,7 @@ elif selected == "Skills":
             r_vals = list(skills.values())
             theta_vals = list(skills.keys())
             
-            # Create Plotly Figure 
-
-[Image of radar chart]
-
+            # Create Plotly Figure
             fig = go.Figure()
             fig.add_trace(go.Scatterpolar(
                 r=r_vals,
