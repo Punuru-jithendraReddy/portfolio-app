@@ -22,11 +22,12 @@ st.markdown("""
     h1, h2, h3 { font-family: 'Segoe UI', sans-serif; color: #0F172A; }
     
     /* 0. COLUMN SETUP */
+    /* This ensures columns stretch to equal height */
     [data-testid="column"] {
         position: relative !important;
         display: flex;
         flex-direction: column;
-        height: 100%;
+        height: 100%; 
     }
 
     /* 1. PROJECT CARD DESIGN */
@@ -41,10 +42,12 @@ st.markdown("""
         display: flex;
         flex-direction: column;
         
-        height: auto; 
-        min-height: 420px; 
+        /* FORCE EQUAL HEIGHT */
+        height: 100%; 
+        min-height: 450px; /* Slight increase to ensure uniformity */
         
-        padding-bottom: 80px; 
+        /* INCREASED SPACE FOR BUTTON */
+        padding-bottom: 100px; 
         
         transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
@@ -63,10 +66,11 @@ st.markdown("""
         border-radius: 8px;
         margin-bottom: 15px;
         border: 1px solid #f1f5f9;
+        flex-shrink: 0; /* Prevents image from shrinking */
     }
     .p-img { width: 100%; height: 100%; object-fit: cover; }
     
-    /* CATEGORY OVERLAY (Top Left) */
+    /* CATEGORY OVERLAY */
     .p-cat-overlay {
         position: absolute;
         top: 30px; 
@@ -83,32 +87,35 @@ st.markdown("""
         border: 1px solid #e2e8f0;
     }
 
-    /* PROJECT TEXT - FLEXBOX LAYOUT FOR ALIGNMENT */
+    /* PROJECT TEXT */
     .p-title { 
         font-size: 1.2rem; 
         font-weight: 700; 
         color: #1E293B; 
-        margin-bottom: 12px; 
-        line-height: 1.2;
+        margin-bottom: 15px; 
+        line-height: 1.3;
+        flex-grow: 0; /* Title takes natural height */
     }
     
-    /* Container for a single row (Label + Text) */
+    /* Rows container to push content down if needed, or stick to top */
+    .p-details-container {
+        flex-grow: 1; /* Takes up remaining space */
+    }
+
     .p-row {
-        display: flex;       /* This enables side-by-side layout */
-        align-items: flex-start; /* Aligns text to top if it wraps */
-        margin-bottom: 8px;
+        display: flex;       
+        align-items: flex-start; 
+        margin-bottom: 10px; /* Increased margin for better separation */
     }
     
-    /* The Label Column (e.g. "Problem:") */
     .p-label {
-        min-width: 85px;    /* Fixed width ensures alignment */
-        flex-shrink: 0;     /* Prevents shrinking */
+        min-width: 85px;    
+        flex-shrink: 0;     
         font-weight: 700;
         color: #334155;
         font-size: 0.85rem;
     }
     
-    /* The Content Column (The actual text) */
     .p-val {
         font-size: 0.85rem;
         color: #475569;
@@ -118,7 +125,7 @@ st.markdown("""
     /* 2. BUTTON STYLING */
     div[data-testid="column"] .stButton {
         position: absolute !important;
-        bottom: 20px !important; 
+        bottom: 25px !important; /* Increased from 20px for better look */
         left: 20px !important;
         right: 20px !important;
         width: auto !important; 
@@ -133,7 +140,7 @@ st.markdown("""
         width: 100% !important;
         font-size: 0.95rem !important;
         font-weight: 600 !important;
-        padding: 0.5rem 1rem !important;
+        padding: 0.6rem 1rem !important;
         box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
         transition: all 0.2s ease !important;
     }
@@ -144,47 +151,16 @@ st.markdown("""
         transform: translateY(-2px) !important; 
         box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2) !important;
     }
+    
     div[data-testid="column"] .stButton button:focus {
         outline: none !important;
         box-shadow: none !important;
     }
 
-    /* 3. EXPERIENCE CARD */
-    .timeline-card {
-        background: white; border-radius: 12px; padding: 24px;
-        margin-bottom: 20px;
-        border-left: 6px solid #3B82F6;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .timeline-card:hover { 
-        transform: translateX(8px); 
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1); 
-    }
-    
-    .timeline-desc {
-        white-space: pre-line;
-        color: #475569;
-        margin-top: 10px;
-        line-height: 1.6;
-        font-size: 0.95rem;
-    }
-
-    .metric-card {
+    /* OTHER CARDS */
+    .timeline-card, .metric-card {
         background: white; border: 1px solid #E2E8F0; border-radius: 12px;
-        padding: 20px; text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .metric-card:hover { transform: translateY(-5px); border-color: #3B82F6; }
-    
-    /* SKILL BARS */
-    .skill-metric {
-        background: white;
-        border: 1px solid #f1f5f9;
-        border-radius: 8px;
-        padding: 15px;
-        text-align: center;
-        margin-bottom: 10px;
+        padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
     }
 
 </style>
@@ -291,19 +267,22 @@ elif selected == "Projects":
                 with cols[j]:
                     img_src = get_img_src(p.get('image', ''))
                     
-                    # --- CRITICAL FIX: LEFT ALIGNED HTML ---
-                    # The HTML string is strictly aligned to the left to avoid indentation issues.
+                    # --- HTML CARD ---
+                    # Using LEFT ALIGNED string to prevent code block issues.
+                    # height:100% in CSS forces the card to fill the column space.
                     html_content = f"""<div class="project-card">
 <div class="p-cat-overlay">{p.get('category')}</div>
 <div class="p-img-container"><img src="{img_src}" class="p-img"></div>
 <div class="p-title">{p.get('title')}</div>
+<div class="p-details-container">
 <div class="p-row"><div class="p-label">🚨 Problem:</div><div class="p-val">{p.get('problem')}</div></div>
 <div class="p-row"><div class="p-label">💡 Solution:</div><div class="p-val">{p.get('solution')}</div></div>
 <div class="p-row"><div class="p-label">🚀 Impact:</div><div class="p-val">{p.get('impact')}</div></div>
+</div>
 </div>"""
                     st.markdown(html_content, unsafe_allow_html=True)
                     
-                    # 2. BUTTON (Full Width)
+                    # BUTTON
                     if st.button("More Information", key=f"btn_{actual_idx}"):
                         st.session_state.selected_project = actual_idx
                         st.rerun()
@@ -315,14 +294,12 @@ elif selected == "Skills":
     skills = st.session_state.data.get('skills', {})
     
     if skills:
-        # SPIDER CHART (POLYGON STYLE)
+        # SPIDER CHART
         c1, c2, c3 = st.columns([1, 2, 1])
         with c2:
-            # We add the first point to the end to close the polygon loop
             r_vals = list(skills.values())
             theta_vals = list(skills.keys())
             
-            # Create Plotly Figure
             fig = go.Figure()
             fig.add_trace(go.Scatterpolar(
                 r=r_vals,
@@ -333,21 +310,11 @@ elif selected == "Skills":
                 marker=dict(color='#3B82F6')
             ))
             
-            # Layout to match the reference image (Polygon grid, no circular axis labels)
             fig.update_layout(
                 polar=dict(
-                    radialaxis=dict(
-                        visible=True,
-                        range=[0, 100],
-                        showticklabels=False, # Hides the 0, 20, 40... labels on the axis
-                        ticks='',
-                        gridcolor='#E2E8F0',
-                    ),
-                    angularaxis=dict(
-                        showticklabels=True,
-                        gridcolor='#E2E8F0'
-                    ),
-                    gridshape='linear', # THIS MAKES IT A POLYGON (Spider), NOT CIRCLE
+                    radialaxis=dict(visible=True, range=[0, 100], showticklabels=False, ticks='', gridcolor='#E2E8F0'),
+                    angularaxis=dict(showticklabels=True, gridcolor='#E2E8F0'),
+                    gridshape='linear',
                     bgcolor='white'
                 ),
                 showlegend=False,
@@ -356,14 +323,14 @@ elif selected == "Skills":
             )
             st.plotly_chart(fig, use_container_width=True)
 
-    # PROFICIENCY BARS (Restored)
+    # PROFICIENCY BARS
     st.markdown("### Proficiency")
     s_cols = st.columns(4)
     skill_items = list(skills.items())
     for i, (s, v) in enumerate(skill_items):
         with s_cols[i % 4]:
             st.markdown(f"""
-            <div class="skill-metric">
+            <div class="skill-metric" style="background:white; border:1px solid #f1f5f9; border-radius:8px; padding:15px; text-align:center; margin-bottom:10px;">
                 <b>{s}</b>
                 <div style="color:#3B82F6; font-size:1.2rem; font-weight:800;">{v}%</div>
                 <progress value="{v}" max="100" style="width:100%; height:8px; border-radius:5px;"></progress>
@@ -375,10 +342,10 @@ elif selected == "Experience":
     st.title("Experience")
     for job in st.session_state.data.get('experience', []):
         st.markdown(f"""
-        <div class="timeline-card">
+        <div class="timeline-card" style="background:white; border-radius:12px; padding:24px; margin-bottom:20px; border-left:6px solid #3B82F6; box-shadow:0 2px 4px rgba(0,0,0,0.05);">
             <b>{job.get("role")}</b> @ {job.get("company")}<br>
             <small>{job.get("date")}</small>
-            <div class="timeline-desc">{job.get("description")}</div>
+            <div class="timeline-desc" style="white-space:pre-line; color:#475569; margin-top:10px; line-height:1.6; font-size:0.95rem;">{job.get("description")}</div>
         </div>
         """, unsafe_allow_html=True)
 
