@@ -22,6 +22,17 @@ st.markdown("""
     .main { padding-top: 1rem; }
     h1, h2, h3 { font-family: 'Segoe UI', sans-serif; color: #0F172A; }
     
+    /* --- ANIMATIONS DEFINITIONS --- */
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translate3d(0, 20px, 0); }
+        to { opacity: 1; transform: translate3d(0, 0, 0); }
+    }
+    
+    @keyframes zoomIn {
+        from { opacity: 0; transform: scale3d(0.95, 0.95, 0.95); }
+        to { opacity: 1; transform: scale3d(1, 1, 1); }
+    }
+
     /* 0. COLUMN SETUP */
     [data-testid="column"] {
         display: flex;
@@ -48,6 +59,8 @@ st.markdown("""
         padding-bottom: 70px; 
         margin-bottom: 20px; 
         
+        /* ANIMATION APPLIED HERE */
+        animation: fadeInUp 0.6s ease-out;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
     
@@ -86,19 +99,17 @@ st.markdown("""
         border: 1px solid #e2e8f0;
     }
 
-    /* PROJECT TEXT - IMPROVED CONTRAST */
+    /* PROJECT TEXT */
     .p-title { 
         font-size: 1.2rem; 
         font-weight: 700; 
-        color: #0F172A; /* Darker Navy */
+        color: #0F172A;
         margin-bottom: 15px; 
         line-height: 1.3;
         flex-grow: 0; 
     }
     
-    .p-details-container {
-        flex-grow: 1; 
-    }
+    .p-details-container { flex-grow: 1; }
 
     .p-row {
         display: flex;       
@@ -110,13 +121,13 @@ st.markdown("""
         min-width: 85px;    
         flex-shrink: 0;     
         font-weight: 700;
-        color: #1E293B; /* Darker Slate */
+        color: #1E293B;
         font-size: 0.85rem;
     }
     
     .p-val {
         font-size: 0.85rem;
-        color: #334155; /* Darker text for better readability */
+        color: #334155;
         line-height: 1.5;
     }
 
@@ -157,7 +168,7 @@ st.markdown("""
         box-shadow: none !important;
     }
 
-    /* 3. DETAILED VIEW BOXES (DARKER TEXT FOR CONTRAST) */
+    /* 3. DETAILED VIEW BOXES */
     .detail-row {
         display: flex;
         flex-direction: row;
@@ -165,6 +176,7 @@ st.markdown("""
         width: 100%;
         margin-bottom: 20px;
         flex-wrap: wrap; 
+        animation: zoomIn 0.5s ease-out; /* Animation added */
     }
     
     .detail-box {
@@ -191,24 +203,44 @@ st.markdown("""
         font-weight: 500;
     }
 
-    /* Darkened text colors for better contrast */
-    .d-blue { background-color: #EFF6FF; border: 1px solid #DBEAFE; color: #172554; } /* Dark Navy on Light Blue */
-    .d-green { background-color: #F0FDF4; border: 1px solid #DCFCE7; color: #14532D; } /* Dark Green on Light Green */
-    .d-yellow { background-color: #FEFCE8; border: 1px solid #FEF9C3; color: #78350F; } /* Dark Brown on Light Yellow */
+    .d-blue { background-color: #EFF6FF; border: 1px solid #DBEAFE; color: #172554; } 
+    .d-green { background-color: #F0FDF4; border: 1px solid #DCFCE7; color: #14532D; } 
+    .d-yellow { background-color: #FEFCE8; border: 1px solid #FEF9C3; color: #78350F; } 
 
-    /* 4. PROGRESS BAR COLOR FIX */
-    progress {
-        accent-color: #3B82F6; /* For Chrome/Edge/Safari */
+    /* 4. OTHER CARDS (TIMELINE, METRICS) */
+    .timeline-card {
+        background: white; border: 1px solid #E2E8F0; border-radius: 12px;
+        padding: 24px; margin-bottom: 20px;
+        border-left: 6px solid #3B82F6;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        animation: fadeInUp 0.6s ease-out; /* Slide Up Animation */
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    /* Webkit fallback */
+    .timeline-card:hover { transform: translateX(5px); }
+
+    .metric-card {
+        background: white; border: 1px solid #E2E8F0; border-radius: 12px;
+        padding: 20px; text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        animation: zoomIn 0.5s ease-out; /* Pop In Animation */
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .metric-card:hover { transform: translateY(-5px); border-color: #3B82F6; }
+
+    /* SKILL BARS */
+    .skill-metric {
+        background: white;
+        border: 1px solid #f1f5f9;
+        border-radius: 8px;
+        padding: 15px;
+        text-align: center;
+        margin-bottom: 10px;
+        animation: fadeInUp 0.7s ease-out; /* Slide Up Animation */
+    }
+
+    /* Progress Bar Color */
+    progress { accent-color: #3B82F6; }
     progress::-webkit-progress-value { background-color: #3B82F6 !important; }
     progress::-moz-progress-bar { background-color: #3B82F6 !important; }
-
-    /* OTHER CARDS */
-    .timeline-card, .metric-card {
-        background: white; border: 1px solid #E2E8F0; border-radius: 12px;
-        padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-    }
 
 </style>
 """, unsafe_allow_html=True)
@@ -250,7 +282,7 @@ with st.sidebar:
         img_src = get_img_src(prof.get('image_url'))
         st.markdown(f"""
             <div style="display: flex; justify-content: center; margin-bottom: 20px;">
-                <img src="{img_src}" style="width: 140px; border-radius: 10px; object-fit: cover;">
+                <img src="{img_src}" style="width: 140px; border-radius: 10px; object-fit: cover; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
             </div>
         """, unsafe_allow_html=True)
     
@@ -275,9 +307,11 @@ if selected == "Home":
     mets = st.session_state.data.get('metrics', {})
     c1, c2 = st.columns([1.5, 1])
     with c1:
-        st.markdown(f"<h1 style='font-size:3.5rem; margin-bottom:0;'>{prof.get('name', 'Name')}</h1>", unsafe_allow_html=True)
-        st.markdown(f"<h3 style='color:#3B82F6; margin-top:0;'>{prof.get('role', 'Role')}</h3>", unsafe_allow_html=True)
+        st.markdown(f"<h1 style='font-size:3.5rem; margin-bottom:0; animation: fadeInUp 0.5s ease-out;'>{prof.get('name', 'Name')}</h1>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='color:#3B82F6; margin-top:0; animation: fadeInUp 0.6s ease-out;'>{prof.get('role', 'Role')}</h3>", unsafe_allow_html=True)
         st.write(prof.get('summary', ''))
+        
+        # Metrics with Animation
         mc1, mc2, mc3 = st.columns(3)
         with mc1: st.markdown(f'<div class="metric-card"><div style="font-size:1.8rem; font-weight:800; color:#3B82F6;">{mets.get("dashboards","0")}</div><div style="font-size:0.85rem; color:#64748B;">DASHBOARDS</div></div>', unsafe_allow_html=True)
         with mc2: st.markdown(f'<div class="metric-card"><div style="font-size:1.8rem; font-weight:800; color:#3B82F6;">{mets.get("manual_reduction","0%")}</div><div style="font-size:0.85rem; color:#64748B;">REDUCTION</div></div>', unsafe_allow_html=True)
@@ -308,7 +342,7 @@ elif selected == "Projects":
         st.write(p.get('details', 'Description coming soon.'))
         st.markdown("---")
         
-        # --- DETAILED VIEW BOXES (DARKER TEXT) ---
+        # --- DETAILED VIEW BOXES ---
         html_details = textwrap.dedent(f"""
             <div class="detail-row">
                 <div class="detail-box d-blue">
@@ -337,7 +371,7 @@ elif selected == "Projects":
                 with cols[j]:
                     img_src = get_img_src(p.get('image', ''))
                     
-                    # --- PROJECT CARD (GRID VIEW) ---
+                    # --- PROJECT CARD ---
                     html_content = textwrap.dedent(f"""
                         <div class="project-card">
                             <div class="p-cat-overlay">{p.get('category')}</div>
@@ -392,14 +426,14 @@ elif selected == "Skills":
             )
             st.plotly_chart(fig, use_container_width=True)
 
-    # PROFICIENCY BARS (BLUE THEMED)
+    # PROFICIENCY BARS
     st.markdown("### Proficiency")
     s_cols = st.columns(4)
     skill_items = list(skills.items())
     for i, (s, v) in enumerate(skill_items):
         with s_cols[i % 4]:
             st.markdown(f"""
-            <div class="skill-metric" style="background:white; border:1px solid #f1f5f9; border-radius:8px; padding:15px; text-align:center; margin-bottom:10px;">
+            <div class="skill-metric">
                 <b>{s}</b>
                 <div style="color:#3B82F6; font-size:1.2rem; font-weight:800;">{v}%</div>
                 <progress value="{v}" max="100" style="width:100%; height:8px; border-radius:5px;"></progress>
@@ -411,7 +445,7 @@ elif selected == "Experience":
     st.title("Experience")
     for job in st.session_state.data.get('experience', []):
         st.markdown(f"""
-        <div class="timeline-card" style="background:white; border-radius:12px; padding:24px; margin-bottom:20px; border-left:6px solid #3B82F6; box-shadow:0 2px 4px rgba(0,0,0,0.05);">
+        <div class="timeline-card">
             <b>{job.get("role")}</b> @ {job.get("company")}<br>
             <small>{job.get("date")}</small>
             <div class="timeline-desc" style="white-space:pre-line; color:#475569; margin-top:10px; line-height:1.6; font-size:0.95rem;">{job.get("description")}</div>
