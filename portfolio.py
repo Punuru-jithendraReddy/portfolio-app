@@ -21,6 +21,14 @@ st.markdown("""
     .main { padding-top: 1rem; }
     h1, h2, h3 { font-family: 'Segoe UI', sans-serif; color: #0F172A; }
     
+    /* 0. COLUMN POSITIONING */
+    /* Needed for the button overlay to work */
+    [data-testid="column"] {
+        position: relative !important;
+        display: flex;
+        flex-direction: column;
+    }
+
     /* 1. HERO METRIC CARDS */
     .metric-card {
         background: white; border: 1px solid #E2E8F0; border-radius: 12px;
@@ -62,16 +70,17 @@ st.markdown("""
         display: flex;
         flex-direction: column;
         height: 100%;
-        min-height: 540px; 
-        
-        /* IMPORTANT: This bottom padding reserves space for the button */
-        padding-bottom: 70px; 
+        min-height: 500px; 
+        padding-bottom: 20px; /* Removed extra padding since button is now an overlay */
     }
-    .project-card:hover {
+    
+    /* HOVER EFFECT: Triggered by hovering the COLUMN now, because the button is on top */
+    [data-testid="column"]:hover .project-card {
         transform: translateY(-5px);
         box-shadow: 0 12px 20px -5px rgba(59, 130, 246, 0.25);
         border-color: #3B82F6;
     }
+
     .p-img-container { 
         width: 100%; 
         height: 200px; 
@@ -88,7 +97,6 @@ st.markdown("""
         flex-direction: column; 
     }
     
-    /* CATEGORY OVERLAY: Floating top-left */
     .p-cat-overlay { 
         position: absolute;
         top: 15px;
@@ -109,36 +117,24 @@ st.markdown("""
     .p-title { font-size: 1.25rem; font-weight: 800; color: #1E293B; margin-bottom: 10px; }
     .p-detail { font-size: 0.90rem; color: #475569; margin-bottom: 8px; line-height: 1.4; }
 
-    /* 6. BUTTON STYLING: Logic to place inside card */
-    
-    /* Target only buttons inside the nested columns (The Project Grid) */
-    div[data-testid="column"] div[data-testid="column"] .stButton {
-        margin-top: -65px !important; /* Pull button UP into the card padding */
-        float: right !important;      /* Align to right */
-        margin-right: 20px !important;/* Spacing from right edge */
-        position: relative !important;
-        z-index: 99 !important;
-        text-align: right !important;
-        width: auto !important;
+    /* 6. INVISIBLE OVERLAY BUTTON */
+    /* This makes the button fill the ENTIRE column and sit on top of the card */
+    div[data-testid="column"] .stButton {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        z-index: 99 !important; /* Sit on top of the HTML */
     }
 
-    /* Style the actual button to look nice */
-    div[data-testid="column"] div[data-testid="column"] .stButton button {
-        background-color: #F0F9FF !important; /* Light Blue */
-        color: #0284C7 !important; /* Dark Blue Text */
-        border: 1px solid #BAE6FD !important; /* Light Blue Border */
-        border-radius: 20px !important; /* Pill shape */
-        padding: 0.4rem 1.0rem !important;
-        font-weight: 600 !important;
-        font-size: 0.85rem !important;
-        transition: all 0.2s ease !important;
-    }
-
-    div[data-testid="column"] div[data-testid="column"] .stButton button:hover {
-        background-color: #E0F2FE !important;
-        border-color: #0284C7 !important;
-        color: #0369A1 !important;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+    div[data-testid="column"] .stButton button {
+        width: 100% !important;
+        height: 100% !important;
+        opacity: 0 !important; /* Make it invisible */
+        cursor: pointer !important;
+        border: none !important;
+        background: transparent !important;
     }
 
 </style>
@@ -244,7 +240,7 @@ elif selected == "Projects":
                 actual_idx = i + j
                 with cols[j]:
                     img_src = get_img_src(p.get('image', ''))
-                    # CARD HTML
+                    # CARD HTML (Visual Only)
                     st.markdown(f"""
                     <div class="project-card">
                         <div class="p-cat-overlay">{p.get('category')}</div>
@@ -260,8 +256,9 @@ elif selected == "Projects":
                     </div>
                     """, unsafe_allow_html=True)
                     
-                    # BUTTON WIDGET (Positions itself inside the card due to CSS margins)
-                    if st.button(f"View Case Study ➡", key=f"btn_{actual_idx}"):
+                    # INVISIBLE BUTTON (Functionality)
+                    # The CSS makes this button cover the entire column above the card
+                    if st.button("View", key=f"btn_{actual_idx}"):
                         st.session_state.selected_project = actual_idx
                         st.rerun()
             st.markdown("<div style='height: 25px;'></div>", unsafe_allow_html=True)
