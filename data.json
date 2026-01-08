@@ -81,7 +81,7 @@
             "problem": "Unreliable forecasts and unclear pipeline visibility made resource planning hard.",
             "solution": "Bridges past results with current pipeline data to deliver accurate revenue forecasts.",
             "impact": "Improved reliability of revenue projections for investors.",
-            "details": "Designed to support the CRO, this dashboard blends historical invoice data with live CRM opportunity data. We implemented a weighted forecast logic (Deal Value * Probability) to give a realistic revenue projection. The visualization includes a funnel chart to identify where deals are dropping off and a trend line comparing this quarter's pipeline velocity against the previous four quarters."
+            "details": "This Open Sales Order analytics solution provides a real-time, consolidated view of open sales performance across customers, regions, and sales ownership. It enables clear visibility into order value, volume, pricing, and status, while supporting year-over-year trend analysis to identify demand patterns and seasonality.\n\nThe solution demonstrates strong capability in business-aligned KPI definition, dynamic, filter-driven analysis, and insight-focused reporting, supporting faster and more informed decision-making for sales and leadership teams."
         },
         {
             "title": "Performance Leaderboard",
@@ -165,4 +165,3 @@
         }
     ]
 }
-
