@@ -128,10 +128,14 @@ st.markdown("""
     }
     .metric-card:hover { transform: translateY(-5px); border-color: #3B82F6; }
 
-    /* TOOLTIP CONTAINER */
+   /* --- TOOLTIP STYLES --- */
     .tooltip-text {
         visibility: hidden;
-        width: 220px;
+        
+        /* 1. INCREASED WIDTH & FORCE SINGLE LINE */
+        width: auto; 
+        min-width: 300px; 
+        white-space: nowrap; 
         
         /* LIGHT THEME STYLING */
         background-color: #ffffff; 
@@ -146,7 +150,7 @@ st.markdown("""
         z-index: 100;
         
         /* POSITIONING: DOWNWARD */
-        top: 110%; /* Push below the card */
+        top: 110%; 
         left: 50%;
         transform: translateX(-50%);
         
@@ -589,4 +593,5 @@ elif selected == "Contact":
     for i, item in enumerate(prof.get('contact_info', [])):
         with (c1 if i % 2 == 0 else c2):
             st.markdown(f'<a href="{item.get("value")}" target="_blank" style="text-decoration:none;"><div class="metric-card"><img src="{item.get("icon")}" width="40"><br><b>{item.get("label")}</b></div></a>', unsafe_allow_html=True)
+
 
