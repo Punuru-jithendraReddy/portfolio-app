@@ -22,12 +22,11 @@ st.markdown("""
     .main { padding-top: 1rem; }
     h1, h2, h3 { font-family: 'Segoe UI', sans-serif; color: #0F172A; }
     
-    /* 0. COLUMN SETUP */
+    /* 0. COLUMN SETUP - FORCE EQUAL HEIGHT */
     [data-testid="column"] {
-        position: relative !important;
         display: flex;
         flex-direction: column;
-        height: 100%; 
+        height: 100%; /* Ensures the column container fills the row height */
     }
 
     /* 1. PROJECT CARD DESIGN */
@@ -42,8 +41,10 @@ st.markdown("""
         display: flex;
         flex-direction: column;
         
-        height: 100%; 
-        min-height: 400px; 
+        /* FORCE EQUAL HEIGHT */
+        flex: 1;       /* Grow to fill the column height */
+        height: 100%;  /* Take up 100% of available space */
+        min-height: 450px; 
         
         /* Padding bottom reserves space for button */
         padding-bottom: 70px; 
@@ -123,16 +124,14 @@ st.markdown("""
         line-height: 1.5;
     }
 
-    /* 2. BUTTON STYLING (RIGHT ALIGNED) */
+    /* 2. BUTTON STYLING (STRICT RIGHT ALIGNMENT) */
     div[data-testid="column"] .stButton {
         position: absolute !important;
         bottom: 20px !important; 
-        right: 20px !important;    /* Anchor to right */
-        left: auto !important;     /* Release left anchor */
-        width: auto !important;    /* Shrink to fit content */
-        min-width: 0 !important;
-        display: inline-flex !important;
-        justify-content: flex-end !important;
+        right: 20px !important;      /* Pin to right */
+        left: unset !important;      /* Release left pin */
+        width: auto !important;      /* Allow shrink wrap */
+        text-align: right !important;
         z-index: 10 !important;
     }
 
@@ -142,11 +141,12 @@ st.markdown("""
         border: 1px solid #DBEAFE !important;
         border-radius: 8px !important;
         width: auto !important; 
-        font-size: 0.95rem !important;
+        font-size: 0.90rem !important;
         font-weight: 600 !important;
-        padding: 0.5rem 1.2rem !important;
+        padding: 0.5rem 1.0rem !important;
         box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
         transition: all 0.2s ease !important;
+        float: right !important; /* Extra safety to float right */
     }
 
     div[data-testid="column"] .stButton button:hover {
@@ -272,7 +272,7 @@ elif selected == "Projects":
                     img_src = get_img_src(p.get('image', ''))
                     
                     # --- HTML CARD ---
-                    # Using textwrap.dedent to strip any accidental indentation
+                    # Using textwrap to handle indentation cleanly
                     html_content = textwrap.dedent(f"""
                         <div class="project-card">
                             <div class="p-cat-overlay">{p.get('category')}</div>
