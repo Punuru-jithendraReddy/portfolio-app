@@ -311,9 +311,9 @@ if selected == "Home":
         # Tooltip for Dashboards
         tt_dash = """
         <div style='margin-bottom:6px;'><b>Key Projects:</b></div>
-        • 10+ interactive Power BI dashboards<br>
-        • Covers Finance, Sales, HR, Operations & Management KPIs<br>
-        • Built with drill-downs, filters, and performance-optimized models
+        • 10+ dashboards supporting data-driven decisions<br>
+        • Combines KPIs, trends, and variance analysis<br>
+        • Designed for both operational and leadership use
         """
         
         # Tooltip for Reduction
@@ -589,3 +589,4 @@ elif selected == "Contact":
     for i, item in enumerate(prof.get('contact_info', [])):
         with (c1 if i % 2 == 0 else c2):
             st.markdown(f'<a href="{item.get("value")}" target="_blank" style="text-decoration:none;"><div class="metric-card"><img src="{item.get("icon")}" width="40"><br><b>{item.get("label")}</b></div></a>', unsafe_allow_html=True)
+
