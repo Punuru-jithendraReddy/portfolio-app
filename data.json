@@ -35,20 +35,21 @@
         "Power Automate": 90,
         "Python": 85,
         "SQL": 80,
-        "Azure Logic Apps": 75
+        "Azure Logic Apps": 75,
+        "Power Apps": 75
     },
     "experience": [
         {
             "role": "Software Engineer (BI & Automation)",
             "company": "Svarapps Technologies Pvt Ltd",
             "date": "Sep 2024 - Present",
-            "description": "• Delivered 8+ high-impact Power BI dashboards across Finance, Sales, Logistics, and Operations, improving management decision-making and financial visibility.\n• Built and optimized end-to-end data pipelines (Oracle -> SharePoint -> Power BI) using Python and automation, reducing manual effort and improving data reliability.\n• Enhanced reporting performance by optimizing data models and refresh logic, achieving faster refresh times and more responsive dashboards.\n• Developed automation and AI solutions using Copilot Studio, Logic Apps, and AI Builder to enable self-service insights, automate invoice processing, and streamline file management.\n• Drove cost optimization by introducing Excel-based reporting alternatives, reducing dependency on premium BI licensing without sacrificing insights."
+            "description": "\u2022 Delivered 8+ high-impact Power BI dashboards across Finance, Sales, Logistics, and Operations, improving management decision-making and financial visibility.\n\u2022 Built and optimized end-to-end data pipelines (Oracle -> SharePoint -> Power BI) using Python and automation, reducing manual effort and improving data reliability.\n\u2022 Enhanced reporting performance by optimizing data models and refresh logic, achieving faster refresh times and more responsive dashboards.\n\u2022 Developed automation and AI solutions using Copilot Studio, Logic Apps, and AI Builder to enable self-service insights, automate invoice processing, and streamline file management.\n\u2022 Drove cost optimization by introducing Excel-based reporting alternatives, reducing dependency on premium BI licensing without sacrificing insights."
         },
         {
             "role": "Data Analyst Intern",
             "company": "AI Varient",
             "date": "Jan 2023 - Jan 2024",
-            "description": "• Generated Reports and Dashboards using Power-Bi Desktop, Tableau, and Advanced Excel.\n• Constructed tabular and multidimensional data models.\n• Created compelling data visualizations from live & extract data sources.\n• Processed and shaped data using Excel, MySQL and advanced extraction techniques.\n• Completed two projects during a 6-month internship, demonstrating proficiency in data analytics and visualization."
+            "description": "\u2022 Generated Reports and Dashboards using Power-Bi Desktop, Tableau, and Advanced Excel.\n\u2022 Constructed tabular and multidimensional data models.\n\u2022 Created compelling data visualizations from live & extract data sources.\n\u2022 Processed and shaped data using Excel, MySQL and advanced extraction techniques.\n\u2022 Completed two projects during a 6-month internship, demonstrating proficiency in data analytics and visualization."
         }
     ],
     "projects": [
@@ -100,7 +101,7 @@
             "problem": "Frequent PO changes raised costs and hid supplier inefficiencies.",
             "solution": "Root Cause Analysis dashboard categorizing reasons for order revisions.",
             "impact": "Identified bottlenecks and improved supplier performance.",
-            "details": "Focused on procurement efficiency, this tool analyzes Purchase Order (PO) lifecycle data. It highlights 'PO Churn'—orders that are modified more than 3 times. By visualizing the 'Reason for Change' (e.g., Vendor Out of Stock, Price Change, Internal Request), the procurement team was able to renegotiate terms with vendors causing 80% of the disruptions."
+            "details": "Focused on procurement efficiency, this tool analyzes Purchase Order (PO) lifecycle data. It highlights 'PO Churn'\u2014orders that are modified more than 3 times. By visualizing the 'Reason for Change' (e.g., Vendor Out of Stock, Price Change, Internal Request), the procurement team was able to renegotiate terms with vendors causing 80% of the disruptions."
         },
         {
             "title": "Live Operations Monitor",
