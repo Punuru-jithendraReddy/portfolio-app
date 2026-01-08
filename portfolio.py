@@ -52,28 +52,44 @@ st.markdown("""
     .t-date { font-size: 0.85rem; color: #94A3B8; float: right; font-weight: 500; }
     .t-desc { font-size: 0.95rem; color: #334155; line-height: 1.6; margin-top: 10px; white-space: pre-line; }
 
-    /* 3. PROJECT CARDS (Uniform Height & Animation) */
+    /* 3. PROJECT CARDS (Fixed: Equal Height Strategy) */
     .project-card {
         background-color: #ffffff;
         border: 1px solid #e2e8f0;
         border-radius: 12px;
         padding: 0;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        margin-bottom: 0px; /* Removed bottom margin as rows handle spacing */
+        margin-bottom: 0px; 
         overflow: hidden;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
-        height: 100%; /* Fills the container height */
+        
+        /* FORCE EQUAL HEIGHT */
         display: flex;
         flex-direction: column;
+        height: 100%;       /* Fills container */
+        min-height: 520px;  /* Ensures even short cards are tall enough to match neighbors */
     }
     .project-card:hover {
         transform: translateY(-8px);
         box-shadow: 0 12px 20px -5px rgba(59, 130, 246, 0.25);
         border-color: #3B82F6;
     }
-    .p-img-container { width: 100%; height: 200px; overflow: hidden; border-bottom: 1px solid #e2e8f0; flex-shrink: 0; }
+    .p-img-container { 
+        width: 100%; 
+        height: 200px; 
+        overflow: hidden; 
+        border-bottom: 1px solid #e2e8f0; 
+        flex-shrink: 0; /* Prevents image from shrinking */
+    }
     .p-img { width: 100%; height: 100%; object-fit: cover; }
-    .p-content { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
+    
+    .p-content { 
+        padding: 20px; 
+        flex-grow: 1; /* Pushes content to fill remaining space */
+        display: flex; 
+        flex-direction: column; 
+    }
+    
     .p-title { font-size: 1.25rem; font-weight: 800; color: #1E293B; margin-bottom: 5px; }
     .p-cat { font-size: 0.8rem; font-weight: 700; color: #64748B; text-transform: uppercase; margin-bottom: 15px; }
     .p-detail { font-size: 0.95rem; color: #475569; margin-bottom: 10px; line-height: 1.5; }
@@ -231,7 +247,7 @@ elif selected == "Experience":
         </div>
         """, unsafe_allow_html=True)
 
-# --- PROJECTS (FIXED: UNIFORM ROW ALIGNMENT) ---
+# --- PROJECTS ---
 elif selected == "Projects":
     st.title("Projects")
     
@@ -256,14 +272,10 @@ elif selected == "Projects":
                 if st.button("Delete", type="primary"): st.session_state.data['projects'].pop(pidx); save_data(st.session_state.data); st.rerun()
 
     # --- RENDER LOGIC: Process in Batches of 2 ---
-    # This creates a new row container for every 2 projects, ensuring perfect top alignment.
     projects = st.session_state.data.get('projects', [])
     
     for i in range(0, len(projects), 2):
-        # Create a new row of columns for every pair
         cols = st.columns(2)
-        
-        # Get the slice of 2 projects (or 1 if it's the last one)
         batch = projects[i : i+2]
         
         for j, p in enumerate(batch):
@@ -288,7 +300,6 @@ elif selected == "Projects":
                 </div>
                 """, unsafe_allow_html=True)
         
-        # Add a small spacer after each row
         st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
 
 
