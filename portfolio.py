@@ -2,7 +2,6 @@ import streamlit as st
 import json
 import os
 import base64
-import textwrap  # Added to fix the HTML indentation issue
 from streamlit_option_menu import option_menu
 from PIL import Image
 import plotly.graph_objects as go
@@ -292,32 +291,16 @@ elif selected == "Projects":
                 with cols[j]:
                     img_src = get_img_src(p.get('image', ''))
                     
-                    # 1. CARD HTML - FIXED INDENTATION USING textwrap.dedent
-                    # This removes all common leading whitespace, preventing Markdown code block issues
-                    html_content = textwrap.dedent(f"""
-                        <div class="project-card">
-                            <div class="p-cat-overlay">{p.get('category')}</div>
-                            <div class="p-img-container">
-                                <img src="{img_src}" class="p-img">
-                            </div>
-                            <div class="p-title">{p.get('title')}</div>
-                            
-                            <div class="p-row">
-                                <div class="p-label">🚨 Problem:</div>
-                                <div class="p-val">{p.get('problem')}</div>
-                            </div>
-                            
-                            <div class="p-row">
-                                <div class="p-label">💡 Solution:</div>
-                                <div class="p-val">{p.get('solution')}</div>
-                            </div>
-                            
-                            <div class="p-row">
-                                <div class="p-label">🚀 Impact:</div>
-                                <div class="p-val">{p.get('impact')}</div>
-                            </div>
-                        </div>
-                    """)
+                    # --- CRITICAL FIX: LEFT ALIGNED HTML ---
+                    # The HTML string is strictly aligned to the left to avoid indentation issues.
+                    html_content = f"""<div class="project-card">
+<div class="p-cat-overlay">{p.get('category')}</div>
+<div class="p-img-container"><img src="{img_src}" class="p-img"></div>
+<div class="p-title">{p.get('title')}</div>
+<div class="p-row"><div class="p-label">🚨 Problem:</div><div class="p-val">{p.get('problem')}</div></div>
+<div class="p-row"><div class="p-label">💡 Solution:</div><div class="p-val">{p.get('solution')}</div></div>
+<div class="p-row"><div class="p-label">🚀 Impact:</div><div class="p-val">{p.get('impact')}</div></div>
+</div>"""
                     st.markdown(html_content, unsafe_allow_html=True)
                     
                     # 2. BUTTON (Full Width)
