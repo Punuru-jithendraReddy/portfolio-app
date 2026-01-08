@@ -41,14 +41,13 @@ st.markdown("""
         display: flex;
         flex-direction: column;
         
-        /* Force equal height alignment */
         height: 100%; 
         min-height: 400px; 
         
-        /* ADJUSTED: Reduced internal padding so button is closer to text */
+        /* Padding bottom reserves space for button */
         padding-bottom: 70px; 
         
-        /* ADJUSTED: Added external margin to push next content away */
+        /* Margin bottom pushes the next row away */
         margin-bottom: 20px; 
         
         transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -123,13 +122,13 @@ st.markdown("""
         line-height: 1.5;
     }
 
-    /* 2. BUTTON STYLING */
+    /* 2. BUTTON STYLING (RIGHT ALIGNED) */
     div[data-testid="column"] .stButton {
         position: absolute !important;
         bottom: 20px !important; 
-        left: 20px !important;
-        right: 20px !important;
-        width: auto !important; 
+        right: 20px !important;    /* Anchor to right */
+        left: auto !important;     /* Release left anchor */
+        width: auto !important;    /* Auto width based on text size */
         z-index: 10 !important;
     }
 
@@ -138,10 +137,11 @@ st.markdown("""
         color: #2563EB !important;
         border: 1px solid #DBEAFE !important;
         border-radius: 8px !important;
-        width: 100% !important;
+        /* Remove width:100% so it hugs the text */
+        width: auto !important; 
         font-size: 0.95rem !important;
         font-weight: 600 !important;
-        padding: 0.6rem 1rem !important;
+        padding: 0.5rem 1.2rem !important;
         box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
         transition: all 0.2s ease !important;
     }
@@ -269,7 +269,6 @@ elif selected == "Projects":
                     img_src = get_img_src(p.get('image', ''))
                     
                     # --- HTML CARD ---
-                    # Using LEFT ALIGNED string to prevent code block issues.
                     html_content = f"""<div class="project-card">
 <div class="p-cat-overlay">{p.get('category')}</div>
 <div class="p-img-container"><img src="{img_src}" class="p-img"></div>
@@ -283,10 +282,9 @@ elif selected == "Projects":
                     st.markdown(html_content, unsafe_allow_html=True)
                     
                     # BUTTON
-                    if st.button("More Information", key=f"btn_{actual_idx}"):
+                    if st.button("More Information ➜", key=f"btn_{actual_idx}"):
                         st.session_state.selected_project = actual_idx
                         st.rerun()
-            # INCREASED SPACER: From 30px to 80px to separate rows more clearly
             st.markdown("<div style='height: 80px;'></div>", unsafe_allow_html=True)
 
 # --- SKILLS ---
