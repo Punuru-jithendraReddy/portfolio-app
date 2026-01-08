@@ -68,7 +68,8 @@ st.markdown("""
         flex-direction: column;
         height: 100%;
         min-height: 520px; /* Consistent Height */
-        padding-bottom: 65px; /* EXTRA PADDING AT BOTTOM FOR THE BUTTON */
+        /* IMPORTANT: Extra padding at bottom to hold the button inside */
+        padding-bottom: 80px; 
     }
     .project-card:hover {
         transform: translateY(-5px);
@@ -90,8 +91,18 @@ st.markdown("""
         display: flex; 
         flex-direction: column; 
     }
-    .p-title { font-size: 1.25rem; font-weight: 800; color: #1E293B; margin-bottom: 5px; }
-    .p-cat { font-size: 0.8rem; font-weight: 700; color: #64748B; text-transform: uppercase; margin-bottom: 15px; }
+    
+    /* CATEGORY: Small, Top-Left, Uppercase */
+    .p-cat { 
+        font-size: 0.75rem; 
+        font-weight: 700; 
+        color: #3B82F6; /* Blue text */
+        text-transform: uppercase; 
+        margin-bottom: 4px; /* Slight space before title */
+        letter-spacing: 0.5px;
+    }
+
+    .p-title { font-size: 1.25rem; font-weight: 800; color: #1E293B; margin-bottom: 10px; }
     .p-detail { font-size: 0.90rem; color: #475569; margin-bottom: 8px; line-height: 1.4; }
 
     /* 4. SKILL METRICS */
@@ -118,16 +129,16 @@ st.markdown("""
     .contact-label { font-size: 1.1rem; font-weight: 700; color: #1E293B; margin-bottom: 5px; }
     .contact-val { font-size: 0.9rem; color: #3B82F6; }
 
-    /* 6. BUTTON STYLING (The Magic Part) */
+    /* 6. BUTTON STYLING (Fixed Positioning) */
     
-    /* Target buttons specifically inside the columns layout (Project Grid) */
+    /* Target buttons specifically inside the columns layout */
     [data-testid="column"] .stButton {
-        margin-top: -60px; /* Pulls the button UP into the card's padding area */
-        margin-right: 15px; /* Adds spacing from the right edge */
+        margin-top: -75px; /* AGGRESSIVE NEGATIVE MARGIN to pull it inside */
+        margin-right: 15px;
         display: flex;
-        justify-content: flex-end; /* Aligns button to the right */
+        justify-content: flex-end; /* Align right */
         position: relative;
-        z-index: 99; /* Ensures button is clickable and on top */
+        z-index: 99;
     }
 
     /* Style the actual button element */
@@ -142,7 +153,6 @@ st.markdown("""
         transition: all 0.2s ease !important;
     }
 
-    /* Hover effect for the button */
     [data-testid="column"] .stButton button:hover {
         background-color: #E0F2FE !important;
         border-color: #0284C7 !important;
@@ -388,21 +398,22 @@ elif selected == "Projects":
                     if p.get('solution'): details_html += f"<div class='p-detail'><b>💡 Solution:</b> {p['solution']}</div>"
                     if p.get('impact'): details_html += f"<div class='p-detail'><b>🚀 Impact:</b> {p['impact']}</div>"
 
+                    # FIXED: Category is now BEFORE title (Top-left)
                     st.markdown(f"""
                     <div class="project-card">
                         <div class="p-img-container">
                             <img src="{img_src}" class="p-img">
                         </div>
                         <div class="p-content">
-                            <div class="p-title">{p.get('title')}</div>
                             <div class="p-cat">📂 {p.get('category')}</div>
+                            <div class="p-title">{p.get('title')}</div>
                             {details_html}
                         </div>
                     </div>
                     """, unsafe_allow_html=True)
                     
                     # 2. Add the "View Case Study" Button
-                    # The CSS 'margin-top: -60px' will pull this button UP into the card above
+                    # The CSS 'margin-top: -75px' pulls this button UP into the card
                     if st.button(f"View Case Study ➡", key=f"btn_{actual_idx}"):
                         st.session_state.selected_project = actual_idx
                         st.rerun()
