@@ -21,11 +21,11 @@ st.markdown("""
     .main { padding-top: 1rem; }
     h1, h2, h3 { font-family: 'Segoe UI', sans-serif; color: #0F172A; }
     
-    /* 1. HERO METRIC CARDS (With Animation) */
+    /* 1. HERO METRIC CARDS */
     .metric-card {
         background: white; border: 1px solid #E2E8F0; border-radius: 12px;
         padding: 20px; text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-        transition: transform 0.3s ease, box-shadow 0.3s ease; /* ANIMATION ADDED */
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     .metric-card:hover { 
         transform: translateY(-5px); 
@@ -35,13 +35,13 @@ st.markdown("""
     .metric-value { font-size: 1.8rem; font-weight: 800; color: #3B82F6; }
     .metric-label { font-size: 0.85rem; font-weight: 600; color: #64748B; text-transform: uppercase; }
 
-    /* 2. TIMELINE CARDS (With Animation) */
+    /* 2. TIMELINE CARDS */
     .timeline-card {
         background: white; border-radius: 12px; padding: 24px;
         margin-bottom: 20px;
         border-left: 6px solid #3B82F6;
         box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        transition: transform 0.3s ease, box-shadow 0.3s ease; /* ANIMATION ADDED */
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     .timeline-card:hover { 
         transform: translateX(8px); 
@@ -52,35 +52,37 @@ st.markdown("""
     .t-date { font-size: 0.85rem; color: #94A3B8; float: right; font-weight: 500; }
     .t-desc { font-size: 0.95rem; color: #334155; line-height: 1.6; margin-top: 10px; white-space: pre-line; }
 
-    /* 3. PROJECT CARDS (Untouched - Good Design) */
+    /* 3. PROJECT CARDS (Uniform Height & Animation) */
     .project-card {
         background-color: #ffffff;
         border: 1px solid #e2e8f0;
         border-radius: 12px;
         padding: 0;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        margin-bottom: 25px;
+        margin-bottom: 0px; /* Removed bottom margin as rows handle spacing */
         overflow: hidden;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
-        height: 100%;
+        height: 100%; /* Fills the container height */
+        display: flex;
+        flex-direction: column;
     }
     .project-card:hover {
         transform: translateY(-8px);
         box-shadow: 0 12px 20px -5px rgba(59, 130, 246, 0.25);
         border-color: #3B82F6;
     }
-    .p-img-container { width: 100%; height: 200px; overflow: hidden; border-bottom: 1px solid #e2e8f0; }
+    .p-img-container { width: 100%; height: 200px; overflow: hidden; border-bottom: 1px solid #e2e8f0; flex-shrink: 0; }
     .p-img { width: 100%; height: 100%; object-fit: cover; }
-    .p-content { padding: 20px; }
+    .p-content { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
     .p-title { font-size: 1.25rem; font-weight: 800; color: #1E293B; margin-bottom: 5px; }
     .p-cat { font-size: 0.8rem; font-weight: 700; color: #64748B; text-transform: uppercase; margin-bottom: 15px; }
     .p-detail { font-size: 0.95rem; color: #475569; margin-bottom: 10px; line-height: 1.5; }
 
-    /* 4. SKILL METRICS (Compact) */
+    /* 4. SKILL METRICS */
     .skill-metric {
         background-color: #F8FAFC;
         border-radius: 8px;
-        padding: 10px; /* Reduced padding */
+        padding: 10px;
         text-align: center;
         border: 1px solid #E2E8F0;
         margin-bottom: 10px;
@@ -165,7 +167,7 @@ with st.sidebar:
             st.session_state.is_admin = False
             st.rerun()
 
-# --- HOME (Animation Added) ---
+# --- HOME ---
 if selected == "Home":
     prof = st.session_state.data.get('profile', {})
     mets = st.session_state.data.get('metrics', {})
@@ -188,7 +190,6 @@ if selected == "Home":
         st.markdown(f"<h3 style='color:#3B82F6; margin-top:0;'>{prof.get('role', 'Role')}</h3>", unsafe_allow_html=True)
         st.write(prof.get('summary', ''))
         st.markdown("<br>", unsafe_allow_html=True)
-        # METRIC CARDS (Now Animated via CSS)
         mc1, mc2, mc3 = st.columns(3)
         with mc1: st.markdown(f'<div class="metric-card"><div class="metric-value">{mets.get("dashboards","0")}</div><div class="metric-label">Dashboards</div></div>', unsafe_allow_html=True)
         with mc2: st.markdown(f'<div class="metric-card"><div class="metric-value">{mets.get("manual_reduction","0%")}</div><div class="metric-label">Reduction</div></div>', unsafe_allow_html=True)
@@ -198,7 +199,7 @@ if selected == "Home":
         render_image(prof.get('image_url'), width=350)
         st.markdown('</div>', unsafe_allow_html=True)
 
-# --- EXPERIENCE (Animation Added) ---
+# --- EXPERIENCE ---
 elif selected == "Experience":
     st.title("Professional Experience")
     if st.session_state.is_admin:
@@ -220,7 +221,6 @@ elif selected == "Experience":
                 if c1.button("Update"): st.session_state.data['experience'][idx] = {"role": er, "company": ec, "date": ed, "description": edesc}; save_data(st.session_state.data); st.rerun()
                 if c2.button("Delete", type="primary"): st.session_state.data['experience'].pop(idx); save_data(st.session_state.data); st.rerun()
 
-    # TIMELINE CARDS (Now Animated via CSS)
     for job in st.session_state.data.get('experience', []):
         st.markdown(f"""
         <div class="timeline-card">
@@ -231,7 +231,7 @@ elif selected == "Experience":
         </div>
         """, unsafe_allow_html=True)
 
-# --- PROJECTS (Untouched - Perfect) ---
+# --- PROJECTS (FIXED: UNIFORM ROW ALIGNMENT) ---
 elif selected == "Projects":
     st.title("Projects")
     
@@ -255,32 +255,44 @@ elif selected == "Projects":
                 if st.button("Update"): st.session_state.data['projects'][pidx] = {"title": ept, "category": epc, "image": epi, "problem": epp, "solution": eps, "impact": epimp}; save_data(st.session_state.data); st.rerun()
                 if st.button("Delete", type="primary"): st.session_state.data['projects'].pop(pidx); save_data(st.session_state.data); st.rerun()
 
-    # ANIMATED HTML CARDS
-    cols = st.columns(2)
-    for i, p in enumerate(st.session_state.data.get('projects', [])):
-        with cols[i%2]:
-            img_src = get_img_src(p.get('image', ''))
-            
-            # Details Block
-            details = ""
-            if p.get('problem'): details += f"<div class='p-detail'><b>🚨 Problem:</b> {p['problem']}</div>"
-            if p.get('solution'): details += f"<div class='p-detail'><b>💡 Solution:</b> {p['solution']}</div>"
-            if p.get('impact'): details += f"<div class='p-detail'><b>🚀 Impact:</b> {p['impact']}</div>"
+    # --- RENDER LOGIC: Process in Batches of 2 ---
+    # This creates a new row container for every 2 projects, ensuring perfect top alignment.
+    projects = st.session_state.data.get('projects', [])
+    
+    for i in range(0, len(projects), 2):
+        # Create a new row of columns for every pair
+        cols = st.columns(2)
+        
+        # Get the slice of 2 projects (or 1 if it's the last one)
+        batch = projects[i : i+2]
+        
+        for j, p in enumerate(batch):
+            with cols[j]:
+                img_src = get_img_src(p.get('image', ''))
+                
+                details = ""
+                if p.get('problem'): details += f"<div class='p-detail'><b>🚨 Problem:</b> {p['problem']}</div>"
+                if p.get('solution'): details += f"<div class='p-detail'><b>💡 Solution:</b> {p['solution']}</div>"
+                if p.get('impact'): details += f"<div class='p-detail'><b>🚀 Impact:</b> {p['impact']}</div>"
 
-            st.markdown(f"""
-            <div class="project-card">
-                <div class="p-img-container">
-                    <img src="{img_src}" class="p-img">
+                st.markdown(f"""
+                <div class="project-card">
+                    <div class="p-img-container">
+                        <img src="{img_src}" class="p-img">
+                    </div>
+                    <div class="p-content">
+                        <div class="p-title">{p.get('title')}</div>
+                        <div class="p-cat">📂 {p.get('category')}</div>
+                        {details}
+                    </div>
                 </div>
-                <div class="p-content">
-                    <div class="p-title">{p.get('title')}</div>
-                    <div class="p-cat">📂 {p.get('category')}</div>
-                    {details}
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
+                """, unsafe_allow_html=True)
+        
+        # Add a small spacer after each row
+        st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
 
-# --- SKILLS (Fixed Scrolling - 4 Columns) ---
+
+# --- SKILLS ---
 elif selected == "Skills":
     st.title("Technical Skills")
     skills = st.session_state.data.get('skills', {})
@@ -301,9 +313,9 @@ elif selected == "Skills":
             fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 100])), showlegend=False, margin=dict(l=40, r=40, t=30, b=30), height=250)
             st.plotly_chart(fig, use_container_width=True)
 
-    # 2. Dense Grid (4 Columns to prevent Scrolling)
+    # 2. Dense Grid (4 Cols)
     st.markdown("### Proficiency")
-    s_cols = st.columns(4) # INCREASED TO 4
+    s_cols = st.columns(4)
     skill_items = list(skills.items())
     
     for i, (s, v) in enumerate(skill_items):
