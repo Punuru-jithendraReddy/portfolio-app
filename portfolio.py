@@ -59,7 +59,7 @@ st.markdown("""
         padding-bottom: 70px; 
         margin-bottom: 20px; 
         
-        /* ANIMATION APPLIED HERE */
+        /* ANIMATION */
         animation: fadeInUp 0.6s ease-out;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
@@ -176,7 +176,7 @@ st.markdown("""
         width: 100%;
         margin-bottom: 20px;
         flex-wrap: wrap; 
-        animation: zoomIn 0.5s ease-out; /* Animation added */
+        animation: zoomIn 0.5s ease-out;
     }
     
     .detail-box {
@@ -207,13 +207,13 @@ st.markdown("""
     .d-green { background-color: #F0FDF4; border: 1px solid #DCFCE7; color: #14532D; } 
     .d-yellow { background-color: #FEFCE8; border: 1px solid #FEF9C3; color: #78350F; } 
 
-    /* 4. OTHER CARDS (TIMELINE, METRICS) */
+    /* 4. OTHER CARDS */
     .timeline-card {
         background: white; border: 1px solid #E2E8F0; border-radius: 12px;
         padding: 24px; margin-bottom: 20px;
         border-left: 6px solid #3B82F6;
         box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-        animation: fadeInUp 0.6s ease-out; /* Slide Up Animation */
+        animation: fadeInUp 0.6s ease-out;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     .timeline-card:hover { transform: translateX(5px); }
@@ -221,7 +221,7 @@ st.markdown("""
     .metric-card {
         background: white; border: 1px solid #E2E8F0; border-radius: 12px;
         padding: 20px; text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-        animation: zoomIn 0.5s ease-out; /* Pop In Animation */
+        animation: zoomIn 0.5s ease-out;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     .metric-card:hover { transform: translateY(-5px); border-color: #3B82F6; }
@@ -234,10 +234,10 @@ st.markdown("""
         padding: 15px;
         text-align: center;
         margin-bottom: 10px;
-        animation: fadeInUp 0.7s ease-out; /* Slide Up Animation */
+        animation: fadeInUp 0.7s ease-out;
     }
 
-    /* Progress Bar Color */
+    /* Progress Bar */
     progress { accent-color: #3B82F6; }
     progress::-webkit-progress-value { background-color: #3B82F6 !important; }
     progress::-moz-progress-bar { background-color: #3B82F6 !important; }
@@ -291,11 +291,19 @@ with st.sidebar:
                            styles={"nav-link-selected": {"background-color": "#3B82F6"}})
     st.markdown("---")
     
+    # --- FIXED ADMIN LOGIN LOGIC ---
     if not st.session_state.is_admin:
-        with st.expander("🔒 Admin"):
-            if st.button("Login") and st.text_input("Pass", type="password") == ADMIN_PASSWORD:
-                st.session_state.is_admin = True
-                st.rerun()
+        with st.expander("🔒 Admin Access"):
+            # Using st.form ensures the button and input work together reliably
+            with st.form("admin_auth"):
+                password = st.text_input("Password", type="password")
+                submitted = st.form_submit_button("Login")
+                if submitted:
+                    if password == ADMIN_PASSWORD:
+                        st.session_state.is_admin = True
+                        st.rerun()
+                    else:
+                        st.error("Incorrect password")
     else:
         if st.button("Logout"):
             st.session_state.is_admin = False
@@ -311,7 +319,6 @@ if selected == "Home":
         st.markdown(f"<h3 style='color:#3B82F6; margin-top:0; animation: fadeInUp 0.6s ease-out;'>{prof.get('role', 'Role')}</h3>", unsafe_allow_html=True)
         st.write(prof.get('summary', ''))
         
-        # Metrics with Animation
         mc1, mc2, mc3 = st.columns(3)
         with mc1: st.markdown(f'<div class="metric-card"><div style="font-size:1.8rem; font-weight:800; color:#3B82F6;">{mets.get("dashboards","0")}</div><div style="font-size:0.85rem; color:#64748B;">DASHBOARDS</div></div>', unsafe_allow_html=True)
         with mc2: st.markdown(f'<div class="metric-card"><div style="font-size:1.8rem; font-weight:800; color:#3B82F6;">{mets.get("manual_reduction","0%")}</div><div style="font-size:0.85rem; color:#64748B;">REDUCTION</div></div>', unsafe_allow_html=True)
