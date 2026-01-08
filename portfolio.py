@@ -83,22 +83,37 @@ st.markdown("""
         border: 1px solid #e2e8f0;
     }
 
-    /* PROJECT TEXT */
+    /* PROJECT TEXT - FLEXBOX LAYOUT FOR ALIGNMENT */
     .p-title { 
         font-size: 1.2rem; 
         font-weight: 700; 
         color: #1E293B; 
-        margin-bottom: 5px; 
+        margin-bottom: 12px; 
         line-height: 1.2;
     }
     
-    .p-detail { 
-        font-size: 0.85rem; 
-        color: #475569; 
-        margin-bottom: 4px; 
-        line-height: 1.4; 
+    /* Container for a single row (Label + Text) */
+    .p-row {
+        display: flex;       /* This enables side-by-side layout */
+        align-items: flex-start; /* Aligns text to top if it wraps */
+        margin-bottom: 8px;
     }
-    .p-label { font-weight: 600; color: #334155; }
+    
+    /* The Label Column (e.g. "Problem:") */
+    .p-label {
+        min-width: 85px;    /* Fixed width ensures alignment */
+        flex-shrink: 0;     /* Prevents shrinking */
+        font-weight: 700;
+        color: #334155;
+        font-size: 0.85rem;
+    }
+    
+    /* The Content Column (The actual text) */
+    .p-val {
+        font-size: 0.85rem;
+        color: #475569;
+        line-height: 1.5;
+    }
 
     /* 2. BUTTON STYLING */
     div[data-testid="column"] .stButton {
@@ -161,6 +176,16 @@ st.markdown("""
         transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     .metric-card:hover { transform: translateY(-5px); border-color: #3B82F6; }
+    
+    /* SKILL BARS */
+    .skill-metric {
+        background: white;
+        border: 1px solid #f1f5f9;
+        border-radius: 8px;
+        padding: 15px;
+        text-align: center;
+        margin-bottom: 10px;
+    }
 
 </style>
 """, unsafe_allow_html=True)
@@ -267,6 +292,7 @@ elif selected == "Projects":
                     img_src = get_img_src(p.get('image', ''))
                     
                     # 1. CARD HTML
+                    # Using Flexbox Rows (.p-row) to align text correctly if it wraps
                     st.markdown(f"""
                     <div class="project-card">
                         <div class="p-cat-overlay">{p.get('category')}</div>
@@ -274,9 +300,22 @@ elif selected == "Projects":
                             <img src="{img_src}" class="p-img">
                         </div>
                         <div class="p-title">{p.get('title')}</div>
-                        <div class='p-detail'><span class='p-label'>🚨 Problem:</span> {p.get('problem')}</div>
-                        <div class='p-detail'><span class='p-label'>💡 Solution:</span> {p.get('solution')}</div>
-                        <div class='p-detail'><span class='p-label'>🚀 Impact:</span> {p.get('impact')}</div>
+                        
+                        <div class="p-row">
+                            <div class="p-label">🚨 Problem:</div>
+                            <div class="p-val">{p.get('problem')}</div>
+                        </div>
+                        
+                        <div class="p-row">
+                            <div class="p-label">💡 Solution:</div>
+                            <div class="p-val">{p.get('solution')}</div>
+                        </div>
+                        
+                        <div class="p-row">
+                            <div class="p-label">🚀 Impact:</div>
+                            <div class="p-val">{p.get('impact')}</div>
+                        </div>
+
                     </div>
                     """, unsafe_allow_html=True)
                     
@@ -290,12 +329,65 @@ elif selected == "Projects":
 elif selected == "Skills":
     st.title("Technical Skills")
     skills = st.session_state.data.get('skills', {})
+    
     if skills:
+        # SPIDER CHART (POLYGON STYLE)
         c1, c2, c3 = st.columns([1, 2, 1])
         with c2:
-            fig = go.Figure(data=go.Scatterpolar(r=list(skills.values()), theta=list(skills.keys()), fill='toself', marker=dict(color='#3B82F6')))
-            fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 100])), showlegend=False, height=350)
+            # We add the first point to the end to close the polygon loop
+            r_vals = list(skills.values())
+            theta_vals = list(skills.keys())
+            
+            # Create Plotly Figure 
+
+[Image of radar chart]
+
+            fig = go.Figure()
+            fig.add_trace(go.Scatterpolar(
+                r=r_vals,
+                theta=theta_vals,
+                fill='toself',
+                name='Skills',
+                line=dict(color='#3B82F6', width=2),
+                marker=dict(color='#3B82F6')
+            ))
+            
+            # Layout to match the reference image (Polygon grid, no circular axis labels)
+            fig.update_layout(
+                polar=dict(
+                    radialaxis=dict(
+                        visible=True,
+                        range=[0, 100],
+                        showticklabels=False, # Hides the 0, 20, 40... labels on the axis
+                        ticks='',
+                        gridcolor='#E2E8F0',
+                    ),
+                    angularaxis=dict(
+                        showticklabels=True,
+                        gridcolor='#E2E8F0'
+                    ),
+                    gridshape='linear', # THIS MAKES IT A POLYGON (Spider), NOT CIRCLE
+                    bgcolor='white'
+                ),
+                showlegend=False,
+                height=400,
+                margin=dict(t=40, b=40, l=40, r=40)
+            )
             st.plotly_chart(fig, use_container_width=True)
+
+    # PROFICIENCY BARS (Restored)
+    st.markdown("### Proficiency")
+    s_cols = st.columns(4)
+    skill_items = list(skills.items())
+    for i, (s, v) in enumerate(skill_items):
+        with s_cols[i % 4]:
+            st.markdown(f"""
+            <div class="skill-metric">
+                <b>{s}</b>
+                <div style="color:#3B82F6; font-size:1.2rem; font-weight:800;">{v}%</div>
+                <progress value="{v}" max="100" style="width:100%; height:8px; border-radius:5px;"></progress>
+            </div>
+            """, unsafe_allow_html=True)
 
 # --- EXPERIENCE ---
 elif selected == "Experience":
