@@ -86,7 +86,7 @@
         {
             "title": "Performance Leaderboard",
             "category": "Sales",
-            "image": "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&q=80",
+            "image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/SPR.mp4",
             "dashboard_image": "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1920&q=80",
             "problem": "Relying on intuition to assess performance caused leaders to overlook top talent.",
             "solution": "Automated rankings and trend insights to recognize high performers instantly.",
@@ -165,3 +165,4 @@
         }
     ]
 }
+
