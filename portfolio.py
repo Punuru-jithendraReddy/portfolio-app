@@ -41,11 +41,9 @@ st.markdown("""
         display: flex;
         flex-direction: column;
         
-        /* ADJUSTMENT: Replaced height:100% with min-height to reduce empty space */
         height: auto; 
-        min-height: 420px; /* Ensures consistency without forcing huge gaps */
+        min-height: 420px; 
         
-        /* ADJUSTMENT: Reduced padding-bottom (was 110px) to pull button closer to text */
         padding-bottom: 80px; 
         
         transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -105,7 +103,6 @@ st.markdown("""
     /* 2. BUTTON STYLING */
     div[data-testid="column"] .stButton {
         position: absolute !important;
-        /* ADJUSTMENT: Moves button up slightly from the absolute bottom edge */
         bottom: 20px !important; 
         left: 20px !important;
         right: 20px !important;
@@ -299,12 +296,6 @@ elif selected == "Skills":
             fig = go.Figure(data=go.Scatterpolar(r=list(skills.values()), theta=list(skills.keys()), fill='toself', marker=dict(color='#3B82F6')))
             fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 100])), showlegend=False, height=350)
             st.plotly_chart(fig, use_container_width=True)
-    st.markdown("### Proficiency")
-    s_cols = st.columns(4)
-    skill_items = list(skills.items())
-    for i, (s, v) in enumerate(skill_items):
-        with s_cols[i % 4]:
-            st.markdown(f'<div class="metric-card"><b>{s}</b><div style="color:#3B82F6; font-size:1.2rem; font-weight:800;">{v}%</div><progress value="{v}" max="100" style="width:100%;"></progress></div>', unsafe_allow_html=True)
 
 # --- EXPERIENCE ---
 elif selected == "Experience":
