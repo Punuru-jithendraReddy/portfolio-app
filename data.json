@@ -127,7 +127,7 @@
             "title": "Advanced Benchmarking",
             "category": "Sales",
             "image": "https://images.unsplash.com/photo-1535957998253-26ae1ef29506?auto=format&fit=crop&w=800&q=80",
-            "dashboard_image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1920&q=80",
+            "dashboard_image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/dvancePerformanceAnalytics.mp4",
             "problem": "Measuring performance only in the present hides improvement or decline.",
             "solution": "Compares present activity to historical benchmarks (Last 3 Months/Year).",
             "impact": "Reveals true performance direction (positive/negative trends).",
@@ -165,3 +165,4 @@
         }
     ]
 }
+
