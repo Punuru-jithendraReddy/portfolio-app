@@ -2,6 +2,7 @@ import streamlit as st
 import json
 import os
 import base64
+import textwrap
 from streamlit_option_menu import option_menu
 from PIL import Image
 import plotly.graph_objects as go
@@ -128,7 +129,10 @@ st.markdown("""
         bottom: 20px !important; 
         right: 20px !important;    /* Anchor to right */
         left: auto !important;     /* Release left anchor */
-        width: auto !important;    /* Auto width based on text size */
+        width: auto !important;    /* Shrink to fit content */
+        min-width: 0 !important;
+        display: inline-flex !important;
+        justify-content: flex-end !important;
         z-index: 10 !important;
     }
 
@@ -137,7 +141,6 @@ st.markdown("""
         color: #2563EB !important;
         border: 1px solid #DBEAFE !important;
         border-radius: 8px !important;
-        /* Remove width:100% so it hugs the text */
         width: auto !important; 
         font-size: 0.95rem !important;
         font-weight: 600 !important;
@@ -269,16 +272,19 @@ elif selected == "Projects":
                     img_src = get_img_src(p.get('image', ''))
                     
                     # --- HTML CARD ---
-                    html_content = f"""<div class="project-card">
-<div class="p-cat-overlay">{p.get('category')}</div>
-<div class="p-img-container"><img src="{img_src}" class="p-img"></div>
-<div class="p-title">{p.get('title')}</div>
-<div class="p-details-container">
-<div class="p-row"><div class="p-label">🚨 Problem:</div><div class="p-val">{p.get('problem')}</div></div>
-<div class="p-row"><div class="p-label">💡 Solution:</div><div class="p-val">{p.get('solution')}</div></div>
-<div class="p-row"><div class="p-label">🚀 Impact:</div><div class="p-val">{p.get('impact')}</div></div>
-</div>
-</div>"""
+                    # Using textwrap.dedent to strip any accidental indentation
+                    html_content = textwrap.dedent(f"""
+                        <div class="project-card">
+                            <div class="p-cat-overlay">{p.get('category')}</div>
+                            <div class="p-img-container"><img src="{img_src}" class="p-img"></div>
+                            <div class="p-title">{p.get('title')}</div>
+                            <div class="p-details-container">
+                                <div class="p-row"><div class="p-label">🚨 Problem:</div><div class="p-val">{p.get('problem')}</div></div>
+                                <div class="p-row"><div class="p-label">💡 Solution:</div><div class="p-val">{p.get('solution')}</div></div>
+                                <div class="p-row"><div class="p-label">🚀 Impact:</div><div class="p-val">{p.get('impact')}</div></div>
+                            </div>
+                        </div>
+                    """)
                     st.markdown(html_content, unsafe_allow_html=True)
                     
                     # BUTTON
