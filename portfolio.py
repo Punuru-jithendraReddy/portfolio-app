@@ -21,7 +21,7 @@ st.markdown("""
     .main { padding-top: 1rem; }
     h1, h2, h3 { font-family: 'Segoe UI', sans-serif; color: #0F172A; }
     
-    /* 0. COLUMN SETUP - CRITICAL FOR POSITIONING */
+    /* 0. COLUMN SETUP */
     [data-testid="column"] {
         position: relative !important;
         display: flex;
@@ -29,44 +29,21 @@ st.markdown("""
         height: 100%;
     }
 
-    /* 1. ANIMATIONS & CARDS FOR OTHER PAGES (Home/Experience/Skills) */
-    .metric-card {
-        background: white; border: 1px solid #E2E8F0; border-radius: 12px;
-        padding: 20px; text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-        transition: transform 0.3s ease, box-shadow 0.3s ease; /* Animation restored */
-    }
-    .metric-card:hover { 
-        transform: translateY(-5px); 
-        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); 
-        border-color: #3B82F6; 
-    }
-    
-    .timeline-card {
-        background: white; border-radius: 12px; padding: 24px;
-        margin-bottom: 20px;
-        border-left: 6px solid #3B82F6;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        transition: transform 0.3s ease, box-shadow 0.3s ease; /* Animation restored */
-    }
-    .timeline-card:hover { 
-        transform: translateX(8px); 
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1); 
-    }
-
-    /* 2. PROJECT CARD DESIGN */
+    /* 1. PROJECT CARD DESIGN */
     .project-card {
         background-color: #ffffff;
         border: 1px solid #E2E8F0;
         border-radius: 12px;
         padding: 20px;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        position: relative; /* Needed for absolute category positioning */
         
         display: flex;
         flex-direction: column;
         height: 100%;
         
-        /* INCREASED SPACE: More bottom padding so text doesn't hit button */
-        padding-bottom: 100px; 
+        /* INCREASED BOTTOM PADDING: Creates the gap between text and button */
+        padding-bottom: 110px; 
         transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
     
@@ -87,47 +64,59 @@ st.markdown("""
     }
     .p-img { width: 100%; height: 100%; object-fit: cover; }
     
-    /* PROJECT TEXT */
+    /* CATEGORY OVERLAY (Top Left) */
+    .p-cat-overlay {
+        position: absolute;
+        top: 30px; /* Offset to sit inside the padding */
+        left: 30px;
+        background-color: rgba(255, 255, 255, 0.95);
+        color: #3B82F6;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        z-index: 5;
+        border: 1px solid #e2e8f0;
+    }
+
+    /* PROJECT TEXT SPACING (Reduced) */
     .p-title { 
         font-size: 1.2rem; 
         font-weight: 700; 
         color: #1E293B; 
-        margin-bottom: 8px; 
-        line-height: 1.3;
+        margin-bottom: 5px; /* Reduced */
+        line-height: 1.2;
     }
-    .p-cat {
-        font-size: 0.75rem; font-weight: 700; color: #3B82F6;
-        text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;
-    }
+    
     .p-detail { 
-        font-size: 0.85rem; color: #475569; margin-bottom: 6px; line-height: 1.5; 
+        font-size: 0.85rem; 
+        color: #475569; 
+        margin-bottom: 4px; /* Reduced space after each line */
+        line-height: 1.4; 
     }
     .p-label { font-weight: 600; color: #334155; }
 
-    /* 3. BUTTON STYLING - FULL WIDTH FIX */
-    
-    /* The Container: Stretches from left:20px to right:20px */
+    /* 2. BUTTON STYLING (Full Width, Pinned Bottom) */
     div[data-testid="column"] .stButton {
         position: absolute !important;
-        bottom: 25px !important;   /* Pinned to bottom */
-        left: 20px !important;     /* Match card padding */
-        right: 20px !important;    /* Match card padding */
-        width: auto !important;    /* Auto width allows left/right to dictate size */
+        bottom: 25px !important;
+        left: 20px !important;
+        right: 20px !important;
+        width: auto !important; 
         z-index: 10 !important;
     }
 
-    /* The Button Itself: Fills the container */
     div[data-testid="column"] .stButton button {
         background: #EFF6FF !important;
         color: #2563EB !important;
         border: 1px solid #DBEAFE !important;
         border-radius: 8px !important;
-        
-        width: 100% !important; /* Force Full Width */
-        
-        font-size: 1rem !important;
+        width: 100% !important;
+        font-size: 0.95rem !important;
         font-weight: 600 !important;
-        padding: 0.6rem 1rem !important;
+        padding: 0.5rem 1rem !important;
         box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
         transition: all 0.2s ease !important;
     }
@@ -138,12 +127,39 @@ st.markdown("""
         transform: translateY(-2px) !important; 
         box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2) !important;
     }
-    
-    /* Hide Focus Outline */
     div[data-testid="column"] .stButton button:focus {
         outline: none !important;
         box-shadow: none !important;
     }
+
+    /* 3. EXPERIENCE CARD & BULLET ALIGNMENT */
+    .timeline-card {
+        background: white; border-radius: 12px; padding: 24px;
+        margin-bottom: 20px;
+        border-left: 6px solid #3B82F6;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .timeline-card:hover { 
+        transform: translateX(8px); 
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1); 
+    }
+    
+    /* This fixes the bullet point alignment */
+    .timeline-desc {
+        white-space: pre-line; /* Respects new lines in JSON */
+        color: #475569;
+        margin-top: 10px;
+        line-height: 1.6;
+        font-size: 0.95rem;
+    }
+
+    .metric-card {
+        background: white; border: 1px solid #E2E8F0; border-radius: 12px;
+        padding: 20px; text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .metric-card:hover { transform: translateY(-5px); border-color: #3B82F6; }
 
 </style>
 """, unsafe_allow_html=True)
@@ -250,12 +266,13 @@ elif selected == "Projects":
                     img_src = get_img_src(p.get('image', ''))
                     
                     # 1. CARD HTML
+                    # Note the use of p-cat-overlay for Top-Left positioning
                     st.markdown(f"""
                     <div class="project-card">
+                        <div class="p-cat-overlay">{p.get('category')}</div>
                         <div class="p-img-container">
                             <img src="{img_src}" class="p-img">
                         </div>
-                        <div class="p-cat">{p.get('category')}</div>
                         <div class="p-title">{p.get('title')}</div>
                         <div class='p-detail'><span class='p-label'>🚨 Problem:</span> {p.get('problem')}</div>
                         <div class='p-detail'><span class='p-label'>💡 Solution:</span> {p.get('solution')}</div>
@@ -263,7 +280,7 @@ elif selected == "Projects":
                     </div>
                     """, unsafe_allow_html=True)
                     
-                    # 2. BUTTON (Positions Full-Width Bottom via CSS)
+                    # 2. BUTTON (Full Width)
                     if st.button("More Information", key=f"btn_{actual_idx}"):
                         st.session_state.selected_project = actual_idx
                         st.rerun()
@@ -290,7 +307,14 @@ elif selected == "Skills":
 elif selected == "Experience":
     st.title("Experience")
     for job in st.session_state.data.get('experience', []):
-        st.markdown(f'<div class="timeline-card"><b>{job.get("role")}</b> @ {job.get("company")}<br><small>{job.get("date")}</small><p>{job.get("description")}</p></div>', unsafe_allow_html=True)
+        # Added 'timeline-desc' class to handle bullet point alignment
+        st.markdown(f"""
+        <div class="timeline-card">
+            <b>{job.get("role")}</b> @ {job.get("company")}<br>
+            <small>{job.get("date")}</small>
+            <div class="timeline-desc">{job.get("description")}</div>
+        </div>
+        """, unsafe_allow_html=True)
 
 # --- CONTACT ---
 elif selected == "Contact":
