@@ -21,12 +21,10 @@ st.markdown("""
     .main { padding-top: 1rem; }
     h1, h2, h3 { font-family: 'Segoe UI', sans-serif; color: #0F172A; }
     
-    /* 0. COLUMN POSITIONING */
-    /* Needed for the button overlay to work */
+    /* 0. COLUMN POSITIONING - CRITICAL FOR CLICKABLE CARDS */
+    /* This makes the column the "anchor" for the invisible button */
     [data-testid="column"] {
         position: relative !important;
-        display: flex;
-        flex-direction: column;
     }
 
     /* 1. HERO METRIC CARDS */
@@ -51,10 +49,6 @@ st.markdown("""
         box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    .timeline-card:hover { 
-        transform: translateX(8px); 
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1); 
-    }
 
     /* 3. PROJECT CARDS */
     .project-card {
@@ -71,10 +65,9 @@ st.markdown("""
         flex-direction: column;
         height: 100%;
         min-height: 500px; 
-        padding-bottom: 20px; /* Removed extra padding since button is now an overlay */
     }
     
-    /* HOVER EFFECT: Triggered by hovering the COLUMN now, because the button is on top */
+    /* HOVER EFFECT: When hovering the COLUMN (which includes the invisible button), animate the card */
     [data-testid="column"]:hover .project-card {
         transform: translateY(-5px);
         box-shadow: 0 12px 20px -5px rgba(59, 130, 246, 0.25);
@@ -117,24 +110,35 @@ st.markdown("""
     .p-title { font-size: 1.25rem; font-weight: 800; color: #1E293B; margin-bottom: 10px; }
     .p-detail { font-size: 0.90rem; color: #475569; margin-bottom: 8px; line-height: 1.4; }
 
-    /* 6. INVISIBLE OVERLAY BUTTON */
-    /* This makes the button fill the ENTIRE column and sit on top of the card */
-    div[data-testid="column"] .stButton {
+    /* --- THE INVISIBLE CLICK LAYER --- */
+    /* This targets the button inside the project columns */
+    div[data-testid="column"] .stButton button {
         position: absolute !important;
         top: 0 !important;
         left: 0 !important;
         width: 100% !important;
         height: 100% !important;
-        z-index: 99 !important; /* Sit on top of the HTML */
-    }
-
-    div[data-testid="column"] .stButton button {
-        width: 100% !important;
-        height: 100% !important;
-        opacity: 0 !important; /* Make it invisible */
-        cursor: pointer !important;
+        
+        /* Make it invisible */
+        opacity: 0 !important; 
+        background-color: transparent !important;
         border: none !important;
-        background: transparent !important;
+        color: transparent !important;
+        
+        /* Ensure it captures the click */
+        z-index: 5 !important; 
+        cursor: pointer !important;
+    }
+    
+    /* Remove padding around the button container so it fits perfectly */
+    div[data-testid="column"] .stButton {
+        position: absolute !important;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        margin: 0 !important;
+        padding: 0 !important;
     }
 
 </style>
@@ -240,7 +244,7 @@ elif selected == "Projects":
                 actual_idx = i + j
                 with cols[j]:
                     img_src = get_img_src(p.get('image', ''))
-                    # CARD HTML (Visual Only)
+                    # 1. RENDER THE CARD VISUALS
                     st.markdown(f"""
                     <div class="project-card">
                         <div class="p-cat-overlay">{p.get('category')}</div>
@@ -256,9 +260,10 @@ elif selected == "Projects":
                     </div>
                     """, unsafe_allow_html=True)
                     
-                    # INVISIBLE BUTTON (Functionality)
-                    # The CSS makes this button cover the entire column above the card
-                    if st.button("View", key=f"btn_{actual_idx}"):
+                    # 2. INVISIBLE CLICK LAYER
+                    # We use a button with whitespace " " as the label.
+                    # The CSS above forces this button to be transparent and cover the whole column.
+                    if st.button(" ", key=f"btn_{actual_idx}"):
                         st.session_state.selected_project = actual_idx
                         st.rerun()
             st.markdown("<div style='height: 25px;'></div>", unsafe_allow_html=True)
