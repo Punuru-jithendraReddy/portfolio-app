@@ -62,6 +62,7 @@ st.markdown("""
         margin-bottom: 0px; 
         overflow: hidden;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
+        position: relative; /* Essential for absolute positioning of category */
         
         /* Layout Strategy */
         display: flex;
@@ -92,13 +93,20 @@ st.markdown("""
         flex-direction: column; 
     }
     
-    /* CATEGORY: Small, Top-Left, Uppercase */
-    .p-cat { 
-        font-size: 0.75rem; 
-        font-weight: 700; 
-        color: #3B82F6; /* Blue text */
+    /* CATEGORY OVERLAY: Floating on top of the image */
+    .p-cat-overlay { 
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        z-index: 10;
+        background-color: rgba(255, 255, 255, 0.95);
+        color: #3B82F6;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.7rem; 
+        font-weight: 800; 
         text-transform: uppercase; 
-        margin-bottom: 4px; /* Slight space before title */
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         letter-spacing: 0.5px;
     }
 
@@ -398,14 +406,14 @@ elif selected == "Projects":
                     if p.get('solution'): details_html += f"<div class='p-detail'><b>💡 Solution:</b> {p['solution']}</div>"
                     if p.get('impact'): details_html += f"<div class='p-detail'><b>🚀 Impact:</b> {p['impact']}</div>"
 
-                    # FIXED: Category is now BEFORE title (Top-left)
+                    # MODIFIED: Added p-cat-overlay ABOVE image
                     st.markdown(f"""
                     <div class="project-card">
+                        <div class="p-cat-overlay">📂 {p.get('category')}</div>
                         <div class="p-img-container">
                             <img src="{img_src}" class="p-img">
                         </div>
                         <div class="p-content">
-                            <div class="p-cat">📂 {p.get('category')}</div>
                             <div class="p-title">{p.get('title')}</div>
                             {details_html}
                         </div>
