@@ -22,7 +22,6 @@ st.markdown("""
     h1, h2, h3 { font-family: 'Segoe UI', sans-serif; color: #0F172A; }
     
     /* 0. COLUMN SETUP */
-    /* This ensures columns stretch to equal height */
     [data-testid="column"] {
         position: relative !important;
         display: flex;
@@ -42,12 +41,15 @@ st.markdown("""
         display: flex;
         flex-direction: column;
         
-        /* FORCE EQUAL HEIGHT */
+        /* Force equal height alignment */
         height: 100%; 
-        min-height: 450px; /* Slight increase to ensure uniformity */
+        min-height: 400px; 
         
-        /* INCREASED SPACE FOR BUTTON */
-        padding-bottom: 100px; 
+        /* ADJUSTED: Reduced internal padding so button is closer to text */
+        padding-bottom: 70px; 
+        
+        /* ADJUSTED: Added external margin to push next content away */
+        margin-bottom: 20px; 
         
         transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
@@ -66,7 +68,7 @@ st.markdown("""
         border-radius: 8px;
         margin-bottom: 15px;
         border: 1px solid #f1f5f9;
-        flex-shrink: 0; /* Prevents image from shrinking */
+        flex-shrink: 0; 
     }
     .p-img { width: 100%; height: 100%; object-fit: cover; }
     
@@ -94,18 +96,17 @@ st.markdown("""
         color: #1E293B; 
         margin-bottom: 15px; 
         line-height: 1.3;
-        flex-grow: 0; /* Title takes natural height */
+        flex-grow: 0; 
     }
     
-    /* Rows container to push content down if needed, or stick to top */
     .p-details-container {
-        flex-grow: 1; /* Takes up remaining space */
+        flex-grow: 1; 
     }
 
     .p-row {
         display: flex;       
         align-items: flex-start; 
-        margin-bottom: 10px; /* Increased margin for better separation */
+        margin-bottom: 10px; 
     }
     
     .p-label {
@@ -125,7 +126,7 @@ st.markdown("""
     /* 2. BUTTON STYLING */
     div[data-testid="column"] .stButton {
         position: absolute !important;
-        bottom: 25px !important; /* Increased from 20px for better look */
+        bottom: 20px !important; 
         left: 20px !important;
         right: 20px !important;
         width: auto !important; 
@@ -269,7 +270,6 @@ elif selected == "Projects":
                     
                     # --- HTML CARD ---
                     # Using LEFT ALIGNED string to prevent code block issues.
-                    # height:100% in CSS forces the card to fill the column space.
                     html_content = f"""<div class="project-card">
 <div class="p-cat-overlay">{p.get('category')}</div>
 <div class="p-img-container"><img src="{img_src}" class="p-img"></div>
@@ -286,7 +286,8 @@ elif selected == "Projects":
                     if st.button("More Information", key=f"btn_{actual_idx}"):
                         st.session_state.selected_project = actual_idx
                         st.rerun()
-            st.markdown("<div style='height: 30px;'></div>", unsafe_allow_html=True)
+            # INCREASED SPACER: From 30px to 80px to separate rows more clearly
+            st.markdown("<div style='height: 80px;'></div>", unsafe_allow_html=True)
 
 # --- SKILLS ---
 elif selected == "Skills":
