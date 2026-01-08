@@ -17,25 +17,23 @@ st.set_page_config(layout="wide", page_title="Portfolio", page_icon="✨")
 # --- CUSTOM CSS ---
 st.markdown("""
 <style>
-    /* GLOBAL FONTS & SETTINGS */
+    /* GLOBAL FONTS */
     .main { padding-top: 1rem; }
     h1, h2, h3 { font-family: 'Segoe UI', sans-serif; color: #0F172A; }
     
-    /* 0. COLUMN CONTAINER SETUP */
-    /* This allows us to pin the button to the bottom-right of the column */
+    /* 0. COLUMN SETUP */
+    /* This allows absolute positioning of the button inside the column */
     [data-testid="column"] {
         position: relative !important;
-        background-color: transparent !important;
         display: flex;
         flex-direction: column;
         height: 100%;
     }
 
-    /* 1. PROJECT CARD DESIGN (The White Box) */
+    /* 1. PROJECT CARD */
     .project-card {
         background-color: #ffffff;
         border: 1px solid #E2E8F0;
-        border-top: 4px solid #3B82F6; /* Blue Accent Top */
         border-radius: 12px;
         padding: 20px;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
@@ -43,20 +41,19 @@ st.markdown("""
         display: flex;
         flex-direction: column;
         height: 100%;
-        min-height: 520px; /* Ensure cards are same height */
         
-        /* Important: Padding at bottom to make room for the button */
-        padding-bottom: 70px; 
+        /* ADJUSTED: Reduced padding so there isn't too much whitespace */
+        padding-bottom: 55px; 
         transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
     
     .project-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.1);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.1);
         border-color: #3B82F6;
     }
 
-    /* IMAGES */
+    /* CARD IMAGES */
     .p-img-container { 
         width: 100%; 
         height: 180px; 
@@ -67,81 +64,75 @@ st.markdown("""
     }
     .p-img { width: 100%; height: 100%; object-fit: cover; }
     
-    /* TYPOGRAPHY */
+    /* TEXT STYLES */
     .p-title { 
-        font-size: 1.3rem; 
+        font-size: 1.2rem; 
         font-weight: 700; 
         color: #1E293B; 
-        margin-bottom: 12px; 
+        margin-bottom: 8px; 
         line-height: 1.3;
     }
     
-    .p-tag {
-        display: inline-block;
-        background: #F1F5F9;
-        color: #64748B;
-        padding: 4px 10px;
-        border-radius: 20px;
+    .p-cat {
         font-size: 0.75rem;
-        font-weight: 600;
+        font-weight: 700;
+        color: #3B82F6;
         text-transform: uppercase;
-        margin-bottom: 12px;
+        letter-spacing: 0.5px;
+        margin-bottom: 10px;
     }
 
     .p-detail { 
-        font-size: 0.9rem; 
+        font-size: 0.85rem; 
         color: #475569; 
-        margin-bottom: 8px; 
+        margin-bottom: 6px; 
         line-height: 1.5; 
     }
-    
-    .p-label {
-        font-weight: 600;
-        color: #334155;
-    }
+    .p-label { font-weight: 600; color: #334155; }
 
-    /* 2. BUTTON STYLING (The "Arrow" Circle) */
+    /* 2. BUTTON POSITIONING (Bottom-Right) */
     
-    /* Target the button container inside the column */
+    /* Target the container of the button inside columns */
     div[data-testid="column"] .stButton {
         position: absolute !important;
-        bottom: 25px !important;
-        right: 25px !important;
-        width: auto !important;
-        z-index: 100 !important;
+        bottom: 20px !important;   /* Distance from bottom */
+        right: 20px !important;    /* Distance from right */
+        left: auto !important;     /* Force right alignment */
+        width: auto !important;    /* prevent full width */
+        z-index: 10 !important;
     }
 
-    /* Style the actual button element */
+    /* Style the actual button (Circle) */
     div[data-testid="column"] .stButton button {
-        background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%) !important;
-        color: white !important;
-        border: none !important;
-        border-radius: 50% !important; /* Make it a circle */
-        width: 45px !important;
-        height: 45px !important;
+        background: #EFF6FF !important; /* Light blue bg */
+        color: #2563EB !important;      /* Blue arrow */
+        border: 1px solid #DBEAFE !important;
+        border-radius: 50% !important;  /* Circle */
+        width: 40px !important;
+        height: 40px !important;
         font-size: 1.2rem !important;
         padding: 0 !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
-        box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3) !important;
-        transition: all 0.3s ease !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
+        transition: all 0.2s ease !important;
     }
 
-    /* Hover Effect */
     div[data-testid="column"] .stButton button:hover {
+        background: #2563EB !important;
+        color: white !important;
         transform: scale(1.1) !important;
-        box-shadow: 0 6px 15px rgba(37, 99, 235, 0.5) !important;
-        background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%) !important;
+        box-shadow: 0 4px 6px rgba(37, 99, 235, 0.3) !important;
     }
     
-    /* Remove default focus outline */
+    /* Hide focus outline */
     div[data-testid="column"] .stButton button:focus {
-        box-shadow: none !important;
         outline: none !important;
+        box-shadow: none !important;
     }
     
-    /* OTHER CARDS (Skills, etc) */
+    /* OTHER CARDS */
     .metric-card, .timeline-card {
         background: white; border: 1px solid #E2E8F0; border-radius: 12px;
         padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
@@ -243,7 +234,6 @@ elif selected == "Projects":
         c3.warning(f"**🚀 Impact**\n{p.get('impact')}")
     else:
         st.title("Projects")
-        # Loop through projects in pairs
         for i in range(0, len(projects), 2):
             cols = st.columns(2)
             batch = projects[i : i+2]
@@ -252,14 +242,14 @@ elif selected == "Projects":
                 with cols[j]:
                     img_src = get_img_src(p.get('image', ''))
                     
-                    # 1. RENDER CARD HTML
-                    # Note: We added padding-bottom: 70px in CSS to make room for the button
+                    # 1. CARD HTML
+                    # Note: padding-bottom in CSS handles the space for the button
                     st.markdown(f"""
                     <div class="project-card">
                         <div class="p-img-container">
                             <img src="{img_src}" class="p-img">
                         </div>
-                        <span class="p-tag">{p.get('category')}</span>
+                        <div class="p-cat">{p.get('category')}</div>
                         <div class="p-title">{p.get('title')}</div>
                         <div class='p-detail'><span class='p-label'>🚨 Problem:</span> {p.get('problem')}</div>
                         <div class='p-detail'><span class='p-label'>💡 Solution:</span> {p.get('solution')}</div>
@@ -267,13 +257,10 @@ elif selected == "Projects":
                     </div>
                     """, unsafe_allow_html=True)
                     
-                    # 2. RENDER BUTTON
-                    # The CSS forces this to the Bottom-Right of the column
+                    # 2. BUTTON (Positions Bottom-Right via CSS)
                     if st.button("➜", key=f"btn_{actual_idx}"):
                         st.session_state.selected_project = actual_idx
                         st.rerun()
-            
-            # Spacer between rows
             st.markdown("<div style='height: 30px;'></div>", unsafe_allow_html=True)
 
 # --- SKILLS ---
