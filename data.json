@@ -1,167 +1,548 @@
-{
-    "profile": {
-        "name": "Jithendra Reddy Punuru",
-        "role": "Software Engineer",
-        "tagline": "Business Intelligence & Automation Architect",
-        "email": "jithendrareddypunuru@gmail.com",
-        "phone": "+91-8374547319",
-        "location": "Bengaluru, India",
-        "linkedin": "https://www.linkedin.com/in/jithendrareddypunuru/",
-        "summary": "Software Engineer with solid experience in Power BI, SQL, Python, and Microsoft Power Platform. Skilled in building dashboards, automating workflows, integrating Oracle systems, and improving business processes. Known for reducing manual efforts and improving efficiency through automation and clean data models.",
-        "image_url": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/Profile.jpg",
-        "contact_info": [
-            {
-                "label": "Mail",
-                "value": "mailto:jithendrareddypunuru@gmail.com",
-                "icon": "https://img.icons8.com/color/48/gmail-new.png",
-                "category": "Email"
-            },
-            {
-                "label": "LinkedIn",
-                "value": "https://www.linkedin.com/in/jithendrareddypunuru/",
-                "icon": "https://img.icons8.com/color/48/linkedin.png",
-                "category": "LinkedIn"
-            }
-        ]
-    },
-    "metrics": {
-        "dashboards": "8+",
-        "manual_reduction": "40%",
-        "efficiency": "30%"
-    },
-    "skills": {
-        "Power BI": 95,
-        "DAX": 90,
-        "Power Automate": 90,
-        "Python": 85,
-        "SQL": 80,
-        "Azure Logic Apps": 75,
-        "Power Apps": 75
-    },
-    "experience": [
-        {
-            "role": "Software Engineer (BI & Automation)",
-            "company": "Svarapps Technologies Pvt Ltd",
-            "date": "Sep 2024 - Present",
-            "description": "\u2022 Delivered 8+ high-impact Power BI dashboards across Finance, Sales, Logistics, and Operations, improving management decision-making and financial visibility.\n\u2022 Built and optimized end-to-end data pipelines (Oracle -> SharePoint -> Power BI) using Python and automation, reducing manual effort and improving data reliability.\n\u2022 Enhanced reporting performance by optimizing data models and refresh logic, achieving faster refresh times and more responsive dashboards.\n\u2022 Developed automation and AI solutions using Copilot Studio, Logic Apps, and AI Builder to enable self-service insights, automate invoice processing, and streamline file management.\n\u2022 Drove cost optimization by introducing Excel-based reporting alternatives, reducing dependency on premium BI licensing without sacrificing insights."
-        },
-        {
-            "role": "Data Analyst Intern",
-            "company": "AI Varient",
-            "date": "Jan 2023 - Jan 2024",
-            "description": "\u2022 Generated Reports and Dashboards using Power-Bi Desktop, Tableau, and Advanced Excel.\n\u2022 Constructed tabular and multidimensional data models.\n\u2022 Created compelling data visualizations from live & extract data sources.\n\u2022 Processed and shaped data using Excel, MySQL and advanced extraction techniques.\n\u2022 Completed two projects during a 6-month internship, demonstrating proficiency in data analytics and visualization."
+import streamlit as st
+import json
+import os
+import base64
+import textwrap
+from streamlit_option_menu import option_menu
+from PIL import Image
+import plotly.graph_objects as go
+
+# --- CONFIGURATION ---
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_FILE = os.path.join(BASE_DIR, 'data.json')
+ASSETS_DIR = os.path.join(BASE_DIR, 'assets')
+ADMIN_PASSWORD = "admin" 
+
+st.set_page_config(layout="wide", page_title="Portfolio", page_icon="✨")
+
+# --- CUSTOM CSS ---
+st.markdown("""
+<style>
+    /* GLOBAL FONTS */
+    .main { padding-top: 1rem; }
+    h1, h2, h3 { font-family: 'Segoe UI', sans-serif; color: #0F172A; }
+    
+    /* ANIMATIONS */
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translate3d(0, 20px, 0); }
+        to { opacity: 1; transform: translate3d(0, 0, 0); }
+    }
+    @keyframes zoomIn {
+        from { opacity: 0; transform: scale3d(0.95, 0.95, 0.95); }
+        to { opacity: 1; transform: scale3d(1, 1, 1); }
+    }
+
+    /* 0. COLUMN SETUP */
+    [data-testid="column"] {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    /* 1. PROJECT CARD DESIGN */
+    .project-card {
+        background-color: #ffffff;
+        border: 1px solid #E2E8F0;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        position: relative; 
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        height: 100%; 
+        min-height: 450px; 
+        padding-bottom: 70px; 
+        margin-bottom: 20px; 
+        animation: fadeInUp 0.6s ease-out;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .project-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.1);
+        border-color: #3B82F6;
+    }
+
+    /* IMAGES */
+    .p-img-container { 
+        width: 100%; height: 180px; overflow: hidden; 
+        border-radius: 8px; margin-bottom: 15px; 
+        border: 1px solid #f1f5f9; flex-shrink: 0; 
+    }
+    .p-img { width: 100%; height: 100%; object-fit: cover; }
+    
+    /* OVERLAY */
+    .p-cat-overlay {
+        position: absolute; top: 30px; left: 30px;
+        background-color: rgba(255, 255, 255, 0.95);
+        color: #3B82F6; padding: 5px 12px; border-radius: 20px;
+        font-size: 0.7rem; font-weight: 800; text-transform: uppercase;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1); z-index: 5; border: 1px solid #e2e8f0;
+    }
+
+    /* TEXT */
+    .p-title { 
+        font-size: 1.2rem; font-weight: 700; color: #0F172A;
+        margin-bottom: 15px; line-height: 1.3; flex-grow: 0; 
+    }
+    .p-details-container { flex-grow: 1; }
+    .p-row { display: flex; align-items: flex-start; margin-bottom: 10px; }
+    .p-label { min-width: 85px; flex-shrink: 0; font-weight: 700; color: #1E293B; font-size: 0.85rem; }
+    .p-val { font-size: 0.85rem; color: #334155; line-height: 1.5; }
+
+    /* 2. BUTTON STYLING */
+    div[data-testid="column"] .stButton {
+        position: absolute !important; bottom: 20px !important; 
+        right: 20px !important; left: unset !important;      
+        width: auto !important; text-align: right !important; z-index: 10 !important;
+    }
+    div[data-testid="column"] .stButton button {
+        background: #EFF6FF !important; color: #2563EB !important;
+        border: 1px solid #DBEAFE !important; border-radius: 8px !important;
+        width: auto !important; font-size: 0.90rem !important;
+        font-weight: 600 !important; padding: 0.5rem 1.0rem !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
+        transition: all 0.2s ease !important; float: right !important; 
+    }
+    div[data-testid="column"] .stButton button:hover {
+        background: #2563EB !important; color: white !important;
+        transform: translateY(-2px) !important; box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2) !important;
+    }
+    div[data-testid="column"] .stButton button:focus { outline: none !important; box-shadow: none !important; }
+
+    /* 3. DETAILED VIEW */
+    .detail-row { display: flex; flex-direction: row; gap: 20px; width: 100%; margin-bottom: 20px; flex-wrap: wrap; animation: zoomIn 0.5s ease-out; }
+    .detail-box { flex: 1; display: flex; flex-direction: column; padding: 20px; border-radius: 10px; min-width: 200px; }
+    .box-title { font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; font-size: 1rem; }
+    .box-content { font-size: 0.95rem; line-height: 1.6; font-weight: 500; }
+    .d-blue { background-color: #EFF6FF; border: 1px solid #DBEAFE; color: #172554; } 
+    .d-green { background-color: #F0FDF4; border: 1px solid #DCFCE7; color: #14532D; } 
+    .d-yellow { background-color: #FEFCE8; border: 1px solid #FEF9C3; color: #78350F; } 
+
+    /* 4. OTHER CARDS & TOOLTIP */
+    .timeline-card {
+        background: white; border: 1px solid #E2E8F0; border-radius: 12px;
+        padding: 24px; margin-bottom: 20px; border-left: 6px solid #3B82F6;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); animation: fadeInUp 0.6s ease-out;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .timeline-card:hover { transform: translateX(5px); }
+    
+    .metric-card {
+        background: white; border: 1px solid #E2E8F0; border-radius: 12px;
+        padding: 20px; text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        animation: zoomIn 0.5s ease-out; transition: transform 0.3s ease, box-shadow 0.3s ease;
+        position: relative; /* For tooltip */
+    }
+    .metric-card:hover { transform: translateY(-5px); border-color: #3B82F6; }
+
+    /* --- TOOLTIP STYLES --- */
+    .tooltip-text {
+        visibility: hidden;
+        width: 200px;
+        background-color: #1E293B; /* Dark Slate */
+        color: #fff;
+        text-align: left;
+        border-radius: 8px;
+        padding: 12px;
+        position: absolute;
+        z-index: 100;
+        bottom: 110%; /* Place above the card */
+        left: 50%;
+        transform: translateX(-50%);
+        opacity: 0;
+        transition: opacity 0.3s, bottom 0.3s;
+        font-size: 0.75rem;
+        font-weight: 500;
+        line-height: 1.5;
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2);
+        pointer-events: none;
+    }
+    
+    .tooltip-text::after {
+        content: ""; position: absolute; top: 100%; left: 50%;
+        margin-left: -5px; border-width: 5px; border-style: solid;
+        border-color: #1E293B transparent transparent transparent;
+    }
+
+    .metric-card:hover .tooltip-text {
+        visibility: visible; opacity: 1; bottom: 120%;
+    }
+
+    .skill-metric {
+        background: white; border: 1px solid #f1f5f9; border-radius: 8px;
+        padding: 15px; text-align: center; margin-bottom: 10px; animation: fadeInUp 0.7s ease-out;
+    }
+    progress { accent-color: #3B82F6; }
+    progress::-webkit-progress-value { background-color: #3B82F6 !important; }
+    progress::-moz-progress-bar { background-color: #3B82F6 !important; }
+
+</style>
+""", unsafe_allow_html=True)
+
+# --- DATA MANAGER ---
+def load_data():
+    if not os.path.exists(DATA_FILE): 
+        # Default fallback structure if file missing
+        return {
+            "profile": {"name": "Your Name", "role": "Your Role", "summary": "Summary here", "image_url": "", "contact_info": []},
+            "metrics": {"dashboards": "10+", "manual_reduction": "50%", "efficiency": "30%"},
+            "experience": [],
+            "projects": [],
+            "skills": {}
         }
-    ],
-    "projects": [
-        {
-            "title": "Executive Command Center",
-            "category": "Finance",
-            "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80",
-            "dashboard_image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1920&q=80",
-            "problem": "Executives lacked a clear, real-time view of business performance across regions.",
-            "solution": "Centralized 'Single Source of Truth' hub for Sales, Profit Margin, and Deal Size.",
-            "impact": "25% improvement in financial visibility.",
-            "details": "This Executive Command Center serves as the primary daily touchpoint for C-suite leadership. Integrating data from Oracle ERP and Salesforce, the dashboard features a dynamic 'War Room' view that allows leaders to filter by region, product line, and fiscal quarter instantly. We utilized complex DAX measures to calculate Year-over-Year (YoY) growth and EBITDA margins on the fly. The dashboard includes a decomposition tree to analyze the root causes of margin slippage."
-        },
-        {
-            "title": "Financial Budget Tracking",
-            "category": "Finance",
-            "image": "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=800&q=80",
-            "dashboard_image": "https://images.unsplash.com/photo-1543286386-2e659306cd6c?auto=format&fit=crop&w=1920&q=80",
-            "problem": "Lack of clear visibility into budget variances made it difficult to track overspending.",
-            "solution": "Real-time comparison of Actuals vs Budget vs Forecast with drill-down capabilities.",
-            "impact": "Enabled timely corrective actions on budget deviations.",
-            "details": "This report replaced a manual monthly Excel process that took 4 days to compile. It connects directly to the General Ledger and provides a daily refresh of Actuals vs. Budget. Key features include conditional formatting to highlight cost centers exceeding 90% of their budget and a 'What-If' parameter allowing finance managers to adjust forecast assumptions and see the potential impact on year-end landing."
-        },
-        {
-            "title": "Sales Forecasting & Pipeline",
-            "category": "Sales",
-            "image": "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&w=800&q=80",
-            "dashboard_image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1920&q=80",
-            "problem": "Unreliable forecasts and unclear pipeline visibility made resource planning hard.",
-            "solution": "Bridges past results with current pipeline data to deliver accurate revenue forecasts.",
-            "impact": "Improved reliability of revenue projections for investors.",
-            "details": "Designed to support the CRO, this dashboard blends historical invoice data with live CRM opportunity data. We implemented a weighted forecast logic (Deal Value * Probability) to give a realistic revenue projection. The visualization includes a funnel chart to identify where deals are dropping off and a trend line comparing this quarter's pipeline velocity against the previous four quarters."
-        },
-        {
-            "title": "Performance Leaderboard",
-            "category": "Sales",
-            "image": "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&q=80",
-            "dashboard_image": "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1920&q=80",
-            "problem": "Relying on intuition to assess performance caused leaders to overlook top talent.",
-            "solution": "Automated rankings and trend insights to recognize high performers instantly.",
-            "impact": "Data-driven performance reviews without manual reporting.",
-            "details": "This gamified dashboard tracks individual sales representative performance against quotas. It features a 'Leaderboard' matrix that updates daily, ranking reps by revenue, new logos, and upsell percentage. Drill-through capabilities allow managers to click on a specific rep and see their specific deal mix, call activity, and win-rate trends over the last 12 months."
-        },
-        {
-            "title": "Supply Chain Intelligence",
-            "category": "Logistics",
-            "image": "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800&q=80",
-            "dashboard_image": "https://images.unsplash.com/photo-1494412574643-35d324688182?auto=format&fit=crop&w=1920&q=80",
-            "problem": "Frequent PO changes raised costs and hid supplier inefficiencies.",
-            "solution": "Root Cause Analysis dashboard categorizing reasons for order revisions.",
-            "impact": "Identified bottlenecks and improved supplier performance.",
-            "details": "Focused on procurement efficiency, this tool analyzes Purchase Order (PO) lifecycle data. It highlights 'PO Churn'\u2014orders that are modified more than 3 times. By visualizing the 'Reason for Change' (e.g., Vendor Out of Stock, Price Change, Internal Request), the procurement team was able to renegotiate terms with vendors causing 80% of the disruptions."
-        },
-        {
-            "title": "Live Operations Monitor",
-            "category": "Logistics",
-            "image": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80",
-            "dashboard_image": "https://videos.pexels.com/video-files/3129671/3129671-uhd_2560_1440_30fps.mp4",
-            "problem": "Delays and workflow issues were often noticed only after affecting customers.",
-            "solution": "Real-time tracking of orders and pipeline stages with live metric tickers.",
-            "impact": "Proactive removal of blockers before escalation.",
-            "details": "This dashboard is displayed on large monitors in the operations floor. It uses DirectQuery to fetch live data, showing a ticking count of orders in 'Pending', 'Processing', and 'Shipped' states. Conditional formatting turns cards red if an order sits in a specific stage for longer than 4 hours (SLA breach warning), alerting the floor manager immediately. (Note: The video above demonstrates the real-time ticker concept)."
-        },
-        {
-            "title": "Workflow Process Monitoring",
-            "category": "Logistics",
-            "image": "https://images.unsplash.com/photo-1507925921958-8a62f3d1a50d?auto=format&fit=crop&w=800&q=80",
-            "dashboard_image": "https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=1920&q=80",
-            "problem": "Inefficiencies in key multi-step processes often went unnoticed.",
-            "solution": "Granular visibility into every stage of a workflow, highlighting stuck items.",
-            "impact": "Instant identification of process bottlenecks.",
-            "details": "By connecting to the Power Automate run history and Logic Apps logs, this dashboard visualizes the health of automated business processes. It tracks success/failure rates of workflows and calculates the average duration of each step. This visibility helped identify that the 'Approval' step was the major bottleneck, leading to a process redesign."
-        },
-        {
-            "title": "Advanced Benchmarking",
-            "category": "Sales",
-            "image": "https://images.unsplash.com/photo-1535957998253-26ae1ef29506?auto=format&fit=crop&w=800&q=80",
-            "dashboard_image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1920&q=80",
-            "problem": "Measuring performance only in the present hides improvement or decline.",
-            "solution": "Compares present activity to historical benchmarks (Last 3 Months/Year).",
-            "impact": "Reveals true performance direction (positive/negative trends).",
-            "details": "This analytical tool moves beyond simple 'Month-to-Date' reporting. It uses time-intelligence functions to create rolling averages (3-month and 12-month) and compares current performance against those benchmarks. It answers the question: 'Are we doing better than our usual average?' rather than just 'Did we hit the target?'"
-        },
-        {
-            "title": "Flat File Comparison Tool",
-            "category": "Tools",
-            "image": "https://images.unsplash.com/photo-1587620962725-abab7fe55159?auto=format&fit=crop&w=800&q=80",
-            "dashboard_image": "https://images.unsplash.com/photo-1555099962-4199c345e5dd?auto=format&fit=crop&w=1920&q=80",
-            "problem": "Manual validation of large Excel/CSV files is error-prone.",
-            "solution": "Browser-based Python Streamlit tool for comparing Source vs Target files.",
-            "impact": "Supports 100k+ rows with auto-normalization.",
-            "details": "A custom Python tool built with Pandas and Streamlit. Users upload two datasets (e.g., a migration Source file and a Destination file). The tool automatically normalizes headers, identifies added/removed rows, and highlights specific cell-value mismatches. It exports a detailed 'Delta Report' excel file for the QA team."
-        },
-        {
-            "title": "AI Invoice Automation",
-            "category": "Automation",
-            "image": "https://images.unsplash.com/photo-1618044733300-9472054094ee?auto=format&fit=crop&w=800&q=80",
-            "dashboard_image": "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=1920&q=80",
-            "problem": "Manual extraction of chemical specs from PDFs was time-consuming.",
-            "solution": "Automated flow using Copilot Studio, AI Builder, and Power Automate.",
-            "impact": "50% reduction in manual data entry.",
-            "details": "This project utilized Microsoft's AI Builder to train a custom form-processing model. It automatically extracts key fields (Invoice Number, Date, Line Items, Total) from incoming PDF emails. The data is then validated against the ERP system via an API call, and if it matches, the invoice is posted automatically without human intervention."
-        },
-        {
-            "title": "Recruitment Management App",
-            "category": "Apps",
-            "image": "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=800&q=80",
-            "dashboard_image": "https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=1920&q=80",
-            "problem": "Hiring process was lost in disjointed email chains.",
-            "solution": "Custom Power App with automated approval workflows.",
-            "impact": "40% reduction in HR coordination effort.",
-            "details": "A Canvas Power App designed for the HR team. It provides a mobile-friendly interface for hiring managers to submit requisitions. Once submitted, an approval flow triggers in Microsoft Teams for the Department Head. The app tracks the candidate's journey from 'Applied' to 'Offer Sent' and generates a weekly status report for HR leadership."
-        }
-    ]
-}
+    try:
+        with open(DATA_FILE, 'r', encoding='utf-8') as f: return json.load(f)
+    except: return {}
+
+def get_img_src(image_path):
+    if not image_path: return "https://placehold.co/600x400/png?text=No+Image"
+    if "github.com" in image_path and "/blob/" in image_path:
+        image_path = image_path.replace("github.com", "raw.githubusercontent.com").replace("/blob/", "/")
+    if image_path.startswith("http"): return image_path
+    return image_path
+
+def render_image(image_path, width=None):
+    src = get_img_src(image_path)
+    if width: st.image(src, width=width)
+    else: st.image(src, use_container_width=True)
+
+# --- INITIALIZE SESSION STATE ---
+if 'data' not in st.session_state: st.session_state.data = load_data()
+if 'is_admin' not in st.session_state: st.session_state.is_admin = False
+
+# --- SIDEBAR ---
+with st.sidebar:
+    prof = st.session_state.data.get('profile', {})
+    
+    if prof.get('image_url'):
+        img_src = get_img_src(prof.get('image_url'))
+        st.markdown(f"""
+            <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+                <img src="{img_src}" style="width: 140px; border-radius: 10px; object-fit: cover; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            </div>
+        """, unsafe_allow_html=True)
+    
+    selected = option_menu(None, ["Home", "Experience", "Projects", "Skills", "Contact"], 
+                           icons=["house", "briefcase", "rocket", "cpu", "envelope"], default_index=0,
+                           styles={"nav-link-selected": {"background-color": "#3B82F6"}})
+    st.markdown("---")
+    
+    # --- ADMIN ACCESS & DOWNLOAD ---
+    if not st.session_state.is_admin:
+        with st.expander("🔒 Admin Access"):
+            with st.form("admin_auth"):
+                password = st.text_input("Password", type="password")
+                if st.form_submit_button("Login"):
+                    if password == ADMIN_PASSWORD:
+                        st.session_state.is_admin = True
+                        st.rerun()
+                    else:
+                        st.error("Incorrect password")
+    else:
+        st.success("Admin Mode Active")
+        
+        # DOWNLOAD BUTTON FOR PERMANENT CHANGES
+        json_string = json.dumps(st.session_state.data, indent=4)
+        st.download_button(
+            label="💾 Download Configuration",
+            data=json_string,
+            file_name="data.json",
+            mime="application/json",
+            help="Click to download your updated data.json file."
+        )
+        
+        if st.button("Logout"):
+            st.session_state.is_admin = False
+            st.rerun()
+
+# --- HOME ---
+if selected == "Home":
+    # 1. ADMIN EDITING
+    if st.session_state.is_admin:
+        with st.expander("✏️ Edit Home Page Details", expanded=True):
+            st.session_state.data['profile']['name'] = st.text_input("Name", st.session_state.data['profile'].get('name', ''))
+            st.session_state.data['profile']['role'] = st.text_input("Role", st.session_state.data['profile'].get('role', ''))
+            st.session_state.data['profile']['summary'] = st.text_area("Summary", st.session_state.data['profile'].get('summary', ''))
+            st.session_state.data['profile']['image_url'] = st.text_input("Profile Image URL", st.session_state.data['profile'].get('image_url', ''))
+            
+            c1, c2, c3 = st.columns(3)
+            with c1: st.session_state.data['metrics']['dashboards'] = st.text_input("Metric 1 (Dashboards)", st.session_state.data['metrics'].get('dashboards', ''))
+            with c2: st.session_state.data['metrics']['manual_reduction'] = st.text_input("Metric 2 (Reduction)", st.session_state.data['metrics'].get('manual_reduction', ''))
+            with c3: st.session_state.data['metrics']['efficiency'] = st.text_input("Metric 3 (Efficiency)", st.session_state.data['metrics'].get('efficiency', ''))
+
+    # 2. VIEW
+    prof = st.session_state.data.get('profile', {})
+    mets = st.session_state.data.get('metrics', {})
+    c1, c2 = st.columns([1.5, 1])
+    with c1:
+        st.markdown(f"<h1 style='font-size:3.5rem; margin-bottom:0; animation: fadeInUp 0.5s ease-out;'>{prof.get('name', 'Name')}</h1>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='color:#3B82F6; margin-top:0; animation: fadeInUp 0.6s ease-out;'>{prof.get('role', 'Role')}</h3>", unsafe_allow_html=True)
+        st.write(prof.get('summary', ''))
+        
+        mc1, mc2, mc3 = st.columns(3)
+        
+        # --- TOOLTIP CONTENT ---
+        # You can fetch this from JSON if needed, but hardcoded as per request
+        tooltip_html = """
+        <strong>Dashboards Delivered:</strong><br>
+        • Sales Performance<br>
+        • HR Analytics<br>
+        • Financial Budgeting<br>
+        <br>
+        <strong>Details:</strong><br>
+        • 49% Reduction description<br>
+        • Other key descriptions...
+        """
+        
+        # METRIC CARD 1 (WITH TOOLTIP)
+        with mc1: 
+            st.markdown(f'''
+            <div class="metric-card">
+                <div class="tooltip-text">{tooltip_html}</div>
+                <div style="font-size:1.8rem; font-weight:800; color:#3B82F6;">{mets.get("dashboards","0")}</div>
+                <div style="font-size:0.85rem; color:#64748B;">DASHBOARDS</div>
+            </div>
+            ''', unsafe_allow_html=True)
+            
+        with mc2: st.markdown(f'<div class="metric-card"><div style="font-size:1.8rem; font-weight:800; color:#3B82F6;">{mets.get("manual_reduction","0%")}</div><div style="font-size:0.85rem; color:#64748B;">REDUCTION</div></div>', unsafe_allow_html=True)
+        with mc3: st.markdown(f'<div class="metric-card"><div style="font-size:1.8rem; font-weight:800; color:#3B82F6;">{mets.get("efficiency","0%")}</div><div style="font-size:0.85rem; color:#64748B;">EFFICIENCY</div></div>', unsafe_allow_html=True)
+    with c2: render_image(prof.get('image_url'), width=350)
+
+# --- PROJECTS ---
+elif selected == "Projects":
+    # 1. ADMIN EDITING
+    if st.session_state.is_admin:
+        with st.expander("✏️ Manage Projects"):
+            projects = st.session_state.data.get('projects', [])
+            
+            # Select project to edit
+            project_titles = [p.get('title', 'Untitled') for p in projects]
+            project_titles.insert(0, "➕ Add New Project")
+            selected_proj = st.selectbox("Select Project", project_titles)
+            
+            if selected_proj == "➕ Add New Project":
+                with st.form("add_proj"):
+                    new_title = st.text_input("Title")
+                    new_cat = st.text_input("Category")
+                    new_img = st.text_input("Image URL")
+                    new_prob = st.text_area("Problem")
+                    new_sol = st.text_area("Solution")
+                    new_imp = st.text_area("Impact")
+                    new_det = st.text_area("Details (Long description)")
+                    if st.form_submit_button("Add Project"):
+                        new_p = {
+                            "title": new_title, "category": new_cat, "image": new_img,
+                            "problem": new_prob, "solution": new_sol, "impact": new_imp,
+                            "details": new_det
+                        }
+                        st.session_state.data['projects'].append(new_p)
+                        st.rerun()
+            else:
+                idx = project_titles.index(selected_proj) - 1
+                proj = projects[idx]
+                with st.form(f"edit_proj_{idx}"):
+                    proj['title'] = st.text_input("Title", proj.get('title'))
+                    proj['category'] = st.text_input("Category", proj.get('category'))
+                    proj['image'] = st.text_input("Image URL", proj.get('image'))
+                    proj['problem'] = st.text_area("Problem", proj.get('problem'))
+                    proj['solution'] = st.text_area("Solution", proj.get('solution'))
+                    proj['impact'] = st.text_area("Impact", proj.get('impact'))
+                    proj['details'] = st.text_area("Details", proj.get('details'))
+                    
+                    c1, c2 = st.columns(2)
+                    with c1:
+                        if st.form_submit_button("Update Project"):
+                            st.rerun()
+                    with c2:
+                        if st.form_submit_button("🗑️ Delete Project", type="primary"):
+                            st.session_state.data['projects'].pop(idx)
+                            st.rerun()
+
+    # 2. VIEW
+    if 'selected_project' not in st.session_state:
+        st.session_state.selected_project = None
+
+    projects = st.session_state.data.get('projects', [])
+
+    if st.session_state.selected_project is not None:
+        idx = st.session_state.selected_project
+        if idx < len(projects):
+            p = projects[idx]
+            if st.button("← Back to Projects"):
+                st.session_state.selected_project = None
+                st.rerun()
+                
+            st.title(p.get('title'))
+            st.caption(f"📂 {p.get('category')}")
+            dash_img = p.get('dashboard_image') or p.get('image')
+            if dash_img and dash_img.endswith('.mp4'): st.video(dash_img)
+            else: st.image(get_img_src(dash_img), use_container_width=True)
+            
+            st.markdown("### 📝 Details")
+            st.write(p.get('details', 'Description coming soon.'))
+            st.markdown("---")
+            
+            html_details = textwrap.dedent(f"""
+                <div class="detail-row">
+                    <div class="detail-box d-blue">
+                        <div class="box-title">🚨 Problem</div>
+                        <div class="box-content">{p.get('problem')}</div>
+                    </div>
+                    <div class="detail-box d-green">
+                        <div class="box-title">💡 Solution</div>
+                        <div class="box-content">{p.get('solution')}</div>
+                    </div>
+                    <div class="detail-box d-yellow">
+                        <div class="box-title">🚀 Impact</div>
+                        <div class="box-content">{p.get('impact')}</div>
+                    </div>
+                </div>
+            """)
+            st.markdown(html_details, unsafe_allow_html=True)
+        else:
+            st.session_state.selected_project = None
+            st.rerun()
+
+    else:
+        st.title("Projects")
+        for i in range(0, len(projects), 2):
+            cols = st.columns(2)
+            batch = projects[i : i+2]
+            for j, p in enumerate(batch):
+                actual_idx = i + j
+                with cols[j]:
+                    img_src = get_img_src(p.get('image', ''))
+                    html_content = textwrap.dedent(f"""
+                        <div class="project-card">
+                            <div class="p-cat-overlay">{p.get('category')}</div>
+                            <div class="p-img-container"><img src="{img_src}" class="p-img"></div>
+                            <div class="p-title">{p.get('title')}</div>
+                            <div class="p-details-container">
+                                <div class="p-row"><div class="p-label">🚨 Problem:</div><div class="p-val">{p.get('problem')}</div></div>
+                                <div class="p-row"><div class="p-label">💡 Solution:</div><div class="p-val">{p.get('solution')}</div></div>
+                                <div class="p-row"><div class="p-label">🚀 Impact:</div><div class="p-val">{p.get('impact')}</div></div>
+                            </div>
+                        </div>
+                    """)
+                    st.markdown(html_content, unsafe_allow_html=True)
+                    if st.button("More Information ➜", key=f"btn_{actual_idx}"):
+                        st.session_state.selected_project = actual_idx
+                        st.rerun()
+            st.markdown("<div style='height: 80px;'></div>", unsafe_allow_html=True)
+
+# --- SKILLS ---
+elif selected == "Skills":
+    # 1. ADMIN EDITING
+    if st.session_state.is_admin:
+        with st.expander("✏️ Edit Skills"):
+            st.info("Edit keys (Skill Name) and values (Percentage). Add new rows at the bottom.")
+            # Convert dict to list of dicts for editor
+            skills_list = [{"Skill": k, "Value": v} for k, v in st.session_state.data.get('skills', {}).items()]
+            edited_df = st.data_editor(skills_list, num_rows="dynamic")
+            
+            # Save back to dict
+            new_skills = {row['Skill']: int(row['Value']) for row in edited_df if row['Skill']}
+            st.session_state.data['skills'] = new_skills
+
+    # 2. VIEW
+    st.title("Technical Skills")
+    skills = st.session_state.data.get('skills', {})
+    
+    if skills:
+        c1, c2, c3 = st.columns([1, 2, 1])
+        with c2:
+            r_vals = list(skills.values())
+            theta_vals = list(skills.keys())
+            
+            fig = go.Figure()
+            fig.add_trace(go.Scatterpolar(
+                r=r_vals, theta=theta_vals, fill='toself', name='Skills',
+                line=dict(color='#3B82F6', width=2), marker=dict(color='#3B82F6')
+            ))
+            fig.update_layout(
+                polar=dict(
+                    radialaxis=dict(visible=True, range=[0, 100], showticklabels=False, ticks='', gridcolor='#E2E8F0'),
+                    angularaxis=dict(showticklabels=True, gridcolor='#E2E8F0'),
+                    gridshape='linear', bgcolor='white'
+                ),
+                showlegend=False, height=400, margin=dict(t=40, b=40, l=40, r=40)
+            )
+            st.plotly_chart(fig, use_container_width=True)
+
+    st.markdown("### Proficiency")
+    s_cols = st.columns(4)
+    skill_items = list(skills.items())
+    for i, (s, v) in enumerate(skill_items):
+        with s_cols[i % 4]:
+            st.markdown(f"""
+            <div class="skill-metric">
+                <b>{s}</b>
+                <div style="color:#3B82F6; font-size:1.2rem; font-weight:800;">{v}%</div>
+                <progress value="{v}" max="100" style="width:100%; height:8px; border-radius:5px;"></progress>
+            </div>
+            """, unsafe_allow_html=True)
+
+# --- EXPERIENCE ---
+elif selected == "Experience":
+    # 1. ADMIN EDITING
+    if st.session_state.is_admin:
+        with st.expander("✏️ Manage Experience"):
+            exp_list = st.session_state.data.get('experience', [])
+            
+            # Add New
+            with st.form("add_exp"):
+                st.subheader("Add New Job")
+                n_role = st.text_input("Role")
+                n_comp = st.text_input("Company")
+                n_date = st.text_input("Date")
+                n_desc = st.text_area("Description (Use new lines for bullet points)")
+                if st.form_submit_button("Add Job"):
+                    exp_list.insert(0, {"role": n_role, "company": n_comp, "date": n_date, "description": n_desc})
+                    st.rerun()
+            
+            st.markdown("---")
+            st.subheader("Edit Existing")
+            for i, job in enumerate(exp_list):
+                with st.expander(f"{job.get('role')} @ {job.get('company')}"):
+                    job['role'] = st.text_input(f"Role {i}", job.get('role'))
+                    job['company'] = st.text_input(f"Company {i}", job.get('company'))
+                    job['date'] = st.text_input(f"Date {i}", job.get('date'))
+                    job['description'] = st.text_area(f"Description {i}", job.get('description'))
+                    if st.button(f"Delete Job {i}"):
+                        exp_list.pop(i)
+                        st.rerun()
+
+    # 2. VIEW
+    st.title("Experience")
+    for job in st.session_state.data.get('experience', []):
+        st.markdown(f"""
+        <div class="timeline-card">
+            <b>{job.get("role")}</b> @ {job.get("company")}<br>
+            <small>{job.get("date")}</small>
+            <div class="timeline-desc" style="white-space:pre-line; color:#475569; margin-top:10px; line-height:1.6; font-size:0.95rem;">{job.get("description")}</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+# --- CONTACT ---
+elif selected == "Contact":
+    # 1. ADMIN EDITING
+    if st.session_state.is_admin:
+        with st.expander("✏️ Edit Contact Info"):
+            st.info("Edit your contact links here.")
+            contacts = st.session_state.data.get('profile', {}).get('contact_info', [])
+            # Simplified editor
+            contact_list = [{"Label": c['label'], "Value": c['value'], "Icon": c['icon']} for c in contacts]
+            edited_contacts = st.data_editor(contact_list, num_rows="dynamic")
+            
+            # Save
+            new_contacts = [{"label": r['Label'], "value": r['Value'], "icon": r['Icon']} for r in edited_contacts if r['Label']]
+            st.session_state.data['profile']['contact_info'] = new_contacts
+
+    # 2. VIEW
+    st.title("Contact")
+    prof = st.session_state.data.get('profile', {})
+    c1, c2 = st.columns(2)
+    for i, item in enumerate(prof.get('contact_info', [])):
+        with (c1 if i % 2 == 0 else c2):
+            st.markdown(f'<a href="{item.get("value")}" target="_blank" style="text-decoration:none;"><div class="metric-card"><img src="{item.get("icon")}" width="40"><br><b>{item.get("label")}</b></div></a>', unsafe_allow_html=True)
