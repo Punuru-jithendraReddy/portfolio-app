@@ -284,7 +284,7 @@ elif selected == "Projects":
                 
                 details = ""
                 if p.get('problem'): details += f"<div class='p-detail'><b>🔻 Problem:</b> {p['problem']}</div>"
-                if p.get('solution'): details += f"<div class='p-detail'><b>💡 Solution:</b> {p['solution']}</div>"
+                if p.get('solution'): details += f"<div class='p-detail'><b>🔸 Solution:</b> {p['solution']}</div>"
                 if p.get('impact'): details += f"<div class='p-detail'><b>🔹 Impact:</b> {p['impact']}</div>"
 
                 st.markdown(f"""
@@ -363,4 +363,5 @@ elif selected == "Contact":
                 <div class="contact-val">{val}</div>
             </a>
             """, unsafe_allow_html=True)
+
 
