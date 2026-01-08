@@ -119,7 +119,77 @@ st.markdown("""
     .d-green { background-color: #F0FDF4; border: 1px solid #DCFCE7; color: #14532D; } 
     .d-yellow { background-color: #FEFCE8; border: 1px solid #FEF9C3; color: #78350F; } 
 
-    /* 4. OTHER CARDS & TOOLTIP */
+    /* 4. METRIC CARDS & LIGHT TOOLTIP (DOWNWARD) */
+    .metric-card {
+        background: white; border: 1px solid #E2E8F0; border-radius: 12px;
+        padding: 20px; text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        animation: zoomIn 0.5s ease-out; transition: transform 0.3s ease, box-shadow 0.3s ease;
+        position: relative; /* Anchor for tooltip */
+    }
+    .metric-card:hover { transform: translateY(-5px); border-color: #3B82F6; }
+
+    /* TOOLTIP CONTAINER */
+    .tooltip-text {
+        visibility: hidden;
+        width: 220px;
+        
+        /* LIGHT THEME STYLING */
+        background-color: #ffffff; 
+        color: #1E293B; /* Dark text */
+        border: 1px solid #E2E8F0; /* Subtle border */
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        
+        text-align: left;
+        border-radius: 8px;
+        padding: 15px;
+        position: absolute;
+        z-index: 100;
+        
+        /* POSITIONING: DOWNWARD */
+        top: 110%; /* Push below the card */
+        left: 50%;
+        transform: translateX(-50%);
+        
+        opacity: 0;
+        transition: opacity 0.3s, top 0.3s;
+        font-size: 0.8rem;
+        font-weight: 500;
+        line-height: 1.5;
+        pointer-events: none;
+    }
+    
+    /* TOOLTIP ARROW (Pointing UP) */
+    .tooltip-text::after {
+        content: "";
+        position: absolute;
+        bottom: 100%; /* At the top of the tooltip */
+        left: 50%;
+        margin-left: -8px;
+        border-width: 8px;
+        border-style: solid;
+        /* Arrow color matches white background */
+        border-color: transparent transparent #ffffff transparent; 
+    }
+    
+    /* Tooltip Arrow Border (to match border of box) - Optional visual polish */
+    .tooltip-text::before {
+        content: "";
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        margin-left: -9px;
+        border-width: 9px;
+        border-style: solid;
+        border-color: transparent transparent #E2E8F0 transparent;
+        z-index: -1;
+    }
+
+    .metric-card:hover .tooltip-text {
+        visibility: visible; opacity: 1; 
+        top: 115%; /* Slight slide down effect */
+    }
+
+    /* OTHER ELEMENTS */
     .timeline-card {
         background: white; border: 1px solid #E2E8F0; border-radius: 12px;
         padding: 24px; margin-bottom: 20px; border-left: 6px solid #3B82F6;
@@ -127,48 +197,6 @@ st.markdown("""
         transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     .timeline-card:hover { transform: translateX(5px); }
-    
-    .metric-card {
-        background: white; border: 1px solid #E2E8F0; border-radius: 12px;
-        padding: 20px; text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-        animation: zoomIn 0.5s ease-out; transition: transform 0.3s ease, box-shadow 0.3s ease;
-        position: relative; /* For tooltip */
-    }
-    .metric-card:hover { transform: translateY(-5px); border-color: #3B82F6; }
-
-    /* --- TOOLTIP STYLES --- */
-    .tooltip-text {
-        visibility: hidden;
-        width: 200px;
-        background-color: #1E293B; /* Dark Slate */
-        color: #fff;
-        text-align: left;
-        border-radius: 8px;
-        padding: 12px;
-        position: absolute;
-        z-index: 100;
-        bottom: 110%; /* Place above the card */
-        left: 50%;
-        transform: translateX(-50%);
-        opacity: 0;
-        transition: opacity 0.3s, bottom 0.3s;
-        font-size: 0.75rem;
-        font-weight: 500;
-        line-height: 1.5;
-        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2);
-        pointer-events: none;
-    }
-    
-    .tooltip-text::after {
-        content: ""; position: absolute; top: 100%; left: 50%;
-        margin-left: -5px; border-width: 5px; border-style: solid;
-        border-color: #1E293B transparent transparent transparent;
-    }
-
-    .metric-card:hover .tooltip-text {
-        visibility: visible; opacity: 1; bottom: 120%;
-    }
-
     .skill-metric {
         background: white; border: 1px solid #f1f5f9; border-radius: 8px;
         padding: 15px; text-align: center; margin-bottom: 10px; animation: fadeInUp 0.7s ease-out;
@@ -241,17 +269,13 @@ with st.sidebar:
                         st.error("Incorrect password")
     else:
         st.success("Admin Mode Active")
-        
-        # DOWNLOAD BUTTON FOR PERMANENT CHANGES
         json_string = json.dumps(st.session_state.data, indent=4)
         st.download_button(
             label="💾 Download Configuration",
             data=json_string,
             file_name="data.json",
-            mime="application/json",
-            help="Click to download your updated data.json file."
+            mime="application/json"
         )
-        
         if st.button("Logout"):
             st.session_state.is_admin = False
             st.rerun()
@@ -282,31 +306,62 @@ if selected == "Home":
         
         mc1, mc2, mc3 = st.columns(3)
         
-        # --- TOOLTIP CONTENT ---
-        # You can fetch this from JSON if needed, but hardcoded as per request
-        tooltip_html = """
-        <strong>Dashboards Delivered:</strong><br>
-        • Sales Performance<br>
-        • HR Analytics<br>
-        • Financial Budgeting<br>
-        <br>
-        <strong>Details:</strong><br>
-        • 49% Reduction description<br>
-        • Other key descriptions...
+        # --- TOOLTIP CONTENT FOR ALL 3 CARDS ---
+        
+        # Tooltip for Dashboards
+        tt_dash = """
+        <div style='margin-bottom:6px;'><b>Key Projects:</b></div>
+        • 10+ interactive Power BI dashboards<br>
+        • Covers Finance, Sales, HR, Operations & Management KPIs<br>
+        • Built with drill-downs, filters, and performance-optimized models
         """
         
-        # METRIC CARD 1 (WITH TOOLTIP)
+        # Tooltip for Reduction
+        tt_red = """
+        <div style='margin-bottom:6px;'><b>Impact:</b></div>
+        • Automated 15+ manual reports<br>
+        • Saved 20 hrs/week for analysts<br>
+        • Reduced error rate by 90%
+        """
+        
+        # Tooltip for Efficiency
+        tt_eff = """
+        <div style='margin-bottom:6px;'><b>Gains:</b></div>
+        • Faster decision making<br>
+        • Real-time data access<br>
+        • Improved cross-team colab
+        """
+        
+        # 1. Dashboards
         with mc1: 
             st.markdown(f'''
             <div class="metric-card">
-                <div class="tooltip-text">{tooltip_html}</div>
+                <div class="tooltip-text">{tt_dash}</div>
                 <div style="font-size:1.8rem; font-weight:800; color:#3B82F6;">{mets.get("dashboards","0")}</div>
                 <div style="font-size:0.85rem; color:#64748B;">DASHBOARDS</div>
             </div>
             ''', unsafe_allow_html=True)
             
-        with mc2: st.markdown(f'<div class="metric-card"><div style="font-size:1.8rem; font-weight:800; color:#3B82F6;">{mets.get("manual_reduction","0%")}</div><div style="font-size:0.85rem; color:#64748B;">REDUCTION</div></div>', unsafe_allow_html=True)
-        with mc3: st.markdown(f'<div class="metric-card"><div style="font-size:1.8rem; font-weight:800; color:#3B82F6;">{mets.get("efficiency","0%")}</div><div style="font-size:0.85rem; color:#64748B;">EFFICIENCY</div></div>', unsafe_allow_html=True)
+        # 2. Reduction
+        with mc2: 
+            st.markdown(f'''
+            <div class="metric-card">
+                <div class="tooltip-text">{tt_red}</div>
+                <div style="font-size:1.8rem; font-weight:800; color:#3B82F6;">{mets.get("manual_reduction","0%")}</div>
+                <div style="font-size:0.85rem; color:#64748B;">REDUCTION</div>
+            </div>
+            ''', unsafe_allow_html=True)
+            
+        # 3. Efficiency
+        with mc3: 
+            st.markdown(f'''
+            <div class="metric-card">
+                <div class="tooltip-text">{tt_eff}</div>
+                <div style="font-size:1.8rem; font-weight:800; color:#3B82F6;">{mets.get("efficiency","0%")}</div>
+                <div style="font-size:0.85rem; color:#64748B;">EFFICIENCY</div>
+            </div>
+            ''', unsafe_allow_html=True)
+            
     with c2: render_image(prof.get('image_url'), width=350)
 
 # --- PROJECTS ---
@@ -315,8 +370,6 @@ elif selected == "Projects":
     if st.session_state.is_admin:
         with st.expander("✏️ Manage Projects"):
             projects = st.session_state.data.get('projects', [])
-            
-            # Select project to edit
             project_titles = [p.get('title', 'Untitled') for p in projects]
             project_titles.insert(0, "➕ Add New Project")
             selected_proj = st.selectbox("Select Project", project_titles)
@@ -436,12 +489,9 @@ elif selected == "Skills":
     # 1. ADMIN EDITING
     if st.session_state.is_admin:
         with st.expander("✏️ Edit Skills"):
-            st.info("Edit keys (Skill Name) and values (Percentage). Add new rows at the bottom.")
-            # Convert dict to list of dicts for editor
+            st.info("Edit keys (Skill Name) and values (Percentage).")
             skills_list = [{"Skill": k, "Value": v} for k, v in st.session_state.data.get('skills', {}).items()]
             edited_df = st.data_editor(skills_list, num_rows="dynamic")
-            
-            # Save back to dict
             new_skills = {row['Skill']: int(row['Value']) for row in edited_df if row['Skill']}
             st.session_state.data['skills'] = new_skills
 
@@ -454,7 +504,6 @@ elif selected == "Skills":
         with c2:
             r_vals = list(skills.values())
             theta_vals = list(skills.keys())
-            
             fig = go.Figure()
             fig.add_trace(go.Scatterpolar(
                 r=r_vals, theta=theta_vals, fill='toself', name='Skills',
@@ -489,18 +538,15 @@ elif selected == "Experience":
     if st.session_state.is_admin:
         with st.expander("✏️ Manage Experience"):
             exp_list = st.session_state.data.get('experience', [])
-            
-            # Add New
             with st.form("add_exp"):
                 st.subheader("Add New Job")
                 n_role = st.text_input("Role")
                 n_comp = st.text_input("Company")
                 n_date = st.text_input("Date")
-                n_desc = st.text_area("Description (Use new lines for bullet points)")
+                n_desc = st.text_area("Description")
                 if st.form_submit_button("Add Job"):
                     exp_list.insert(0, {"role": n_role, "company": n_comp, "date": n_date, "description": n_desc})
                     st.rerun()
-            
             st.markdown("---")
             st.subheader("Edit Existing")
             for i, job in enumerate(exp_list):
@@ -531,11 +577,8 @@ elif selected == "Contact":
         with st.expander("✏️ Edit Contact Info"):
             st.info("Edit your contact links here.")
             contacts = st.session_state.data.get('profile', {}).get('contact_info', [])
-            # Simplified editor
             contact_list = [{"Label": c['label'], "Value": c['value'], "Icon": c['icon']} for c in contacts]
             edited_contacts = st.data_editor(contact_list, num_rows="dynamic")
-            
-            # Save
             new_contacts = [{"label": r['Label'], "value": r['Value'], "icon": r['Icon']} for r in edited_contacts if r['Label']]
             st.session_state.data['profile']['contact_info'] = new_contacts
 
