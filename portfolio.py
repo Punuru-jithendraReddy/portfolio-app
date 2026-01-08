@@ -29,7 +29,7 @@ st.markdown("""
         height: 100%;
     }
 
-    /* 1. PROJECT CARD DESIGN */
+    /* 1. PROJECT CARD DESIGN (GRID VIEW) */
     .project-card {
         background-color: #ffffff;
         border: 1px solid #E2E8F0;
@@ -46,10 +46,7 @@ st.markdown("""
         height: 100%; 
         min-height: 450px; 
         
-        /* Padding bottom reserves space for button */
         padding-bottom: 70px; 
-        
-        /* Margin bottom pushes the next row away */
         margin-bottom: 20px; 
         
         transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -124,7 +121,7 @@ st.markdown("""
         line-height: 1.5;
     }
 
-    /* 2. BUTTON STYLING (STRICT RIGHT ALIGNMENT) */
+    /* 2. BUTTON STYLING (RIGHT ALIGNED) */
     div[data-testid="column"] .stButton {
         position: absolute !important;
         bottom: 20px !important; 
@@ -160,6 +157,44 @@ st.markdown("""
         outline: none !important;
         box-shadow: none !important;
     }
+
+    /* 3. DETAILED VIEW BOXES (EQUAL HEIGHT) */
+    .detail-row {
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+        width: 100%;
+        margin-bottom: 20px;
+        flex-wrap: wrap; /* Wraps on mobile */
+    }
+    
+    .detail-box {
+        flex: 1; /* This forces equal width */
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        border-radius: 10px;
+        min-width: 200px;
+        /* Flex parent aligns items stretch by default, making heights equal */
+    }
+
+    .box-title {
+        font-weight: 700;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .box-content {
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+
+    /* Colors for Detailed View */
+    .d-blue { background-color: #EFF6FF; border: 1px solid #DBEAFE; color: #1E3A8A; }
+    .d-green { background-color: #F0FDF4; border: 1px solid #DCFCE7; color: #14532D; }
+    .d-yellow { background-color: #FEFCE8; border: 1px solid #FEF9C3; color: #713F12; }
 
     /* OTHER CARDS */
     .timeline-card, .metric-card {
@@ -203,10 +238,9 @@ if 'is_admin' not in st.session_state: st.session_state.is_admin = False
 with st.sidebar:
     prof = st.session_state.data.get('profile', {})
     
-    # --- FIXED: CENTERED PROFILE IMAGE USING HTML ---
+    # --- CENTERED PROFILE IMAGE ---
     if prof.get('image_url'):
         img_src = get_img_src(prof.get('image_url'))
-        # Using simple HTML with margin: 0 auto to force centering
         st.markdown(f"""
             <div style="display: flex; justify-content: center; margin-bottom: 20px;">
                 <img src="{img_src}" style="width: 140px; border-radius: 10px; object-fit: cover;">
@@ -256,18 +290,37 @@ elif selected == "Projects":
         if st.button("← Back to Projects"):
             st.session_state.selected_project = None
             st.rerun()
+            
         st.title(p.get('title'))
         st.caption(f"📂 {p.get('category')}")
         dash_img = p.get('dashboard_image') or p.get('image')
         if dash_img.endswith('.mp4'): st.video(dash_img)
         else: st.image(get_img_src(dash_img), use_container_width=True)
+        
         st.markdown("### 📝 Details")
         st.write(p.get('details', 'Description coming soon.'))
         st.markdown("---")
-        c1, c2, c3 = st.columns(3)
-        c1.info(f"**🚨 Problem**\n{p.get('problem')}")
-        c2.success(f"**💡 Solution**\n{p.get('solution')}")
-        c3.warning(f"**🚀 Impact**\n{p.get('impact')}")
+        
+        # --- FIXED DETAILED VIEW (EQUAL HEIGHT BOXES) ---
+        # Using Flexbox layout to ensure all 3 boxes stretch to the same height
+        html_details = textwrap.dedent(f"""
+            <div class="detail-row">
+                <div class="detail-box d-blue">
+                    <div class="box-title">🚨 Problem</div>
+                    <div class="box-content">{p.get('problem')}</div>
+                </div>
+                <div class="detail-box d-green">
+                    <div class="box-title">💡 Solution</div>
+                    <div class="box-content">{p.get('solution')}</div>
+                </div>
+                <div class="detail-box d-yellow">
+                    <div class="box-title">🚀 Impact</div>
+                    <div class="box-content">{p.get('impact')}</div>
+                </div>
+            </div>
+        """)
+        st.markdown(html_details, unsafe_allow_html=True)
+
     else:
         st.title("Projects")
         for i in range(0, len(projects), 2):
@@ -278,8 +331,7 @@ elif selected == "Projects":
                 with cols[j]:
                     img_src = get_img_src(p.get('image', ''))
                     
-                    # --- HTML CARD ---
-                    # Using textwrap to handle indentation cleanly
+                    # --- HTML CARD (GRID VIEW) ---
                     html_content = textwrap.dedent(f"""
                         <div class="project-card">
                             <div class="p-cat-overlay">{p.get('category')}</div>
