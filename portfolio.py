@@ -52,25 +52,26 @@ st.markdown("""
     .t-date { font-size: 0.85rem; color: #94A3B8; float: right; font-weight: 500; }
     .t-desc { font-size: 0.95rem; color: #334155; line-height: 1.6; margin-top: 10px; white-space: pre-line; }
 
-    /* 3. PROJECT CARDS (Fixed: Equal Height Strategy) */
+    /* 3. PROJECT CARDS */
     .project-card {
         background-color: #ffffff;
         border: 1px solid #e2e8f0;
         border-radius: 12px;
         padding: 0;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        margin-bottom: 10px; 
+        margin-bottom: 0px; 
         overflow: hidden;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         
-        /* FORCE EQUAL HEIGHT */
+        /* Layout Strategy */
         display: flex;
         flex-direction: column;
-        height: 100%;       /* Fills container */
-        min-height: 520px;  /* Ensures even short cards are tall enough to match neighbors */
+        height: 100%;
+        min-height: 520px; /* Consistent Height */
+        padding-bottom: 65px; /* EXTRA PADDING AT BOTTOM FOR THE BUTTON */
     }
     .project-card:hover {
-        transform: translateY(-8px);
+        transform: translateY(-5px);
         box-shadow: 0 12px 20px -5px rgba(59, 130, 246, 0.25);
         border-color: #3B82F6;
     }
@@ -79,20 +80,19 @@ st.markdown("""
         height: 200px; 
         overflow: hidden; 
         border-bottom: 1px solid #e2e8f0; 
-        flex-shrink: 0; /* Prevents image from shrinking */
+        flex-shrink: 0;
     }
     .p-img { width: 100%; height: 100%; object-fit: cover; }
     
     .p-content { 
         padding: 20px; 
-        flex-grow: 1; /* Pushes content to fill remaining space */
+        flex-grow: 1;
         display: flex; 
         flex-direction: column; 
     }
-    
     .p-title { font-size: 1.25rem; font-weight: 800; color: #1E293B; margin-bottom: 5px; }
     .p-cat { font-size: 0.8rem; font-weight: 700; color: #64748B; text-transform: uppercase; margin-bottom: 15px; }
-    .p-detail { font-size: 0.95rem; color: #475569; margin-bottom: 10px; line-height: 1.5; }
+    .p-detail { font-size: 0.90rem; color: #475569; margin-bottom: 8px; line-height: 1.4; }
 
     /* 4. SKILL METRICS */
     .skill-metric {
@@ -117,6 +117,38 @@ st.markdown("""
     .contact-icon-big { width: 40px; height: 40px; margin-bottom: 10px; object-fit: contain; }
     .contact-label { font-size: 1.1rem; font-weight: 700; color: #1E293B; margin-bottom: 5px; }
     .contact-val { font-size: 0.9rem; color: #3B82F6; }
+
+    /* 6. BUTTON STYLING (The Magic Part) */
+    
+    /* Target buttons specifically inside the columns layout (Project Grid) */
+    [data-testid="column"] .stButton {
+        margin-top: -60px; /* Pulls the button UP into the card's padding area */
+        margin-right: 15px; /* Adds spacing from the right edge */
+        display: flex;
+        justify-content: flex-end; /* Aligns button to the right */
+        position: relative;
+        z-index: 99; /* Ensures button is clickable and on top */
+    }
+
+    /* Style the actual button element */
+    [data-testid="column"] .stButton button {
+        background-color: #F0F9FF !important; /* Light Blue Background */
+        color: #0284C7 !important; /* Dark Blue Text */
+        border: 1px solid #BAE6FD !important; /* Light Blue Border */
+        border-radius: 8px !important;
+        padding: 0.4rem 1.0rem !important;
+        font-weight: 600 !important;
+        font-size: 0.85rem !important;
+        transition: all 0.2s ease !important;
+    }
+
+    /* Hover effect for the button */
+    [data-testid="column"] .stButton button:hover {
+        background-color: #E0F2FE !important;
+        border-color: #0284C7 !important;
+        color: #0369A1 !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+    }
 
 </style>
 """, unsafe_allow_html=True)
@@ -348,7 +380,7 @@ elif selected == "Projects":
             for j, p in enumerate(batch):
                 actual_idx = i + j
                 with cols[j]:
-                    # 1. Render The Visual Card (Same as before)
+                    # 1. Render The Visual Card
                     img_src = get_img_src(p.get('image', ''))
                     
                     details_html = ""
@@ -369,8 +401,8 @@ elif selected == "Projects":
                     </div>
                     """, unsafe_allow_html=True)
                     
-                    # 2. Add the "View Details" Button BELOW the card
-                    # We use a unique key for every button based on the index
+                    # 2. Add the "View Case Study" Button
+                    # The CSS 'margin-top: -60px' will pull this button UP into the card above
                     if st.button(f"View Case Study ➡", key=f"btn_{actual_idx}"):
                         st.session_state.selected_project = actual_idx
                         st.rerun()
