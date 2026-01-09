@@ -56,7 +56,7 @@
   {
     "title": "Open Sales Order & Pipeline Analytics",
     "category": "Sales Analytics",
-    "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80",
+    "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&h=600&q=80",
     "dashboard_image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/OpensalesOrder.png",
     "problem": "Limited visibility into open sales orders obscures true pipeline health.",
     "solution": "Delivers a real-time, consolidated view of open orders with trend insights.",
@@ -66,7 +66,7 @@
   {
     "title": "Performance Leaderboard",
     "category": "Sales",
-    "image": "https://images.unsplash.com/photo-1556155092-8707de31f9c4?auto=format&fit=crop&w=800&q=80",
+    "image": "https://images.unsplash.com/photo-1556155092-8707de31f9c4?auto=format&fit=crop&w=900&h=600&q=80",
     "dashboard_image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/SPR.mp4",
     "problem": "Relying on intuition to assess performance caused leaders to overlook top talent.",
     "solution": "Automated rankings and trend insights to recognize high performers instantly.",
@@ -76,7 +76,7 @@
   {
     "title": "Time-Intelligent Sales Benchmarking",
     "category": "Sales Analytics",
-    "image": "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=800&q=80",
+    "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=900&h=600&q=80",
     "dashboard_image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/AdvancePerformanceAnalytics.mp4",
     "problem": "Current-month performance lacks historical context for meaningful evaluation.",
     "solution": "Compares current sales, profit, and volume against rolling historical averages.",
@@ -86,7 +86,7 @@
   {
     "title": "Period-Based Sales Performance Comparison",
     "category": "Sales Analytics",
-    "image": "https://images.unsplash.com/photo-1543286386-713bdd548da4?auto=format&fit=crop&w=800&q=80",
+    "image": "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&w=900&h=600&q=80",
     "dashboard_image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/PeriodBasedSales.mp4",
     "problem": "Sales performance is difficult to interpret without clear comparison across time periods.",
     "solution": "Displays previous, current, and next period sales metrics dynamically based on the selected period.",
@@ -96,7 +96,7 @@
   {
     "title": "Flat File Comparison Tool",
     "category": "Tools",
-    "image": "https://images.unsplash.com/photo-1555949963-aa79dcee981c?auto=format&fit=crop&w=800&q=80",
+    "image": "https://images.unsplash.com/photo-1555949963-aa79dcee981c?auto=format&fit=crop&w=900&h=600&q=80",
     "dashboard_image": "https://images.unsplash.com/photo-1555099962-4199c345e5dd?auto=format&fit=crop&w=1920&q=80",
     "problem": "Manual validation of large Excel/CSV files is error-prone.",
     "solution": "Browser-based Python Streamlit tool for comparing Source vs Target files.",
@@ -104,5 +104,6 @@
     "details": "A custom Python tool built with Pandas and Streamlit. Users upload two datasets (e.g., a migration Source file and a Destination file). The tool automatically normalizes headers, identifies added/removed rows, and highlights specific cell-value mismatches. It exports a detailed 'Delta Report' excel file for the QA team."
   }
 ]
-
+  
 }
+
