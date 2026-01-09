@@ -94,18 +94,20 @@
     "details": "This dashboard provides a dynamic, period-driven sales comparison view by displaying previous, current, and next period values across all key sales metrics based on a user-selected timeframe. It allows users to seamlessly evaluate performance shifts, identify momentum changes, and anticipate near-term outcomes.\n\nThe solution demonstrates strong use of time intelligence and dynamic calculations, enabling consistent period-over-period analysis that improves sales monitoring, planning accuracy, and data-driven decision-making."
   },
   {
-    "title": "Flat File Comparison Tool",
-    "category": "Tools",
-    "image": "https://images.unsplash.com/photo-1587620962725-abab7fe55159?auto=format&fit=crop&w=800&q=80",
-    "dashboard_image": "https://images.unsplash.com/photo-1555099962-4199c345e5dd?auto=format&fit=crop&w=1920&q=80",
-    "problem": "Manual validation of large Excel/CSV files is error-prone.",
-    "solution": "Browser-based Python Streamlit tool for comparing Source vs Target files.",
-    "impact": "Supports 100k+ rows with auto-normalization.",
-    "details": "A custom Python tool built with Pandas and Streamlit. Users upload two datasets (e.g., a migration Source file and a Destination file). The tool automatically normalizes headers, identifies added/removed rows, and highlights specific cell-value mismatches. It exports a detailed 'Delta Report' excel file for the QA team."
-  }
+  "title": "Flat File Comparison Tool",
+  "category": "Tools",
+  "image": "https://images.unsplash.com/photo-1587620962725-abab7fe55159?auto=format&fit=crop&w=800&q=80",
+  "dashboard_image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/FalatfielComparisontool.mp4",
+  "problem": "Manual validation of large Excel and CSV files is time-consuming and error-prone.",
+  "solution": "A browser-based Python Streamlit application for reliable Source vs Target flat-file comparison.",
+  "impact": "Enables fast, accurate validation of 100k+ row datasets with audit-ready Excel outputs.",
+  "details": "The Flat File Comparison Tool is a web-hosted data comparison application built using Python and Streamlit, designed to compare large Excel and CSV files directly from the browser without any local installation, setup, or technical configuration. It is optimized for business users, data analysts, auditors, and engineers who require reliable file-level and data-level comparison with clear diagnostics and structured outputs.\n\nThe tool supports Excel (.xlsx, .xls) and CSV (.csv) files and allows users to upload Source and Target files, dynamically select sheets, configure header row positions, and choose single or multiple business key columns. It includes advanced normalization features such as case-insensitive column matching, case-insensitive data comparison, optional whitespace trimming, and automatic handling of dates, numeric formats, and null values.\n\nComparison results include match percentage calculation, row-level classification (present in both files, missing in target, newly added in target), schema difference detection, and value-level mismatch identification. Intelligent diagnostics provide root-cause analysis, ranked mismatch impact, sample value inspection, and automated recommendations to improve match accuracy.\n\nAfter execution, the tool generates a downloadable, business-friendly Excel report containing an Executive Summary, Column Names comparison, Row Comparison, Unique Values analysis, and Summary Statistics. All files are processed securely in-memory per session, with no permanent storage or external system integration, ensuring data privacy and session-level isolation.\n\nThe tool is ideal for data migration validation, periodic reconciliation, finance and operations audits, schema drift detection, regression testing, and quality assurance for reporting datasets. Developed and maintained by Jithendra Reddy, Software Engineer – Data & Automation."
+}
+
 ]
   
 }
+
 
 
 
