@@ -54,35 +54,27 @@
     ],
     "projects": [
         {
-            "title": "Executive Command Center",
-            "category": "Finance",
-            "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80",
-            "dashboard_image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1920&q=80",
-            "problem": "Executives lacked a clear, real-time view of business performance across regions.",
-            "solution": "Centralized 'Single Source of Truth' hub for Sales, Profit Margin, and Deal Size.",
-            "impact": "25% improvement in financial visibility.",
-            "details": "This Executive Command Center serves as the primary daily touchpoint for C-suite leadership. Integrating data from Oracle ERP and Salesforce, the dashboard features a dynamic 'War Room' view that allows leaders to filter by region, product line, and fiscal quarter instantly. We utilized complex DAX measures to calculate Year-over-Year (YoY) growth and EBITDA margins on the fly. The dashboard includes a decomposition tree to analyze the root causes of margin slippage."
-        },
+            "title": "Time-Intelligent Sales Benchmarking",
+            "category": "Sales Analytics",
+            "image": "https://images.unsplash.com/photo-1535957998253-26ae1ef29506?auto=format&fit=crop&w=800&q=80",
+            "dashboard_image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/AdvancePerformanceAnalytics.mp4",
+            "problem": "Current-month performance lacks historical context for meaningful evaluation.",
+            "solution": "Compares current sales, profit, and volume against rolling historical averages.",
+            "impact": "Enables clearer trend detection and more confident performance decisions.",
+            "details": "This dashboard enables comparative performance analysis by evaluating current month sales, profit, and volume against rolling 3-, 6-, 12-, and 24-month averages. This approach helps identify short-term momentum, long-term trends, and performance deviations with clarity.\n\nThe solution demonstrates the ability to deliver time-intelligent analytics, support trend benchmarking, and provide context-driven insights that improve sales monitoring, forecasting accuracy, and data-driven decision-making."
+          },
         {
-            "title": "Financial Budget Tracking",
-            "category": "Finance",
-            "image": "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=800&q=80",
-            "dashboard_image": "https://images.unsplash.com/photo-1543286386-2e659306cd6c?auto=format&fit=crop&w=1920&q=80",
-            "problem": "Lack of clear visibility into budget variances made it difficult to track overspending.",
-            "solution": "Real-time comparison of Actuals vs Budget vs Forecast with drill-down capabilities.",
-            "impact": "Enabled timely corrective actions on budget deviations.",
-            "details": "This report replaced a manual monthly Excel process that took 4 days to compile. It connects directly to the General Ledger and provides a daily refresh of Actuals vs. Budget. Key features include conditional formatting to highlight cost centers exceeding 90% of their budget and a 'What-If' parameter allowing finance managers to adjust forecast assumptions and see the potential impact on year-end landing."
-        },
-       {
           "title": "Open Sales Order & Pipeline Analytics",
           "category": "Sales Analytics",
           "image": "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&w=800&q=80",
           "dashboard_image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/OpensalesOrder.png",
-          "problem": "Limited visibility into open sales orders made it difficult to understand pipeline health, order status, and demand trends across customers and regions.",
-          "solution": "Provides a real-time, consolidated view of open sales orders with breakdowns by customer, region, sales ownership, value, volume, pricing, and status, supported by year-over-year trend analysis.",
-          "impact": "Improved pipeline transparency, stronger demand forecasting signals, and faster, data-driven decisions for sales and leadership teams.",
+          "problem": "Limited visibility into open sales orders obscures true pipeline health.",
+          "solution": "Delivers a real-time, consolidated view of open orders with trend insights.",
+          "impact": "Enables clearer pipeline tracking and faster, data-driven sales decisions.",
           "details": "This Open Sales Order analytics solution provides a real-time, consolidated view of open sales performance across customers, regions, and sales ownership. It enables clear visibility into order value, volume, pricing, and status, while supporting year-over-year trend analysis to identify demand patterns and seasonality.\n\nThe solution demonstrates strong capability in business-aligned KPI definition, dynamic, filter-driven analysis, and insight-focused reporting, supporting faster and more informed decision-making for sales and leadership teams."
+        }
         },
+       
         {
             "title": "Performance Leaderboard",
             "category": "Sales",
@@ -102,16 +94,6 @@
             "solution": "Root Cause Analysis dashboard categorizing reasons for order revisions.",
             "impact": "Identified bottlenecks and improved supplier performance.",
             "details": "Focused on procurement efficiency, this tool analyzes Purchase Order (PO) lifecycle data. It highlights 'PO Churn'\u2014orders that are modified more than 3 times. By visualizing the 'Reason for Change' (e.g., Vendor Out of Stock, Price Change, Internal Request), the procurement team was able to renegotiate terms with vendors causing 80% of the disruptions."
-        },
-        {
-              "title": "Time-Intelligent Sales Benchmarking",
-              "category": "Sales Analytics",
-              "image": "https://images.unsplash.com/photo-1535957998253-26ae1ef29506?auto=format&fit=crop&w=800&q=80",
-              "dashboard_image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/AdvancePerformanceAnalytics.mp4",
-              "problem": "Evaluating sales performance using only current-month figures lacks historical context, making it difficult to distinguish real growth, decline, or seasonal behavior.",
-              "solution": "Benchmarks current month sales, profit, and volume against rolling 3-, 6-, 12-, and 24-month historical averages to provide time-aware performance context.",
-              "impact": "Surfaces short-term momentum, long-term trends, and performance deviations, enabling more accurate performance assessment, forecasting, and strategic sales decisions.",
-              "details": "This dashboard enables comparative performance analysis by evaluating current month sales, profit, and volume against rolling 3-, 6-, 12-, and 24-month averages. This approach helps identify short-term momentum, long-term trends, and performance deviations with clarity.\n\nThe solution demonstrates the ability to deliver time-intelligent analytics, support trend benchmarking, and provide context-driven insights that improve sales monitoring, forecasting accuracy, and data-driven decision-making."
         },
         {
             "title": "Flat File Comparison Tool",
@@ -135,6 +117,7 @@
         }
     ]
 }
+
 
 
 
