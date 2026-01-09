@@ -72,7 +72,7 @@
           "solution": "Delivers a real-time, consolidated view of open orders with trend insights.",
           "impact": "Enables clearer pipeline tracking and faster, data-driven sales decisions.",
           "details": "This Open Sales Order analytics solution provides a real-time, consolidated view of open sales performance across customers, regions, and sales ownership. It enables clear visibility into order value, volume, pricing, and status, while supporting year-over-year trend analysis to identify demand patterns and seasonality.\n\nThe solution demonstrates strong capability in business-aligned KPI definition, dynamic, filter-driven analysis, and insight-focused reporting, supporting faster and more informed decision-making for sales and leadership teams."
-        }
+        
         },
        
         {
@@ -117,6 +117,7 @@
         }
     ]
 }
+
 
 
 
