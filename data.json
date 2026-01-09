@@ -97,7 +97,7 @@
   "title": "Flat File Comparison Tool",
   "category": "Tools",
   "image": "https://images.unsplash.com/photo-1587620962725-abab7fe55159?auto=format&fit=crop&w=800&q=80",
-  "dashboard_image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/FalatfielComparisontool.mp4",
+  "dashboard_image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/FalatfielComparisontool.mp4" ,
   "problem": "Manual validation of large Excel and CSV files is time-consuming and error-prone.",
   "solution": "A browser-based Python Streamlit application for reliable Source vs Target flat-file comparison.",
   "impact": "Enables fast, accurate validation of 100k+ row datasets with audit-ready Excel outputs.",
@@ -107,6 +107,7 @@
 ]
   
 }
+
 
 
 
