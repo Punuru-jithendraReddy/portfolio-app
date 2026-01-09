@@ -73,15 +73,15 @@
             "impact": "Enabled timely corrective actions on budget deviations.",
             "details": "This report replaced a manual monthly Excel process that took 4 days to compile. It connects directly to the General Ledger and provides a daily refresh of Actuals vs. Budget. Key features include conditional formatting to highlight cost centers exceeding 90% of their budget and a 'What-If' parameter allowing finance managers to adjust forecast assumptions and see the potential impact on year-end landing."
         },
-        {
-            "title": "Sales Forecasting & Pipeline",
-            "category": "Sales",
-            "image": "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&w=800&q=80",
-            "dashboard_image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/OpensalesOrder.png",
-            "problem": "Unreliable forecasts and unclear pipeline visibility made resource planning hard.",
-            "solution": "Bridges past results with current pipeline data to deliver accurate revenue forecasts.",
-            "impact": "Improved reliability of revenue projections for investors.",
-            "details": "This Open Sales Order analytics solution provides a real-time, consolidated view of open sales performance across customers, regions, and sales ownership. It enables clear visibility into order value, volume, pricing, and status, while supporting year-over-year trend analysis to identify demand patterns and seasonality.\n\nThe solution demonstrates strong capability in business-aligned KPI definition, dynamic, filter-driven analysis, and insight-focused reporting, supporting faster and more informed decision-making for sales and leadership teams."
+       {
+          "title": "Open Sales Order & Pipeline Analytics",
+          "category": "Sales Analytics",
+          "image": "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&w=800&q=80",
+          "dashboard_image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/OpensalesOrder.png",
+          "problem": "Limited visibility into open sales orders made it difficult to understand pipeline health, order status, and demand trends across customers and regions.",
+          "solution": "Provides a real-time, consolidated view of open sales orders with breakdowns by customer, region, sales ownership, value, volume, pricing, and status, supported by year-over-year trend analysis.",
+          "impact": "Improved pipeline transparency, stronger demand forecasting signals, and faster, data-driven decisions for sales and leadership teams.",
+          "details": "This Open Sales Order analytics solution provides a real-time, consolidated view of open sales performance across customers, regions, and sales ownership. It enables clear visibility into order value, volume, pricing, and status, while supporting year-over-year trend analysis to identify demand patterns and seasonality.\n\nThe solution demonstrates strong capability in business-aligned KPI definition, dynamic, filter-driven analysis, and insight-focused reporting, supporting faster and more informed decision-making for sales and leadership teams."
         },
         {
             "title": "Performance Leaderboard",
@@ -165,4 +165,5 @@
         }
     ]
 }
+
 
