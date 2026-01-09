@@ -124,14 +124,14 @@
             "details": "By connecting to the Power Automate run history and Logic Apps logs, this dashboard visualizes the health of automated business processes. It tracks success/failure rates of workflows and calculates the average duration of each step. This visibility helped identify that the 'Approval' step was the major bottleneck, leading to a process redesign."
         },
         {
-            "title": "Advanced Benchmarking",
-            "category": "Sales",
-            "image": "https://images.unsplash.com/photo-1535957998253-26ae1ef29506?auto=format&fit=crop&w=800&q=80",
-            "dashboard_image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/AdvancePerformanceAnalytics.mp4",
-            "problem": "Measuring performance only in the present hides improvement or decline.",
-            "solution": "Compares present activity to historical benchmarks (Last 3 Months/Year).",
-            "impact": "Reveals true performance direction (positive/negative trends).",
-            "details": "This dashboard enables comparative performance analysis by evaluating current month sales, profit, and volume against rolling 3-, 6-, 12-, and 24-month averages. This approach helps identify short-term momentum, long-term trends, and performance deviations with clarity.\n\nThe solution demonstrates the ability to deliver time-intelligent analytics, support trend benchmarking, and provide context-driven insights that improve sales monitoring, forecasting accuracy, and data-driven decision-making."
+              "title": "Time-Intelligent Sales Benchmarking",
+              "category": "Sales Analytics",
+              "image": "https://images.unsplash.com/photo-1535957998253-26ae1ef29506?auto=format&fit=crop&w=800&q=80",
+              "dashboard_image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/AdvancePerformanceAnalytics.mp4",
+              "problem": "Evaluating sales performance using only current-month figures lacks historical context, making it difficult to distinguish real growth, decline, or seasonal behavior.",
+              "solution": "Benchmarks current month sales, profit, and volume against rolling 3-, 6-, 12-, and 24-month historical averages to provide time-aware performance context.",
+              "impact": "Surfaces short-term momentum, long-term trends, and performance deviations, enabling more accurate performance assessment, forecasting, and strategic sales decisions.",
+              "details": "This dashboard enables comparative performance analysis by evaluating current month sales, profit, and volume against rolling 3-, 6-, 12-, and 24-month averages. This approach helps identify short-term momentum, long-term trends, and performance deviations with clarity.\n\nThe solution demonstrates the ability to deliver time-intelligent analytics, support trend benchmarking, and provide context-driven insights that improve sales monitoring, forecasting accuracy, and data-driven decision-making."
         },
         {
             "title": "Flat File Comparison Tool",
@@ -165,3 +165,4 @@
         }
     ]
 }
+
