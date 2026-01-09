@@ -51,7 +51,7 @@ st.markdown("""
         flex-direction: column;
         flex: 1;
         height: 100%; 
-        min-height: 450px; 
+        min-height: 480px; /* Slight increase to accommodate spacing */
         padding-bottom: 70px; 
         margin-bottom: 20px; 
         animation: fadeInUp 0.6s ease-out;
@@ -63,10 +63,11 @@ st.markdown("""
         border-color: #3B82F6;
     }
 
-    /* IMAGES */
+    /* IMAGES - UPDATED FOR CURVED EDGES */
     .p-img-container { 
         width: 100%; height: 180px; overflow: hidden; 
-        border-radius: 8px; margin-bottom: 15px; 
+        border-radius: 15px; /* Increased curve */
+        margin-bottom: 15px; 
         border: 1px solid #f1f5f9; flex-shrink: 0; 
     }
     .p-img { width: 100%; height: 100%; object-fit: cover; }
@@ -85,15 +86,24 @@ st.markdown("""
         font-size: 1.2rem; font-weight: 700; color: #0F172A;
         margin-bottom: 15px; line-height: 1.3; flex-grow: 0; 
     }
-    .p-details-container { flex-grow: 1; }
+    .p-details-container { flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
     .p-row { display: flex; align-items: flex-start; margin-bottom: 10px; }
     .p-label { min-width: 85px; flex-shrink: 0; font-weight: 700; color: #1E293B; font-size: 0.85rem; }
-    .p-val { font-size: 0.85rem; color: #334155; line-height: 1.5; }
+    
+    /* UPDATED: VALUES TRUNCATED FOR UNIFORM SIZE */
+    .p-val { 
+        font-size: 0.85rem; color: #334155; line-height: 1.5; 
+        display: -webkit-box;
+        -webkit-line-clamp: 3; /* Limits text to 3 lines per section */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 
     /* 2. BUTTON STYLING */
     div[data-testid="column"] .stButton {
         position: absolute !important; bottom: 20px !important; 
-        right: 20px !important; left: unset !important;      
+        right: 20px !important; left: unset !important;       
         width: auto !important; text-align: right !important; z-index: 10 !important;
     }
     div[data-testid="column"] .stButton button {
