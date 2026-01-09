@@ -55,7 +55,7 @@
     "projects": [
   {
     "title": "Open Sales Order & Pipeline Analytics",
-    "category": "Sales Analytics",
+    "category": "Sales",
     "image": "https://i.pinimg.com/1200x/43/54/ad/4354ad598883f576ccc2c3bda1eab558.jpg?auto=format&fit=crop&w=800&h=600&q=80",
     "dashboard_image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/OpensalesOrder.png",
     "problem": "Limited visibility into open sales orders obscures true pipeline health.",
@@ -75,7 +75,7 @@
   },
   {
     "title": "Time-Intelligent Sales Benchmarking",
-    "category": "Sales Analytics",
+    "category": "Sales",
     "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=900&h=600&q=80",
     "dashboard_image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/AdvancePerformanceAnalytics.mp4",
     "problem": "Current-month performance lacks historical context for meaningful evaluation.",
@@ -85,7 +85,7 @@
   },
   {
     "title": "Period-Based Sales Performance Comparison",
-    "category": "Sales Analytics",
+    "category": "Sales",
     "image": "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&w=900&h=600&q=80",
     "dashboard_image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/PeriodBasedSales.mp4",
     "problem": "Sales performance is difficult to interpret without clear comparison across time periods.",
@@ -107,6 +107,7 @@
 ]
   
 }
+
 
 
 
