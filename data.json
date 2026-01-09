@@ -104,26 +104,6 @@
             "details": "Focused on procurement efficiency, this tool analyzes Purchase Order (PO) lifecycle data. It highlights 'PO Churn'\u2014orders that are modified more than 3 times. By visualizing the 'Reason for Change' (e.g., Vendor Out of Stock, Price Change, Internal Request), the procurement team was able to renegotiate terms with vendors causing 80% of the disruptions."
         },
         {
-            "title": "Live Operations Monitor",
-            "category": "Logistics",
-            "image": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80",
-            "dashboard_image": "https://videos.pexels.com/video-files/3129671/3129671-uhd_2560_1440_30fps.mp4",
-            "problem": "Delays and workflow issues were often noticed only after affecting customers.",
-            "solution": "Real-time tracking of orders and pipeline stages with live metric tickers.",
-            "impact": "Proactive removal of blockers before escalation.",
-            "details": "This dashboard is displayed on large monitors in the operations floor. It uses DirectQuery to fetch live data, showing a ticking count of orders in 'Pending', 'Processing', and 'Shipped' states. Conditional formatting turns cards red if an order sits in a specific stage for longer than 4 hours (SLA breach warning), alerting the floor manager immediately. (Note: The video above demonstrates the real-time ticker concept)."
-        },
-        {
-            "title": "Workflow Process Monitoring",
-            "category": "Logistics",
-            "image": "https://images.unsplash.com/photo-1507925921958-8a62f3d1a50d?auto=format&fit=crop&w=800&q=80",
-            "dashboard_image": "https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=1920&q=80",
-            "problem": "Inefficiencies in key multi-step processes often went unnoticed.",
-            "solution": "Granular visibility into every stage of a workflow, highlighting stuck items.",
-            "impact": "Instant identification of process bottlenecks.",
-            "details": "By connecting to the Power Automate run history and Logic Apps logs, this dashboard visualizes the health of automated business processes. It tracks success/failure rates of workflows and calculates the average duration of each step. This visibility helped identify that the 'Approval' step was the major bottleneck, leading to a process redesign."
-        },
-        {
               "title": "Time-Intelligent Sales Benchmarking",
               "category": "Sales Analytics",
               "image": "https://images.unsplash.com/photo-1535957998253-26ae1ef29506?auto=format&fit=crop&w=800&q=80",
@@ -144,16 +124,6 @@
             "details": "A custom Python tool built with Pandas and Streamlit. Users upload two datasets (e.g., a migration Source file and a Destination file). The tool automatically normalizes headers, identifies added/removed rows, and highlights specific cell-value mismatches. It exports a detailed 'Delta Report' excel file for the QA team."
         },
         {
-            "title": "AI Invoice Automation",
-            "category": "Automation",
-            "image": "https://images.unsplash.com/photo-1618044733300-9472054094ee?auto=format&fit=crop&w=800&q=80",
-            "dashboard_image": "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=1920&q=80",
-            "problem": "Manual extraction of chemical specs from PDFs was time-consuming.",
-            "solution": "Automated flow using Copilot Studio, AI Builder, and Power Automate.",
-            "impact": "50% reduction in manual data entry.",
-            "details": "This project utilized Microsoft's AI Builder to train a custom form-processing model. It automatically extracts key fields (Invoice Number, Date, Line Items, Total) from incoming PDF emails. The data is then validated against the ERP system via an API call, and if it matches, the invoice is posted automatically without human intervention."
-        },
-        {
             "title": "Recruitment Management App",
             "category": "Apps",
             "image": "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=800&q=80",
@@ -165,5 +135,6 @@
         }
     ]
 }
+
 
 
