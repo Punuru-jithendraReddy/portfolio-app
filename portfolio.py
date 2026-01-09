@@ -1,26 +1,31 @@
 import streamlit as st
 import json
 import os
-import base64
 import textwrap
 from streamlit_option_menu import option_menu
-from PIL import Image
 import plotly.graph_objects as go
 
 # --- CONFIGURATION ---
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_FILE = os.path.join(BASE_DIR, 'data.json')
-ASSETS_DIR = os.path.join(BASE_DIR, 'assets')
 ADMIN_PASSWORD = "admin" 
 
 st.set_page_config(layout="wide", page_title="Portfolio", page_icon="✨")
 
-# --- CUSTOM CSS ---
+# --- CUSTOM CSS (THEME AWARE) ---
 st.markdown("""
 <style>
+    /* --- THEME ADAPTIVE COLORS ---
+       We use Streamlit CSS variables:
+       var(--background-color) = Main page background
+       var(--secondary-background-color) = Sidebar/Card background
+       var(--text-color) = Main text color
+    */
+
     /* GLOBAL FONTS */
     .main { padding-top: 1rem; }
-    h1, h2, h3 { font-family: 'Segoe UI', sans-serif; color: #0F172A; }
+    h1, h2, h3 { font-family: 'Segoe UI', sans-serif; color: var(--text-color) !important; }
+    p, div, span { color: var(--text-color); }
     
     /* ANIMATIONS */
     @keyframes fadeInUp {
@@ -41,17 +46,17 @@ st.markdown("""
 
     /* 1. PROJECT CARD DESIGN */
     .project-card {
-        background-color: #ffffff;
-        border: 1px solid #E2E8F0;
+        background-color: var(--secondary-background-color); /* ADAPTIVE BACKGROUND */
+        border: 1px solid rgba(128, 128, 128, 0.2); /* SUBTLE BORDER FOR BOTH MODES */
         border-radius: 12px;
         padding: 20px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         position: relative; 
         display: flex;
         flex-direction: column;
         flex: 1;
         height: 100%; 
-        min-height: 480px; /* Slight increase to accommodate spacing */
+        min-height: 480px; 
         padding-bottom: 70px; 
         margin-bottom: 20px; 
         animation: fadeInUp 0.6s ease-out;
@@ -59,42 +64,42 @@ st.markdown("""
     }
     .project-card:hover {
         transform: translateY(-3px);
-        box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.2);
         border-color: #3B82F6;
     }
 
-    /* IMAGES - UPDATED FOR CURVED EDGES */
+    /* IMAGES */
     .p-img-container { 
         width: 100%; height: 180px; overflow: hidden; 
-        border-radius: 15px; /* Increased curve */
+        border-radius: 15px; 
         margin-bottom: 15px; 
-        border: 1px solid #f1f5f9; flex-shrink: 0; 
+        border: 1px solid rgba(128, 128, 128, 0.1); flex-shrink: 0; 
     }
     .p-img { width: 100%; height: 100%; object-fit: cover; }
     
     /* OVERLAY */
     .p-cat-overlay {
         position: absolute; top: 30px; left: 30px;
-        background-color: rgba(255, 255, 255, 0.95);
+        background-color: var(--background-color); /* ADAPTIVE */
         color: #3B82F6; padding: 5px 12px; border-radius: 20px;
         font-size: 0.7rem; font-weight: 800; text-transform: uppercase;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1); z-index: 5; border: 1px solid #e2e8f0;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1); z-index: 5; 
+        border: 1px solid rgba(128, 128, 128, 0.2);
     }
 
     /* TEXT */
     .p-title { 
-        font-size: 1.2rem; font-weight: 700; color: #0F172A;
+        font-size: 1.2rem; font-weight: 700; color: var(--text-color);
         margin-bottom: 15px; line-height: 1.3; flex-grow: 0; 
     }
     .p-details-container { flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
     .p-row { display: flex; align-items: flex-start; margin-bottom: 10px; }
-    .p-label { min-width: 85px; flex-shrink: 0; font-weight: 700; color: #1E293B; font-size: 0.85rem; }
+    .p-label { min-width: 85px; flex-shrink: 0; font-weight: 700; color: var(--text-color); font-size: 0.85rem; opacity: 0.9; }
     
-    /* UPDATED: VALUES TRUNCATED FOR UNIFORM SIZE */
     .p-val { 
-        font-size: 0.85rem; color: #334155; line-height: 1.5; 
+        font-size: 0.85rem; color: var(--text-color); line-height: 1.5; opacity: 0.8;
         display: -webkit-box;
-        -webkit-line-clamp: 3; /* Limits text to 3 lines per section */
+        -webkit-line-clamp: 3; 
         -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -103,12 +108,13 @@ st.markdown("""
     /* 2. BUTTON STYLING */
     div[data-testid="column"] .stButton {
         position: absolute !important; bottom: 20px !important; 
-        right: 20px !important; left: unset !important;       
+        right: 20px !important; left: unset !important;        
         width: auto !important; text-align: right !important; z-index: 10 !important;
     }
     div[data-testid="column"] .stButton button {
-        background: #EFF6FF !important; color: #2563EB !important;
-        border: 1px solid #DBEAFE !important; border-radius: 8px !important;
+        background: var(--background-color) !important; 
+        color: #2563EB !important;
+        border: 1px solid #2563EB !important; border-radius: 8px !important;
         width: auto !important; font-size: 0.90rem !important;
         font-weight: 600 !important; padding: 0.5rem 1.0rem !important;
         box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
@@ -118,102 +124,84 @@ st.markdown("""
         background: #2563EB !important; color: white !important;
         transform: translateY(-2px) !important; box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2) !important;
     }
-    div[data-testid="column"] .stButton button:focus { outline: none !important; box-shadow: none !important; }
 
     /* 3. DETAILED VIEW */
     .detail-row { display: flex; flex-direction: row; gap: 20px; width: 100%; margin-bottom: 20px; flex-wrap: wrap; animation: zoomIn 0.5s ease-out; }
-    .detail-box { flex: 1; display: flex; flex-direction: column; padding: 20px; border-radius: 10px; min-width: 200px; }
-    .box-title { font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; font-size: 1rem; }
-    .box-content { font-size: 0.95rem; line-height: 1.6; font-weight: 500; }
-    .d-blue { background-color: #EFF6FF; border: 1px solid #DBEAFE; color: #172554; } 
-    .d-green { background-color: #F0FDF4; border: 1px solid #DCFCE7; color: #14532D; } 
-    .d-yellow { background-color: #FEFCE8; border: 1px solid #FEF9C3; color: #78350F; } 
+    .detail-box { 
+        flex: 1; display: flex; flex-direction: column; padding: 20px; border-radius: 10px; min-width: 200px; 
+        /* Fallback for light mode, but overridden by specific classes below if needed, 
+           or use variables for true dark mode support */
+    }
+    .box-title { font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; font-size: 1rem; color: #1e293b; }
+    .box-content { font-size: 0.95rem; line-height: 1.6; font-weight: 500; color: #334155; }
+    
+    /* Specific colors for Detail Boxes - We keep these light even in dark mode for contrast, 
+       OR we can make them adaptive. Here we make them adaptive but tinted. */
+    .d-blue { background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); }
+    .d-blue .box-title, .d-blue .box-content { color: var(--text-color); }
+    
+    .d-green { background-color: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); }
+    .d-green .box-title, .d-green .box-content { color: var(--text-color); }
+    
+    .d-yellow { background-color: rgba(234, 179, 8, 0.1); border: 1px solid rgba(234, 179, 8, 0.2); }
+    .d-yellow .box-title, .d-yellow .box-content { color: var(--text-color); }
 
-    /* 4. METRIC CARDS & LIGHT TOOLTIP (DOWNWARD) */
+
+    /* 4. METRIC CARDS */
     .metric-card {
-        background: white; border: 1px solid #E2E8F0; border-radius: 12px;
+        background: var(--secondary-background-color); /* ADAPTIVE */
+        border: 1px solid rgba(128, 128, 128, 0.2); 
+        border-radius: 12px;
         padding: 20px; text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
         animation: zoomIn 0.5s ease-out; transition: transform 0.3s ease, box-shadow 0.3s ease;
-        position: relative; /* Anchor for tooltip */
+        position: relative;
     }
     .metric-card:hover { transform: translateY(-5px); border-color: #3B82F6; }
+    .metric-label { font-size: 0.85rem; color: var(--text-color); opacity: 0.7; }
 
    /* --- TOOLTIP STYLES --- */
     .tooltip-text {
         visibility: hidden;
-        
-        /* 1. INCREASED WIDTH & FORCE SINGLE LINE */
-        width: auto; 
-        min-width: 300px; 
-        white-space: nowrap; 
-        
-        /* LIGHT THEME STYLING */
-        background-color: #ffffff; 
-        color: #1E293B; /* Dark text */
-        border: 1px solid #E2E8F0; /* Subtle border */
-        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
-        
-        text-align: left;
-        border-radius: 8px;
-        padding: 15px;
-        position: absolute;
-        z-index: 100;
-        
-        /* POSITIONING: DOWNWARD */
-        top: 110%; 
-        left: 50%;
-        transform: translateX(-50%);
-        
-        opacity: 0;
-        transition: opacity 0.3s, top 0.3s;
-        font-size: 0.8rem;
-        font-weight: 500;
-        line-height: 1.5;
-        pointer-events: none;
+        width: auto; min-width: 300px; white-space: nowrap; 
+        background-color: var(--secondary-background-color); /* ADAPTIVE */
+        color: var(--text-color);
+        border: 1px solid rgba(128, 128, 128, 0.3);
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2);
+        text-align: left; border-radius: 8px; padding: 15px;
+        position: absolute; z-index: 100;
+        top: 110%; left: 50%; transform: translateX(-50%);
+        opacity: 0; transition: opacity 0.3s, top 0.3s;
+        font-size: 0.8rem; font-weight: 500; line-height: 1.5; pointer-events: none;
     }
     
-    /* TOOLTIP ARROW (Pointing UP) */
+    /* TOOLTIP ARROW */
     .tooltip-text::after {
-        content: "";
-        position: absolute;
-        bottom: 100%; /* At the top of the tooltip */
-        left: 50%;
-        margin-left: -8px;
-        border-width: 8px;
-        border-style: solid;
-        /* Arrow color matches white background */
-        border-color: transparent transparent #ffffff transparent; 
-    }
-    
-    /* Tooltip Arrow Border (to match border of box) - Optional visual polish */
-    .tooltip-text::before {
-        content: "";
-        position: absolute;
-        bottom: 100%;
-        left: 50%;
-        margin-left: -9px;
-        border-width: 9px;
-        border-style: solid;
-        border-color: transparent transparent #E2E8F0 transparent;
-        z-index: -1;
+        content: ""; position: absolute; bottom: 100%; left: 50%; margin-left: -8px;
+        border-width: 8px; border-style: solid;
+        border-color: transparent transparent var(--secondary-background-color) transparent; 
     }
 
-    .metric-card:hover .tooltip-text {
-        visibility: visible; opacity: 1; 
-        top: 115%; /* Slight slide down effect */
-    }
+    .metric-card:hover .tooltip-text { visibility: visible; opacity: 1; top: 115%; }
 
-    /* OTHER ELEMENTS */
+    /* TIMELINE & SKILLS */
     .timeline-card {
-        background: white; border: 1px solid #E2E8F0; border-radius: 12px;
+        background: var(--secondary-background-color); 
+        border: 1px solid rgba(128, 128, 128, 0.2);
+        border-radius: 12px;
         padding: 24px; margin-bottom: 20px; border-left: 6px solid #3B82F6;
         box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); animation: fadeInUp 0.6s ease-out;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     .timeline-card:hover { transform: translateX(5px); }
+    .timeline-desc { color: var(--text-color); opacity: 0.8; }
+
+    /* THIS WAS CAUSING THE INVISIBLE TEXT ISSUE */
     .skill-metric {
-        background: white; border: 1px solid #f1f5f9; border-radius: 8px;
+        background: var(--secondary-background-color); /* Was white */
+        border: 1px solid rgba(128, 128, 128, 0.2);
+        border-radius: 8px;
         padding: 15px; text-align: center; margin-bottom: 10px; animation: fadeInUp 0.7s ease-out;
+        color: var(--text-color); /* Ensure text color adapts */
     }
     progress { accent-color: #3B82F6; }
     progress::-webkit-progress-value { background-color: #3B82F6 !important; }
@@ -225,7 +213,6 @@ st.markdown("""
 # --- DATA MANAGER ---
 def load_data():
     if not os.path.exists(DATA_FILE): 
-        # Default fallback structure if file missing
         return {
             "profile": {"name": "Your Name", "role": "Your Role", "summary": "Summary here", "image_url": "", "contact_info": []},
             "metrics": {"dashboards": "10+", "manual_reduction": "50%", "efficiency": "30%"},
@@ -269,13 +256,11 @@ with st.sidebar:
                            icons=["house", "briefcase", "rocket", "cpu", "envelope"], default_index=0,
                            styles={"nav-link-selected": {"background-color": "#3B82F6"}})
     
-    # --- RESET PROJECT STATE ON NAVIGATION ---
     if selected != "Projects":
         st.session_state.selected_project = None
         
     st.markdown("---")
     
-    # --- ADMIN ACCESS & DOWNLOAD ---
     if not st.session_state.is_admin:
         with st.expander("🔒 Admin Access"):
             with st.form("admin_auth"):
@@ -301,7 +286,6 @@ with st.sidebar:
 
 # --- HOME ---
 if selected == "Home":
-    # 1. ADMIN EDITING
     if st.session_state.is_admin:
         with st.expander("✏️ Edit Home Page Details", expanded=True):
             st.session_state.data['profile']['name'] = st.text_input("Name", st.session_state.data['profile'].get('name', ''))
@@ -314,70 +298,44 @@ if selected == "Home":
             with c2: st.session_state.data['metrics']['manual_reduction'] = st.text_input("Metric 2 (Reduction)", st.session_state.data['metrics'].get('manual_reduction', ''))
             with c3: st.session_state.data['metrics']['efficiency'] = st.text_input("Metric 3 (Efficiency)", st.session_state.data['metrics'].get('efficiency', ''))
 
-    # 2. VIEW
     prof = st.session_state.data.get('profile', {})
     mets = st.session_state.data.get('metrics', {})
     c1, c2 = st.columns([1.5, 1])
     with c1:
         st.markdown(f"<h1 style='font-size:3.5rem; margin-bottom:0; animation: fadeInUp 0.5s ease-out;'>{prof.get('name', 'Name')}</h1>", unsafe_allow_html=True)
-        st.markdown(f"<h3 style='color:#3B82F6; margin-top:0; animation: fadeInUp 0.6s ease-out;'>{prof.get('role', 'Role')}</h3>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='color:#3B82F6 !important; margin-top:0; animation: fadeInUp 0.6s ease-out;'>{prof.get('role', 'Role')}</h3>", unsafe_allow_html=True)
         st.write(prof.get('summary', ''))
         
         mc1, mc2, mc3 = st.columns(3)
         
-        # --- TOOLTIP CONTENT FOR ALL 3 CARDS ---
+        tt_dash = "<div style='margin-bottom:6px;'><b>Key Projects:</b></div>• 10+ dashboards<br>• Variance analysis<br>• Leadership ready"
+        tt_red = "<div style='margin-bottom:6px;'><b>Impact:</b></div>• Automated 15+ reports<br>• Saved 20 hrs/week<br>• Reduced errors"
+        tt_eff = "<div style='margin-bottom:6px;'><b>Gains:</b></div>• Faster decisions<br>• Real-time access<br>• Better collab"
         
-        # Tooltip for Dashboards
-        tt_dash = """
-        <div style='margin-bottom:6px;'><b>Key Projects:</b></div>
-        • 10+ dashboards supporting data-driven decisions<br>
-        • Combines KPIs, trends, and variance analysis<br>
-        • Designed for both operational and leadership use
-        """
-        
-        # Tooltip for Reduction
-        tt_red = """
-        <div style='margin-bottom:6px;'><b>Impact:</b></div>
-        • Automated 15+ manual reports<br>
-        • Saved 20 hrs/week for analysts<br>
-        • Reduced error rate by 90%
-        """
-        
-        # Tooltip for Efficiency
-        tt_eff = """
-        <div style='margin-bottom:6px;'><b>Gains:</b></div>
-        • Faster decision making<br>
-        • Real-time data access<br>
-        • Improved cross-team colab
-        """
-        
-        # 1. Dashboards
         with mc1: 
             st.markdown(f'''
             <div class="metric-card">
                 <div class="tooltip-text">{tt_dash}</div>
                 <div style="font-size:1.8rem; font-weight:800; color:#3B82F6;">{mets.get("dashboards","0")}</div>
-                <div style="font-size:0.85rem; color:#64748B;">DASHBOARDS</div>
+                <div class="metric-label">DASHBOARDS</div>
             </div>
             ''', unsafe_allow_html=True)
             
-        # 2. Reduction
         with mc2: 
             st.markdown(f'''
             <div class="metric-card">
                 <div class="tooltip-text">{tt_red}</div>
                 <div style="font-size:1.8rem; font-weight:800; color:#3B82F6;">{mets.get("manual_reduction","0%")}</div>
-                <div style="font-size:0.85rem; color:#64748B;">REDUCTION</div>
+                <div class="metric-label">REDUCTION</div>
             </div>
             ''', unsafe_allow_html=True)
             
-        # 3. Efficiency
         with mc3: 
             st.markdown(f'''
             <div class="metric-card">
                 <div class="tooltip-text">{tt_eff}</div>
                 <div style="font-size:1.8rem; font-weight:800; color:#3B82F6;">{mets.get("efficiency","0%")}</div>
-                <div style="font-size:0.85rem; color:#64748B;">EFFICIENCY</div>
+                <div class="metric-label">EFFICIENCY</div>
             </div>
             ''', unsafe_allow_html=True)
             
@@ -385,7 +343,6 @@ if selected == "Home":
 
 # --- PROJECTS ---
 elif selected == "Projects":
-    # 1. ADMIN EDITING
     if st.session_state.is_admin:
         with st.expander("✏️ Manage Projects"):
             projects = st.session_state.data.get('projects', [])
@@ -431,7 +388,6 @@ elif selected == "Projects":
                             st.session_state.data['projects'].pop(idx)
                             st.rerun()
 
-    # 2. VIEW
     if 'selected_project' not in st.session_state:
         st.session_state.selected_project = None
 
@@ -505,16 +461,13 @@ elif selected == "Projects":
 
 # --- SKILLS ---
 elif selected == "Skills":
-    # 1. ADMIN EDITING
     if st.session_state.is_admin:
         with st.expander("✏️ Edit Skills"):
-            st.info("Edit keys (Skill Name) and values (Percentage).")
             skills_list = [{"Skill": k, "Value": v} for k, v in st.session_state.data.get('skills', {}).items()]
             edited_df = st.data_editor(skills_list, num_rows="dynamic")
             new_skills = {row['Skill']: int(row['Value']) for row in edited_df if row['Skill']}
             st.session_state.data['skills'] = new_skills
 
-    # 2. VIEW
     st.title("Technical Skills")
     skills = st.session_state.data.get('skills', {})
     
@@ -528,12 +481,16 @@ elif selected == "Skills":
                 r=r_vals, theta=theta_vals, fill='toself', name='Skills',
                 line=dict(color='#3B82F6', width=2), marker=dict(color='#3B82F6')
             ))
+            # FIX: Removed bgcolor='white' and used transparent backgrounds
             fig.update_layout(
                 polar=dict(
-                    radialaxis=dict(visible=True, range=[0, 100], showticklabels=False, ticks='', gridcolor='#E2E8F0'),
-                    angularaxis=dict(showticklabels=True, gridcolor='#E2E8F0'),
-                    gridshape='linear', bgcolor='white'
+                    radialaxis=dict(visible=True, range=[0, 100], showticklabels=False, ticks='', gridcolor='rgba(128,128,128,0.2)'),
+                    angularaxis=dict(showticklabels=True, gridcolor='rgba(128,128,128,0.2)'),
+                    gridshape='linear', 
+                    bgcolor='rgba(0,0,0,0)' # Transparent background for the polar chart
                 ),
+                paper_bgcolor='rgba(0,0,0,0)', # Transparent outer
+                plot_bgcolor='rgba(0,0,0,0)',  # Transparent inner
                 showlegend=False, height=400, margin=dict(t=40, b=40, l=40, r=40)
             )
             st.plotly_chart(fig, use_container_width=True)
@@ -553,7 +510,6 @@ elif selected == "Skills":
 
 # --- EXPERIENCE ---
 elif selected == "Experience":
-    # 1. ADMIN EDITING
     if st.session_state.is_admin:
         with st.expander("✏️ Manage Experience"):
             exp_list = st.session_state.data.get('experience', [])
@@ -578,33 +534,29 @@ elif selected == "Experience":
                         exp_list.pop(i)
                         st.rerun()
 
-    # 2. VIEW
     st.title("Experience")
     for job in st.session_state.data.get('experience', []):
         st.markdown(f"""
         <div class="timeline-card">
-            <b>{job.get("role")}</b> @ {job.get("company")}<br>
-            <small>{job.get("date")}</small>
-            <div class="timeline-desc" style="white-space:pre-line; color:#475569; margin-top:10px; line-height:1.6; font-size:0.95rem;">{job.get("description")}</div>
+            <div style="font-weight:bold; color:var(--text-color); font-size:1.1rem;">{job.get("role")} @ {job.get("company")}</div>
+            <small style="color:var(--text-color); opacity:0.7;">{job.get("date")}</small>
+            <div class="timeline-desc" style="white-space:pre-line; margin-top:10px; line-height:1.6; font-size:0.95rem;">{job.get("description")}</div>
         </div>
         """, unsafe_allow_html=True)
 
 # --- CONTACT ---
 elif selected == "Contact":
-    # 1. ADMIN EDITING
     if st.session_state.is_admin:
         with st.expander("✏️ Edit Contact Info"):
-            st.info("Edit your contact links here.")
             contacts = st.session_state.data.get('profile', {}).get('contact_info', [])
             contact_list = [{"Label": c['label'], "Value": c['value'], "Icon": c['icon']} for c in contacts]
             edited_contacts = st.data_editor(contact_list, num_rows="dynamic")
             new_contacts = [{"label": r['Label'], "value": r['Value'], "icon": r['Icon']} for r in edited_contacts if r['Label']]
             st.session_state.data['profile']['contact_info'] = new_contacts
 
-    # 2. VIEW
     st.title("Contact")
     prof = st.session_state.data.get('profile', {})
     c1, c2 = st.columns(2)
     for i, item in enumerate(prof.get('contact_info', [])):
         with (c1 if i % 2 == 0 else c2):
-            st.markdown(f'<a href="{item.get("value")}" target="_blank" style="text-decoration:none;"><div class="metric-card"><img src="{item.get("icon")}" width="40"><br><b>{item.get("label")}</b></div></a>', unsafe_allow_html=True)
+            st.markdown(f'<a href="{item.get("value")}" target="_blank" style="text-decoration:none;"><div class="metric-card"><img src="{item.get("icon")}" width="40"><br><b style="color:var(--text-color)">{item.get("label")}</b></div></a>', unsafe_allow_html=True)
