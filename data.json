@@ -56,7 +56,7 @@
   {
     "title": "Open Sales Order & Pipeline Analytics",
     "category": "Sales Analytics",
-    "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&h=600&q=80",
+    "image": "https://images.unsplash.com/photo-1608222351212-18fe0ec7b13b?auto=format&fit=crop&w=800&h=600&q=80",
     "dashboard_image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/OpensalesOrder.png",
     "problem": "Limited visibility into open sales orders obscures true pipeline health.",
     "solution": "Delivers a real-time, consolidated view of open orders with trend insights.",
@@ -66,7 +66,7 @@
   {
     "title": "Performance Leaderboard",
     "category": "Sales",
-    "image": "https://images.unsplash.com/photo-1556155092-8707de31f9c4?auto=format&fit=crop&w=900&h=600&q=80",
+    "image": "https://i.pinimg.com/736x/4b/53/e7/4b53e79697b54c7f0016e2b6e4c6b279.jpg/w=800",
     "dashboard_image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/SPR.mp4",
     "problem": "Relying on intuition to assess performance caused leaders to overlook top talent.",
     "solution": "Automated rankings and trend insights to recognize high performers instantly.",
@@ -106,5 +106,6 @@
 ]
   
 }
+
 
 
