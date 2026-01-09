@@ -1,3 +1,10 @@
+I see the issue. That white square is a CSS artifact caused by the "tooltip arrow" trying to render in Dark Mode. It is defaulting to the text color (white) instead of the background color, creating a solid square instead of a subtle triangle.
+
+Since it's causing visual glitches and you "don't want that," the cleanest solution is to **remove the arrow entirely**. The tooltip will look cleaner as a floating rectangle without the glitchy connector.
+
+Here is the fixed code. I have removed the `::after` CSS block that was creating the square.
+
+```python
 import streamlit as st
 import json
 import os
@@ -145,32 +152,21 @@ st.markdown("""
     .tooltip-text {
         visibility: hidden;
         width: auto; min-width: 300px; white-space: nowrap; 
-        background-color: var(--secondary-background-color); /* Matches card background */
+        background-color: var(--secondary-background-color); 
         color: var(--text-color);
         border: 1px solid rgba(128, 128, 128, 0.3);
         box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2);
         text-align: left; border-radius: 8px; padding: 15px;
         position: absolute; z-index: 100;
         
-        /* Adjusted Top Position */
+        /* Position */
         top: 120%; 
         left: 50%; transform: translateX(-50%);
         opacity: 0; transition: opacity 0.3s, top 0.3s;
         font-size: 0.8rem; font-weight: 500; line-height: 1.5; pointer-events: none;
     }
     
-    /* TOOLTIP ARROW (Cleaned up to remove strip artifact) */
-    .tooltip-text::after {
-        content: ""; 
-        position: absolute; 
-        bottom: 100%; /* Sits exactly on top of tooltip */
-        left: 50%; 
-        margin-left: -8px;
-        border-width: 8px; 
-        border-style: solid;
-        /* Arrow color matches the tooltip background variable */
-        border-color: transparent transparent var(--secondary-background-color) transparent; 
-    }
+    /* REMOVED THE ARROW ARTIFACT HERE - CLEANER LOOK */
 
     .metric-card:hover .tooltip-text { visibility: visible; opacity: 1; top: 125%; }
 
@@ -567,3 +563,5 @@ elif selected == "Contact":
     for i, item in enumerate(prof.get('contact_info', [])):
         with (c1 if i % 2 == 0 else c2):
             st.markdown(f'<a href="{item.get("value")}" target="_blank" style="text-decoration:none;"><div class="metric-card"><img src="{item.get("icon")}" width="40"><br><b style="color:var(--text-color)">{item.get("label")}</b></div></a>', unsafe_allow_html=True)
+
+```
