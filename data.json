@@ -86,6 +86,16 @@
             "details": "This dashboard delivers a holistic view of sales performance and revenue trends across time, regions, products, and ownership. It enables stakeholders to track sales growth, contribution patterns, and performance drivers through interactive comparisons and drill-down analysis.\n\nThe solution highlights the ability to structure complex sales data into meaningful KPIs, enable multi-dimensional analysis, and present insights in a way that supports strategic planning, performance monitoring, and informed business decisions."
         },
         {
+          "title": "Period-Based Sales Performance Comparison",
+          "category": "Sales Analytics",
+          "image": "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800&q=80",
+          "dashboard_image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/PeriodBasedSales.mp4",
+          "problem": "Sales performance is difficult to interpret without clear comparison across time periods.",
+          "solution": "Displays previous, current, and next period sales metrics dynamically based on the selected period.",
+          "impact": "Enables quick period-over-period analysis and better short-term planning decisions.",
+          "details": "This dashboard provides a dynamic, period-driven sales comparison view by displaying previous, current, and next period values across all key sales metrics based on a user-selected timeframe. It allows users to seamlessly evaluate performance shifts, identify momentum changes, and anticipate near-term outcomes.\n\nThe solution demonstrates strong use of time intelligence and dynamic calculations, enabling consistent period-over-period analysis that improves sales monitoring, planning accuracy, and data-driven decision-making."
+        },
+        {
             "title": "Supply Chain Intelligence",
             "category": "Logistics",
             "image": "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800&q=80",
@@ -117,6 +127,7 @@
         }
     ]
 }
+
 
 
 
