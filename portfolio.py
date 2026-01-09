@@ -1,10 +1,3 @@
-I see the issue. That white square is a CSS artifact caused by the "tooltip arrow" trying to render in Dark Mode. It is defaulting to the text color (white) instead of the background color, creating a solid square instead of a subtle triangle.
-
-Since it's causing visual glitches and you "don't want that," the cleanest solution is to **remove the arrow entirely**. The tooltip will look cleaner as a floating rectangle without the glitchy connector.
-
-Here is the fixed code. I have removed the `::after` CSS block that was creating the square.
-
-```python
 import streamlit as st
 import json
 import os
@@ -563,5 +556,3 @@ elif selected == "Contact":
     for i, item in enumerate(prof.get('contact_info', [])):
         with (c1 if i % 2 == 0 else c2):
             st.markdown(f'<a href="{item.get("value")}" target="_blank" style="text-decoration:none;"><div class="metric-card"><img src="{item.get("icon")}" width="40"><br><b style="color:var(--text-color)">{item.get("label")}</b></div></a>', unsafe_allow_html=True)
-
-```
