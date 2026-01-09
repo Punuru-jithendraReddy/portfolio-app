@@ -56,7 +56,7 @@
   {
     "title": "Open Sales Order & Pipeline Analytics",
     "category": "Sales Analytics",
-    "image": "https://i.pinimg.com/1200x/ab/58/79/ab5879955209572c2c9fb828c78b5286.jpg?auto=format&fit=crop&w=800&h=600&q=80",
+    "image": "https://i.pinimg.com/1200x/43/54/ad/4354ad598883f576ccc2c3bda1eab558.jpg?auto=format&fit=crop&w=800&h=600&q=80",
     "dashboard_image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/OpensalesOrder.png",
     "problem": "Limited visibility into open sales orders obscures true pipeline health.",
     "solution": "Delivers a real-time, consolidated view of open orders with trend insights.",
@@ -106,6 +106,7 @@
 ]
   
 }
+
 
 
 
