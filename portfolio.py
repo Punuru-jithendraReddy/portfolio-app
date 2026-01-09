@@ -15,14 +15,7 @@ st.set_page_config(layout="wide", page_title="Portfolio", page_icon="✨")
 # --- CUSTOM CSS (THEME AWARE) ---
 st.markdown("""
 <style>
-    /* --- THEME ADAPTIVE COLORS ---
-       We use Streamlit CSS variables:
-       var(--background-color) = Main page background
-       var(--secondary-background-color) = Sidebar/Card background
-       var(--text-color) = Main text color
-    */
-
-    /* GLOBAL FONTS */
+    /* --- THEME ADAPTIVE COLORS --- */
     .main { padding-top: 1rem; }
     h1, h2, h3 { font-family: 'Segoe UI', sans-serif; color: var(--text-color) !important; }
     p, div, span { color: var(--text-color); }
@@ -46,8 +39,8 @@ st.markdown("""
 
     /* 1. PROJECT CARD DESIGN */
     .project-card {
-        background-color: var(--secondary-background-color); /* ADAPTIVE BACKGROUND */
-        border: 1px solid rgba(128, 128, 128, 0.2); /* SUBTLE BORDER FOR BOTH MODES */
+        background-color: var(--secondary-background-color); 
+        border: 1px solid rgba(128, 128, 128, 0.2); 
         border-radius: 12px;
         padding: 20px;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
@@ -80,7 +73,7 @@ st.markdown("""
     /* OVERLAY */
     .p-cat-overlay {
         position: absolute; top: 30px; left: 30px;
-        background-color: var(--background-color); /* ADAPTIVE */
+        background-color: var(--background-color);
         color: #3B82F6; padding: 5px 12px; border-radius: 20px;
         font-size: 0.7rem; font-weight: 800; text-transform: uppercase;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1); z-index: 5; 
@@ -127,29 +120,18 @@ st.markdown("""
 
     /* 3. DETAILED VIEW */
     .detail-row { display: flex; flex-direction: row; gap: 20px; width: 100%; margin-bottom: 20px; flex-wrap: wrap; animation: zoomIn 0.5s ease-out; }
-    .detail-box { 
-        flex: 1; display: flex; flex-direction: column; padding: 20px; border-radius: 10px; min-width: 200px; 
-        /* Fallback for light mode, but overridden by specific classes below if needed, 
-           or use variables for true dark mode support */
-    }
-    .box-title { font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; font-size: 1rem; color: #1e293b; }
-    .box-content { font-size: 0.95rem; line-height: 1.6; font-weight: 500; color: #334155; }
+    .detail-box { flex: 1; display: flex; flex-direction: column; padding: 20px; border-radius: 10px; min-width: 200px; }
+    .box-title { font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; font-size: 1rem; color: var(--text-color); }
+    .box-content { font-size: 0.95rem; line-height: 1.6; font-weight: 500; color: var(--text-color); opacity: 0.9; }
     
-    /* Specific colors for Detail Boxes - We keep these light even in dark mode for contrast, 
-       OR we can make them adaptive. Here we make them adaptive but tinted. */
+    /* Adaptive colors for Detail Boxes with tint */
     .d-blue { background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); }
-    .d-blue .box-title, .d-blue .box-content { color: var(--text-color); }
-    
     .d-green { background-color: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); }
-    .d-green .box-title, .d-green .box-content { color: var(--text-color); }
-    
     .d-yellow { background-color: rgba(234, 179, 8, 0.1); border: 1px solid rgba(234, 179, 8, 0.2); }
-    .d-yellow .box-title, .d-yellow .box-content { color: var(--text-color); }
-
 
     /* 4. METRIC CARDS */
     .metric-card {
-        background: var(--secondary-background-color); /* ADAPTIVE */
+        background: var(--secondary-background-color); 
         border: 1px solid rgba(128, 128, 128, 0.2); 
         border-radius: 12px;
         padding: 20px; text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
@@ -163,25 +145,34 @@ st.markdown("""
     .tooltip-text {
         visibility: hidden;
         width: auto; min-width: 300px; white-space: nowrap; 
-        background-color: var(--secondary-background-color); /* ADAPTIVE */
+        background-color: var(--secondary-background-color); /* Matches card background */
         color: var(--text-color);
         border: 1px solid rgba(128, 128, 128, 0.3);
         box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2);
         text-align: left; border-radius: 8px; padding: 15px;
         position: absolute; z-index: 100;
-        top: 110%; left: 50%; transform: translateX(-50%);
+        
+        /* Adjusted Top Position */
+        top: 120%; 
+        left: 50%; transform: translateX(-50%);
         opacity: 0; transition: opacity 0.3s, top 0.3s;
         font-size: 0.8rem; font-weight: 500; line-height: 1.5; pointer-events: none;
     }
     
-    /* TOOLTIP ARROW */
+    /* TOOLTIP ARROW (Cleaned up to remove strip artifact) */
     .tooltip-text::after {
-        content: ""; position: absolute; bottom: 100%; left: 50%; margin-left: -8px;
-        border-width: 8px; border-style: solid;
+        content: ""; 
+        position: absolute; 
+        bottom: 100%; /* Sits exactly on top of tooltip */
+        left: 50%; 
+        margin-left: -8px;
+        border-width: 8px; 
+        border-style: solid;
+        /* Arrow color matches the tooltip background variable */
         border-color: transparent transparent var(--secondary-background-color) transparent; 
     }
 
-    .metric-card:hover .tooltip-text { visibility: visible; opacity: 1; top: 115%; }
+    .metric-card:hover .tooltip-text { visibility: visible; opacity: 1; top: 125%; }
 
     /* TIMELINE & SKILLS */
     .timeline-card {
@@ -195,13 +186,12 @@ st.markdown("""
     .timeline-card:hover { transform: translateX(5px); }
     .timeline-desc { color: var(--text-color); opacity: 0.8; }
 
-    /* THIS WAS CAUSING THE INVISIBLE TEXT ISSUE */
     .skill-metric {
-        background: var(--secondary-background-color); /* Was white */
+        background: var(--secondary-background-color);
         border: 1px solid rgba(128, 128, 128, 0.2);
         border-radius: 8px;
         padding: 15px; text-align: center; margin-bottom: 10px; animation: fadeInUp 0.7s ease-out;
-        color: var(--text-color); /* Ensure text color adapts */
+        color: var(--text-color);
     }
     progress { accent-color: #3B82F6; }
     progress::-webkit-progress-value { background-color: #3B82F6 !important; }
@@ -308,9 +298,27 @@ if selected == "Home":
         
         mc1, mc2, mc3 = st.columns(3)
         
-        tt_dash = "<div style='margin-bottom:6px;'><b>Key Projects:</b></div>• 10+ dashboards<br>• Variance analysis<br>• Leadership ready"
-        tt_red = "<div style='margin-bottom:6px;'><b>Impact:</b></div>• Automated 15+ reports<br>• Saved 20 hrs/week<br>• Reduced errors"
-        tt_eff = "<div style='margin-bottom:6px;'><b>Gains:</b></div>• Faster decisions<br>• Real-time access<br>• Better collab"
+        # --- RESTORED FULL TOOLTIP TEXT ---
+        tt_dash = """
+        <div style='margin-bottom:6px;'><b>Key Projects:</b></div>
+        • 10+ dashboards supporting data-driven decisions<br>
+        • Combines KPIs, trends, and variance analysis<br>
+        • Designed for both operational and leadership use
+        """
+        
+        tt_red = """
+        <div style='margin-bottom:6px;'><b>Impact:</b></div>
+        • Automated 15+ manual reports<br>
+        • Saved 20 hrs/week for analysts<br>
+        • Reduced error rate by 90%
+        """
+        
+        tt_eff = """
+        <div style='margin-bottom:6px;'><b>Gains:</b></div>
+        • Faster decision making<br>
+        • Real-time data access<br>
+        • Improved cross-team colab
+        """
         
         with mc1: 
             st.markdown(f'''
@@ -481,16 +489,15 @@ elif selected == "Skills":
                 r=r_vals, theta=theta_vals, fill='toself', name='Skills',
                 line=dict(color='#3B82F6', width=2), marker=dict(color='#3B82F6')
             ))
-            # FIX: Removed bgcolor='white' and used transparent backgrounds
             fig.update_layout(
                 polar=dict(
                     radialaxis=dict(visible=True, range=[0, 100], showticklabels=False, ticks='', gridcolor='rgba(128,128,128,0.2)'),
                     angularaxis=dict(showticklabels=True, gridcolor='rgba(128,128,128,0.2)'),
                     gridshape='linear', 
-                    bgcolor='rgba(0,0,0,0)' # Transparent background for the polar chart
+                    bgcolor='rgba(0,0,0,0)' 
                 ),
-                paper_bgcolor='rgba(0,0,0,0)', # Transparent outer
-                plot_bgcolor='rgba(0,0,0,0)',  # Transparent inner
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)', 
                 showlegend=False, height=400, margin=dict(t=40, b=40, l=40, r=40)
             )
             st.plotly_chart(fig, use_container_width=True)
