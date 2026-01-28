@@ -3,7 +3,6 @@ import json
 import os
 import textwrap
 import requests
-import streamlit.components.v1 as components
 from streamlit_option_menu import option_menu
 import plotly.graph_objects as go
 
@@ -17,34 +16,7 @@ ADMIN_PASSWORD = "admin"
 st.set_page_config(layout="wide", page_title="Portfolio", page_icon="🧑‍💻")
 
 # ==========================================
-# 2. JAVASCRIPT: SIDEBAR AUTO-COLLAPSE
-# ==========================================
-# This script runs on every reload. It checks if the screen is mobile (<800px).
-# If it is, and the sidebar is open, it tries to close it after navigation.
-def inject_mobile_sidebar_fix():
-    js = """
-    <script>
-        // Function to check width and close sidebar if on mobile
-        function autoCloseSidebar() {
-            if (window.innerWidth <= 800) {
-                const sidebar = window.parent.document.querySelector('[data-testid="stSidebar"]');
-                if (sidebar) {
-                    // Look for the close button (x) inside the sidebar header
-                    const closeBtn = sidebar.querySelector('button[kind="header"]');
-                    if (closeBtn) {
-                        closeBtn.click();
-                    }
-                }
-            }
-        }
-        // Run slightly delayed to ensure DOM is ready
-        setTimeout(autoCloseSidebar, 100);
-    </script>
-    """
-    components.html(js, height=0, width=0)
-
-# ==========================================
-# 3. MOBILE NOTIFICATION
+# 2. MOBILE NOTIFICATION
 # ==========================================
 st.markdown("""
 <style>
@@ -98,7 +70,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 4. CUSTOM CSS (RESPONSIVE FIXES)
+# 3. CUSTOM CSS (RESPONSIVE FIXES)
 # ==========================================
 st.markdown("""
 <style>
@@ -196,6 +168,7 @@ st.markdown("""
         animation: zoomIn 0.5s ease-out; 
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         position: relative;
+        /* Critical for tooltip to fly out */
         overflow: visible !important;
     }
     .metric-card:hover { transform: translateY(-5px); border-color: #3B82F6; }
@@ -224,29 +197,18 @@ st.markdown("""
     }
     .metric-card:hover .tooltip-text { visibility: visible; opacity: 1; top: 125%; }
 
-    /* === MOBILE PHONE OPTIMIZATION (< 768px) === */
+    /* === MOBILE OPTIMIZATION (Vertical Phone Layout < 768px) === */
     @media only screen and (max-width: 768px) {
         .metric-card { padding: 12px !important; }
         .metric-value { font-size: 1.4rem !important; }
         .metric-label { font-size: 0.75rem !important; }
         h1 { font-size: 2.2rem !important; } 
-        
-        /* FIX: Increase Sidebar Toggle Button Size specifically for Mobile */
-        [data-testid="stSidebarCollapsedControl"] {
-            width: 50px !important;
-            height: 50px !important;
-            background-color: rgba(59, 130, 246, 0.1);
-            border-radius: 10px;
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            margin-top: 10px;
-            margin-left: 10px;
-        }
-        
+        /* Hide tooltip on vertical mobile to avoid overlap */
         .tooltip-text { display: none !important; }
     }
 
-    /* === FIX: MOBILE DESKTOP MODE / TABLET (769px - 1150px) === */
-    /* This targets "Desktop Mode" on mobile to show tooltip BELOW the cards spanning full width */
+    /* === FIX: DESKTOP-MODE-ON-MOBILE / TABLET (769px - 1150px) === */
+    /* This handles the "Mobile Desktop Mode" specifically */
     @media only screen and (min-width: 769px) and (max-width: 1150px) {
         .metric-card { padding: 10px 5px !important; }
         .metric-value { font-size: 1.4rem !important; }
@@ -255,29 +217,27 @@ st.markdown("""
             white-space: nowrap !important; 
         }
         
-        /* FIX: FULL WIDTH TOOLTIP BELOW CARDS */
+        /* FIX: Re-enable Tooltip but Constrain Width */
         .tooltip-text { 
             display: block !important;       
             visibility: hidden;
             
-            /* FIXED Position: Locked to viewport */
-            position: fixed !important;
-            top: 380px !important;     /* Adjusted to sit BELOW the metrics row */
-            left: 50% !important;      /* Center Horizontally */
+            /* Make it narrow to fit cramped screen */
+            min-width: 140px !important;     
+            max-width: 180px !important;
+            width: auto !important;
+            
+            /* Allow text to wrap so it doesn't bleed sidebar */
+            white-space: normal !important;  
+            font-size: 0.75rem !important;
+            line-height: 1.3 !important;
+            padding: 10px !important;
+            
+            /* Ensure it is centered relative to card */
+            top: 110% !important;           
+            left: 50% !important;
             transform: translateX(-50%) !important;
-            
-            width: 90vw !important;    /* 90% of Screen Width (Start of 1st to End of 3rd) */
-            max-width: 800px !important;
-            
-            white-space: normal !important; /* Allow text wrapping */
-            font-size: 0.85rem !important;
-            line-height: 1.5 !important;
-            padding: 15px !important;
-            z-index: 100000 !important; 
-            
-            background-color: var(--secondary-background-color); 
-            border: 2px solid #3B82F6; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 10000 !important; 
         }
         
         .metric-card:hover .tooltip-text { 
@@ -311,7 +271,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 5. DATA MANAGER
+# 4. DATA MANAGER
 # ==========================================
 def load_data():
     if not os.path.exists(DATA_FILE): 
@@ -351,11 +311,10 @@ def render_image(image_path, width=None):
     else: st.image(src, use_container_width=True)
 
 # ==========================================
-# 6. INITIALIZE SESSION STATE & LOGIC
+# 5. INITIALIZE SESSION STATE
 # ==========================================
 if 'data' not in st.session_state: st.session_state.data = load_data()
 if 'is_admin' not in st.session_state: st.session_state.is_admin = False
-if 'last_selected_page' not in st.session_state: st.session_state.last_selected_page = "Home"
 
 # --- SIDEBAR ---
 with st.sidebar:
@@ -372,12 +331,6 @@ with st.sidebar:
                            icons=["house", "briefcase", "rocket", "cpu", "envelope"], default_index=0,
                            styles={"nav-link-selected": {"background-color": "#3B82F6"}})
     
-    # --- LOGIC: CHECK IF NAVIGATION HAPPENED ---
-    if selected != st.session_state.last_selected_page:
-        st.session_state.last_selected_page = selected
-        # Inject the JS to close sidebar because a new page was selected
-        inject_mobile_sidebar_fix()
-
     if selected != "Projects":
         st.session_state.selected_project = None
     
@@ -411,7 +364,7 @@ with st.sidebar:
             st.rerun()
 
 # ==========================================
-# 7. PAGE: HOME
+# 6. PAGE: HOME
 # ==========================================
 if selected == "Home":
     if st.session_state.is_admin:
@@ -471,7 +424,7 @@ if selected == "Home":
     with c2: render_image(prof.get('image_url'), width=350)
 
 # ==========================================
-# 8. PAGE: PROJECTS
+# 7. PAGE: PROJECTS
 # ==========================================
 elif selected == "Projects":
     if st.session_state.is_admin:
@@ -617,7 +570,7 @@ elif selected == "Projects":
                     st.markdown("<div style='height: 40px;'></div>", unsafe_allow_html=True)
 
 # ==========================================
-# 9. PAGE: SKILLS
+# 8. PAGE: SKILLS
 # ==========================================
 elif selected == "Skills":
     if st.session_state.is_admin:
@@ -647,7 +600,7 @@ elif selected == "Skills":
             st.markdown(f"""<div class="skill-metric"><b>{s}</b><div style="color:#3B82F6; font-size:1.2rem; font-weight:800;">{v}%</div><progress value="{v}" max="100" style="width:100%; height:8px; border-radius:5px;"></progress></div>""", unsafe_allow_html=True)
 
 # ==========================================
-# 10. PAGE: EXPERIENCE
+# 9. PAGE: EXPERIENCE
 # ==========================================
 elif selected == "Experience":
     if st.session_state.is_admin:
@@ -679,7 +632,7 @@ elif selected == "Experience":
         st.markdown(f"""<div class="timeline-card"><div style="font-weight:bold; color:var(--text-color); font-size:1.1rem;">{job.get("role")} @ {job.get("company")}</div><small style="color:var(--text-color); opacity:0.7;">{job.get("date")}</small><div class="timeline-desc" style="white-space:pre-line; margin-top:10px; line-height:1.6; font-size:0.95rem;">{job.get("description")}</div></div>""", unsafe_allow_html=True)
 
 # ==========================================
-# 11. PAGE: CONTACT
+# 10. PAGE: CONTACT
 # ==========================================
 elif selected == "Contact":
     if st.session_state.is_admin:
