@@ -673,11 +673,11 @@ elif selected == "Experience":
 
 # ==========================================
 # ==========================================
-# 10. PAGE: CONTACT (UPDATED FOR FORMSPREE)
+# 10. PAGE: CONTACT (UPDATED WITH PHONE NUMBER)
 # ==========================================
 elif selected == "Contact":
     # --- PASTE YOUR FORMSPREE URL HERE ---
-    FORMSPREE_ENDPOINT = "https://formspree.io/f/xnjvqgbb" 
+    FORMSPREE_ENDPOINT = "https://formspree.io/f/xjgrvazo" 
     # Example: "https://formspree.io/f/mqkrvgod"
 
     if st.session_state.is_admin:
@@ -698,18 +698,25 @@ elif selected == "Contact":
         with st.form("contact_form"):
             name = st.text_input("Name")
             email = st.text_input("Email")
+            # --- NEW PHONE NUMBER FIELD ---
+            phone = st.text_input("Phone Number") 
             message = st.text_area("Message")
             submit_button = st.form_submit_button("Send Message")
         
         if submit_button:
             if not name or not email or not message:
-                st.warning("⚠️ Please fill out all fields.")
+                st.warning("⚠️ Please fill out Name, Email, and Message.")
             else:
                 try:
-                    # Sending data to Formspree
+                    # Sending data to Formspree (Including Phone)
                     response = requests.post(
                         FORMSPREE_ENDPOINT,
-                        json={"name": name, "email": email, "message": message}
+                        json={
+                            "name": name, 
+                            "email": email, 
+                            "phone": phone, 
+                            "message": message
+                        }
                     )
                     
                     if response.status_code == 200:
