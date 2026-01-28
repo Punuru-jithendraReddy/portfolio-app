@@ -92,17 +92,18 @@ st.markdown("""
 # This section controls the fonts, card styling, and specific alignments.
 st.markdown("""
 <style>
-        /* --- SIDEBAR SPACING FIXES --- */
-        /* 1. Reduce the massive default top padding in the sidebar */
-        section[data-testid="stSidebar"] div.block-container {
-            padding-top: 2rem !important; /* Was default ~6rem */
-            padding-bottom: 1rem !important;
+    /* --- SIDEBAR SPACING FIXES --- */
+    /* 1. Reduce the massive default top padding in the sidebar */
+    section[data-testid="stSidebar"] div.block-container {
+        padding-top: 2rem !important; /* Was default ~6rem */
+        padding-bottom: 1rem !important;
     }
 
     /* 2. Reduce the gap between sidebar elements (Menu, Line, Admin) */
     section[data-testid="stSidebar"] [data-testid="stVerticalBlock"] {
         gap: 0.5rem !important; /* Was default 1rem */
     }
+
     /* --- THEME ADAPTIVE COLORS --- */
     .main { padding-top: 1rem; }
     h1, h2, h3 { font-family: 'Segoe UI', sans-serif; color: var(--text-color) !important; }
@@ -192,7 +193,7 @@ st.markdown("""
     
     /* --- ALIGNMENT FIX (ENHANCEMENT 2) --- */
     .p-row { 
-        display: flex;           /* Forces side-by-side */
+        display: flex;            /* Forces side-by-side */
         align-items: flex-start; /* Aligns top */
         margin-bottom: 10px; 
     }
@@ -381,7 +382,12 @@ with st.sidebar:
     if selected != "Projects":
         st.session_state.selected_project = None
     
-    st.markdown("---")
+    # --- REPLACED SEPARATOR FOR COMPACT SPACING ---
+    st.markdown("""
+        <div style="margin-top: -15px; margin-bottom: 10px;">
+            <hr style="border: 0; border-top: 1px solid rgba(128,128,128,0.2);">
+        </div>
+    """, unsafe_allow_html=True)
     
     if not st.session_state.is_admin:
         with st.expander("🔒 Admin Access"):
