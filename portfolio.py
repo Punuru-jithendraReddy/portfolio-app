@@ -53,8 +53,8 @@ st.markdown("""
     @media only screen and (max-width: 800px) {
         #mobile-toast {
             visibility: visible;
-            -webkit-animation: fadein 0.5s, fadeout 0.5s 4.5s forwards;
-            animation: fadein 0.5s, fadeout 0.5s 4.5s forwards;
+            -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s forwards;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s forwards;
         }
     }
     @-webkit-keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
@@ -732,3 +732,4 @@ elif selected == "Contact":
         prof = st.session_state.data.get('profile', {})
         for item in prof.get('contact_info', []):
             st.markdown(f'<a href="{item.get("value")}" target="_blank" style="text-decoration:none;"><div class="metric-card" style="margin-bottom:15px; padding:15px;"><img src="{item.get("icon")}" width="30"><br><b style="color:var(--text-color); font-size:0.9rem;">{item.get("label")}</b></div></a>', unsafe_allow_html=True)
+
