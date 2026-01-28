@@ -40,26 +40,17 @@ def check_url_exists(url):
         return False
 
 def get_img_src(image_path):
-    # Fallback image if path is empty
     if not image_path: return "https://placehold.co/400x400/png?text=Me"
-    
-    # Github blob fix
     if "github.com" in image_path and "/blob/" in image_path:
         image_path = image_path.replace("github.com", "raw.githubusercontent.com").replace("/blob/", "/")
-    
     return image_path
-
-def render_image(image_path, width=None):
-    src = get_img_src(image_path)
-    if width: st.image(src, width=width)
-    else: st.image(src, use_container_width=True)
 
 if 'data' not in st.session_state: st.session_state.data = load_data()
 if 'is_admin' not in st.session_state: st.session_state.is_admin = False
 if 'mobile_page' not in st.session_state: st.session_state.mobile_page = "Home"
 
 # ==========================================
-# 3. CSS (DUAL LAYOUT ENGINE)
+# 3. CSS (FIXED TOOLTIPS & LAYOUT)
 # ==========================================
 st.markdown("""
 <style>
@@ -68,20 +59,18 @@ st.markdown("""
     h1, h2, h3 { font-family: 'Segoe UI', sans-serif; color: var(--text-color) !important; }
     p, div, span { color: var(--text-color); }
     
+    /* REMOVE DEFAULT STREAMLIT PADDING/MARGINS THAT INTERFERE */
+    .block-container { padding-top: 2rem; padding-bottom: 5rem; }
+    
     /* =========================================
-       LAYOUT TOGGLING (THE FIX)
+       LAYOUT TOGGLING
        ========================================= */
-    /* DESKTOP DEFAULT: Visible */
     .desktop-view { display: block; }
-    /* MOBILE DEFAULT: Hidden */
     .mobile-view { display: none !important; }
 
-    /* ON MOBILE SCREEN (< 800px): Swap them */
     @media (max-width: 800px) {
         .desktop-view { display: none !important; }
         .mobile-view { display: block !important; }
-        
-        /* FORCE HIDE SIDEBAR ON MOBILE */
         section[data-testid="stSidebar"] { display: none !important; }
         div[data-testid="collapsedControl"] { display: none !important; }
     }
@@ -89,6 +78,11 @@ st.markdown("""
     /* =========================================
        DESKTOP STYLES
        ========================================= */
+    
+    /* 1. METRIC CARDS & TOOLTIPS (FIXED OVERFLOW) */
+    /* We must allow overflow on the Streamlit columns for tooltips to popup correctly */
+    div[data-testid="column"] { overflow: visible !important; }
+    
     .metric-card { 
         background: var(--secondary-background-color); 
         border: 1px solid rgba(128, 128, 128, 0.2); 
@@ -97,35 +91,33 @@ st.markdown("""
         text-align: center; 
         position: relative;
         transition: transform 0.3s ease;
-        overflow: visible !important; /* Fix for tooltips getting clipped */
         z-index: 1;
     }
-    .metric-card:hover { transform: translateY(-5px); border-color: #3B82F6; z-index: 10; }
+    .metric-card:hover { transform: translateY(-5px); border-color: #3B82F6; z-index: 100; }
     
-    /* TOOLTIPS FIXED */
     .tooltip-text { 
         visibility: hidden; 
-        width: 250px; 
-        background-color: #1E1E1E; /* Dark bg for contrast */
+        width: 220px; 
+        background-color: #262730; 
         color: #fff; 
         text-align: left; 
-        border-radius: 6px; 
-        padding: 10px; 
+        border-radius: 8px; 
+        padding: 12px; 
         position: absolute; 
-        z-index: 999; /* High Z-index to float over everything */
-        bottom: 110%; /* Show ABOVE the card */
+        z-index: 9999; 
+        bottom: 115%; 
         left: 50%; 
         transform: translateX(-50%);
         opacity: 0; 
-        transition: opacity 0.3s;
+        transition: opacity 0.2s;
         font-size: 0.8rem;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         border: 1px solid #3B82F6;
         pointer-events: none;
     }
     .metric-card:hover .tooltip-text { visibility: visible; opacity: 1; }
 
-    /* PROJECT CARDS */
+    /* 2. PROJECT CARDS (ORIGINAL LOOK) */
     .project-card {
         background-color: var(--secondary-background-color); 
         border: 1px solid rgba(128, 128, 128, 0.2); 
@@ -133,10 +125,10 @@ st.markdown("""
         padding: 20px;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         display: flex; flex-direction: column; height: 100%; 
-        min-height: 480px; 
+        min-height: 520px; /* Taller to fit P/S/I */
         position: relative;
     }
-    .p-img-container { width: 100%; height: 180px; overflow: hidden; border-radius: 10px; margin-bottom: 15px; }
+    .p-img-container { width: 100%; height: 180px; overflow: hidden; border-radius: 10px; margin-bottom: 15px; flex-shrink: 0; }
     .p-img { width: 100%; height: 100%; object-fit: cover; }
     .p-cat-overlay {
         position: absolute; top: 30px; left: 30px;
@@ -144,7 +136,9 @@ st.markdown("""
         font-size: 0.7rem; font-weight: 800; text-transform: uppercase;
         box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
-    
+    .p-section { margin-top: 10px; font-size: 0.85rem; line-height: 1.4; }
+    .p-label { font-weight: 700; color: #3B82F6; margin-right: 5px; display: inline-block; }
+
     /* =========================================
        MOBILE STYLES
        ========================================= */
@@ -159,7 +153,7 @@ st.markdown("""
     .mobile-profile-pic { 
         width: 50px; height: 50px; border-radius: 50%; object-fit: cover; 
         border: 2px solid #3B82F6; 
-        background-color: #ccc;
+        background-color: #333; /* Fallback color */
     }
     .mobile-card { 
         background: var(--secondary-background-color); 
@@ -167,28 +161,24 @@ st.markdown("""
         box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
         border: 1px solid rgba(128,128,128,0.1);
     }
-    .m-label { font-weight: 700; color: #3B82F6; font-size: 0.8rem; margin-top: 5px; }
-    .m-text { font-size: 0.85rem; opacity: 0.9; margin-bottom: 8px; line-height: 1.4; }
+    .m-p-label { font-weight: 700; color: #3B82F6; font-size: 0.8rem; margin-top: 8px; }
+    .m-p-text { font-size: 0.85rem; opacity: 0.9; margin-bottom: 5px; line-height: 1.4; }
 
 </style>
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 4. VIEW LOGIC
+# 4. DESKTOP VIEW
 # ==========================================
-
-# ------------------------------------------
-# A. DESKTOP RENDERER
-# ------------------------------------------
 st.markdown('<div class="desktop-view">', unsafe_allow_html=True)
 
-# --- SIDEBAR (NAVIGATION ONLY HERE) ---
+# --- SIDEBAR: THE ONLY NAVIGATION & ADMIN ---
 with st.sidebar:
     prof = st.session_state.data.get('profile', {})
     if prof.get('image_url'):
-        st.image(get_img_src(prof.get('image_url')), width=120)
+        st.image(get_img_src(prof.get('image_url')), width=130)
     
-    # THIS IS THE ONLY NAVIGATION MENU NOW
+    # SINGLE NAVIGATION SOURCE
     selected = option_menu(
         menu_title=None,
         options=["Home", "Projects", "Experience", "Skills", "Contact"], 
@@ -199,10 +189,10 @@ with st.sidebar:
     
     st.markdown("---")
     
-    # Admin Logic
+    # SINGLE ADMIN SOURCE (Bottom of Sidebar)
     if not st.session_state.is_admin:
-        with st.expander("🔒 Admin Access"):
-            with st.form("admin_auth"):
+        with st.expander("🔒 Admin"):
+            with st.form("sidebar_admin_auth"):
                 password = st.text_input("Password", type="password")
                 if st.form_submit_button("Login"):
                     if password == ADMIN_PASSWORD:
@@ -214,7 +204,7 @@ with st.sidebar:
             st.session_state.is_admin = False
             st.rerun()
 
-# --- DESKTOP PAGE CONTENT ---
+# --- DESKTOP CONTENT ---
 if selected == "Home":
     prof = st.session_state.data.get('profile', {})
     mets = st.session_state.data.get('metrics', {})
@@ -225,7 +215,7 @@ if selected == "Home":
         st.markdown(f"<h3 style='color:#3B82F6 !important;'>{prof.get('role', 'Role')}</h3>", unsafe_allow_html=True)
         st.write(prof.get('summary', ''))
         
-        # Tooltips defined here
+        # Tooltip Content
         tt_dash = "<b>Projects:</b><br>• 10+ dashboards<br>• KPI variance analysis"
         tt_red = "<b>Impact:</b><br>• Saved 20 hrs/week<br>• 90% error reduction"
         tt_eff = "<b>Gains:</b><br>• Real-time data<br>• Faster decisions"
@@ -257,22 +247,23 @@ elif selected == "Projects":
     st.title("Projects")
     projects = st.session_state.data.get('projects', [])
     
+    # Using columns for grid layout
     for i in range(0, len(projects), 2):
         cols = st.columns(2)
         batch = projects[i : i+2]
         for j, p in enumerate(batch):
             with cols[j]:
                 img_src = get_img_src(p.get('image', ''))
+                # Explicitly rendering Problem/Solution/Impact in the card
                 st.markdown(f"""
                     <div class="project-card">
                         <div class="p-cat-overlay">{p.get('category')}</div>
                         <div class="p-img-container"><img src="{img_src}" class="p-img"></div>
-                        <div class="p-title">{p.get('title')}</div>
-                        <div style="flex-grow:1;">
-                            <div style="margin-bottom:5px;"><b>🚨 Problem:</b> {p.get('problem')}</div>
-                            <div style="margin-bottom:5px;"><b>💡 Solution:</b> {p.get('solution')}</div>
-                            <div><b>🚀 Impact:</b> {p.get('impact')}</div>
-                        </div>
+                        <div style="font-size:1.2rem; font-weight:700; margin-bottom:10px;">{p.get('title')}</div>
+                        
+                        <div class="p-section"><span class="p-label">🚨 Problem:</span>{p.get('problem')}</div>
+                        <div class="p-section"><span class="p-label">💡 Solution:</span>{p.get('solution')}</div>
+                        <div class="p-section"><span class="p-label">🚀 Impact:</span>{p.get('impact')}</div>
                     </div>
                 """, unsafe_allow_html=True)
                 st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
@@ -281,19 +272,46 @@ elif selected == "Experience":
     st.title("Experience")
     for job in st.session_state.data.get('experience', []):
         st.markdown(f"""
-        <div style="background:var(--secondary-background-color); padding:20px; border-radius:10px; border-left:5px solid #3B82F6; margin-bottom:15px;">
+        <div style="background:var(--secondary-background-color); padding:20px; border-radius:10px; border-left:5px solid #3B82F6; margin-bottom:15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
             <div style="font-weight:bold; font-size:1.1rem;">{job.get("role")} @ {job.get("company")}</div>
-            <small>{job.get("date")}</small>
-            <div style="margin-top:10px;">{job.get("description")}</div>
+            <small style="opacity:0.7;">{job.get("date")}</small>
+            <div style="margin-top:10px; line-height:1.6;">{job.get("description")}</div>
         </div>""", unsafe_allow_html=True)
 
 elif selected == "Skills":
     st.title("Skills")
     skills = st.session_state.data.get('skills', {})
     if skills:
-        fig = go.Figure(go.Scatterpolar(r=list(skills.values()), theta=list(skills.keys()), fill='toself'))
-        fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 100])), showlegend=False, height=400, paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
-        st.plotly_chart(fig, use_container_width=True)
+        c1, c2, c3 = st.columns([1, 2, 1])
+        with c2:
+            # STATIC CHART + CUSTOM HOVER
+            fig = go.Figure(go.Scatterpolar(
+                r=list(skills.values()), 
+                theta=list(skills.keys()), 
+                fill='toself',
+                hovertemplate='I am %{r}% proficient in %{theta}<extra></extra>' # Custom Tooltip
+            ))
+            fig.update_layout(
+                polar=dict(radialaxis=dict(visible=True, range=[0, 100])),
+                showlegend=False, 
+                height=400, 
+                paper_bgcolor='rgba(0,0,0,0)', 
+                plot_bgcolor='rgba(0,0,0,0)',
+                dragmode=False # Static
+            )
+            st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False, 'staticPlot': False}) # staticPlot=False to allow hover
+    
+    st.markdown("### Proficiency")
+    s_cols = st.columns(4)
+    for i, (s, v) in enumerate(skills.items()):
+        with s_cols[i % 4]:
+            # Skill % Visible
+            st.markdown(f"""
+            <div style="background:var(--secondary-background-color); padding:15px; border-radius:8px; margin-bottom:10px; text-align:center;">
+                <b>{s}</b>
+                <div style="color:#3B82F6; font-size:1.2rem; font-weight:800;">{v}%</div>
+                <progress value="{v}" max="100" style="width:100%; height:6px;"></progress>
+            </div>""", unsafe_allow_html=True)
 
 elif selected == "Contact":
     st.title("Contact")
@@ -302,9 +320,9 @@ elif selected == "Contact":
 
 st.markdown('</div>', unsafe_allow_html=True) # END DESKTOP
 
-# ------------------------------------------
-# B. MOBILE RENDERER
-# ------------------------------------------
+# ==========================================
+# 5. MOBILE VIEW
+# ==========================================
 st.markdown('<div class="mobile-view">', unsafe_allow_html=True)
 
 # 1. MOBILE HEADER (Photo Fix)
@@ -316,7 +334,7 @@ st.markdown(f"""
         <div style="font-weight: 800; font-size: 1.2rem;">{prof.get('name')}</div>
         <div style="font-size: 0.8rem; opacity: 0.7;">{prof.get('role')}</div>
     </div>
-    <img src="{img_src}" class="mobile-profile-pic" onerror="this.onerror=null; this.src='https://placehold.co/100x100?text=User';">
+    <img src="{img_src}" class="mobile-profile-pic">
 </div>
 """, unsafe_allow_html=True)
 
@@ -325,9 +343,8 @@ if st.session_state.mobile_page == "Home":
     st.markdown(f"#### 👋 Hi, I'm {prof.get('name').split(' ')[0]}")
     st.write(prof.get('summary'))
     
-    # Metrics with VISIBLE Text (No hover on mobile)
+    # Metrics
     mets = st.session_state.data.get('metrics', {})
-    m_cols = st.columns(3)
     metrics_data = [("📊", mets.get("dashboards"), "Dashboards"), ("⚡", mets.get("manual_reduction"), "Reduction"), ("📈", mets.get("efficiency"), "Efficiency")]
     
     st.markdown("<div style='display:flex; gap:10px; overflow-x:auto; padding-bottom:10px;'>", unsafe_allow_html=True)
@@ -340,26 +357,35 @@ if st.session_state.mobile_page == "Home":
         </div>
         """, unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
+    
+    # Skills Summary on Mobile Home
+    st.markdown("### Top Skills")
+    skills = st.session_state.data.get('skills', {})
+    skill_html = "<div style='display:flex; flex-wrap:wrap; gap:8px;'>"
+    for s, v in skills.items():
+        skill_html += f"<span style='background:rgba(59,130,246,0.1); color:#3B82F6; padding:5px 10px; border-radius:15px; font-size:0.8rem; font-weight:600;'>{s} {v}%</span>"
+    skill_html += "</div>"
+    st.markdown(skill_html, unsafe_allow_html=True)
 
 elif st.session_state.mobile_page == "Projects":
     st.markdown("### Projects")
     for p in st.session_state.data.get('projects', []):
         img = get_img_src(p.get('image'))
-        # Added Problem/Solution/Impact visibility here
+        # Added P/S/I VISIBILITY
         st.markdown(f"""
         <div class="mobile-card">
             <img src="{img}" style="width:100%; height:140px; object-fit:cover; border-radius:8px; margin-bottom:10px;">
             <div style="font-weight:800; font-size:1.1rem; margin-bottom:5px;">{p.get('title')}</div>
             <div style="font-size:0.75rem; color:#3B82F6; margin-bottom:10px; text-transform:uppercase;">{p.get('category')}</div>
             
-            <div class="m-label">🚨 Problem</div>
-            <div class="m-text">{p.get('problem')}</div>
+            <div class="m-p-label">🚨 Problem</div>
+            <div class="m-p-text">{p.get('problem')}</div>
             
-            <div class="m-label">💡 Solution</div>
-            <div class="m-text">{p.get('solution')}</div>
+            <div class="m-p-label">💡 Solution</div>
+            <div class="m-p-text">{p.get('solution')}</div>
             
-            <div class="m-label">🚀 Impact</div>
-            <div class="m-text">{p.get('impact')}</div>
+            <div class="m-p-label">🚀 Impact</div>
+            <div class="m-p-text">{p.get('impact')}</div>
         </div>
         """, unsafe_allow_html=True)
 
