@@ -2,7 +2,7 @@ import streamlit as st
 import json
 import os
 import textwrap
-import requests  # Added for link checking
+import requests
 from streamlit_option_menu import option_menu
 import plotly.graph_objects as go
 
@@ -12,6 +12,57 @@ DATA_FILE = os.path.join(BASE_DIR, 'data.json')
 ADMIN_PASSWORD = "admin" 
 
 st.set_page_config(layout="wide", page_title="Portfolio", page_icon="✨")
+
+# --- MOBILE DETECTION & TOAST SCRIPT ---
+# This script injects a temporary popup if the screen width is small (mobile)
+st.markdown("""
+<script>
+    var width = window.innerWidth > 0 ? window.innerWidth : screen.width;
+    
+    // Threshold for mobile devices (usually < 768px or < 800px)
+    if (width < 800) {
+        
+        // Check if we have already shown the notification in this session
+        // This prevents it from popping up every time you click a button
+        if (!sessionStorage.getItem('mobile_notify_shown')) {
+            
+            // Create the toast element
+            var toast = document.createElement('div');
+            
+            // Style the toast
+            toast.style.position = 'fixed';
+            toast.style.bottom = '30px';
+            toast.style.left = '50%';
+            toast.style.transform = 'translateX(-50%)';
+            toast.style.backgroundColor = '#262730';
+            toast.style.color = 'white';
+            toast.style.padding = '12px 24px';
+            toast.style.borderRadius = '10px';
+            toast.style.zIndex = '999999';
+            toast.style.boxShadow = '0 4px 15px rgba(0,0,0,0.3)';
+            toast.style.border = '1px solid #3B82F6';
+            toast.style.fontFamily = 'sans-serif';
+            toast.style.fontSize = '14px';
+            toast.style.textAlign = 'center';
+            toast.style.transition = 'opacity 0.5s ease';
+            toast.innerHTML = '📱 <b>Mobile Detected</b><br>For the best experience, please use Desktop.';
+            
+            document.body.appendChild(toast);
+            
+            // Mark as shown in session storage
+            sessionStorage.setItem('mobile_notify_shown', 'true');
+            
+            // Remove after 3 seconds
+            setTimeout(function() {
+                toast.style.opacity = '0';
+                setTimeout(function() {
+                    document.body.removeChild(toast);
+                }, 500);
+            }, 3000);
+        }
+    }
+</script>
+""", unsafe_allow_html=True)
 
 # --- CUSTOM CSS (THEME AWARE) ---
 st.markdown("""
