@@ -157,7 +157,7 @@ st.markdown("""
     .d-green { background-color: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); }
     .d-yellow { background-color: rgba(234, 179, 8, 0.1); border: 1px solid rgba(234, 179, 8, 0.2); }
 
-    /* 4. METRIC CARDS - DESKTOP DEFAULTS (Large Screens > 1150px) */
+    /* 4. METRIC CARDS - DESKTOP DEFAULTS */
     .metric-card {
         background: var(--secondary-background-color); 
         border: 1px solid rgba(128, 128, 128, 0.2); 
@@ -178,33 +178,7 @@ st.markdown("""
     }
     .metric-label { font-size: 0.85rem; color: var(--text-color); opacity: 0.7; }
     
-    /* === FIX 1: MOBILE OPTIMIZATION (Vertical Layout < 768px) === */
-    @media only screen and (max-width: 768px) {
-        .metric-card { padding: 12px !important; }
-        .metric-value { font-size: 1.4rem !important; }
-        .metric-label { font-size: 0.75rem !important; }
-        h1 { font-size: 2.2rem !important; } 
-    }
-
-    /* === FIX 2: DESKTOP-MODE-ON-MOBILE / TABLET (769px - 1150px) === */
-    /* This targets 'Desktop Mode' on phones which is usually ~980px wide. */
-    /* We force a compact layout here so text doesn't break. */
-    @media only screen and (min-width: 769px) and (max-width: 1150px) {
-        .metric-card {
-            padding: 10px 5px !important; /* Extremely tight padding to maximize space */
-        }
-        .metric-value {
-            font-size: 1.4rem !important; /* Smaller numbers */
-        }
-        .metric-label {
-            font-size: 0.70rem !important; /* Smaller text */
-            white-space: nowrap !important; /* Forces text to stay on one line */
-            overflow: hidden !important;
-            text-overflow: clip !important;
-        }
-    }
-
-    /* TOOLTIP */
+    /* TOOLTIP (Default Desktop) */
     .tooltip-text {
         visibility: hidden;
         width: auto; min-width: 300px; white-space: nowrap; 
@@ -220,6 +194,30 @@ st.markdown("""
         font-size: 0.8rem; font-weight: 500; line-height: 1.5; pointer-events: none;
     }
     .metric-card:hover .tooltip-text { visibility: visible; opacity: 1; top: 125%; }
+
+    /* === MOBILE OPTIMIZATION (Phone Layout) === */
+    @media only screen and (max-width: 768px) {
+        .metric-card { padding: 12px !important; }
+        .metric-value { font-size: 1.4rem !important; }
+        .metric-label { font-size: 0.75rem !important; }
+        h1 { font-size: 2.2rem !important; } 
+        
+        /* FIX: Hide tooltips on mobile to prevent overlapping */
+        .tooltip-text { display: none !important; }
+    }
+
+    /* === DESKTOP-MODE-ON-MOBILE / TABLET FIX (769px - 1150px) === */
+    @media only screen and (min-width: 769px) and (max-width: 1150px) {
+        .metric-card { padding: 10px 5px !important; }
+        .metric-value { font-size: 1.4rem !important; }
+        .metric-label { 
+            font-size: 0.70rem !important; 
+            white-space: nowrap !important; 
+        }
+        
+        /* FIX: Hide tooltips here too as cards might still be tight/stacked */
+        .tooltip-text { display: none !important; }
+    }
 
     /* TIMELINE & SKILLS */
     .timeline-card {
