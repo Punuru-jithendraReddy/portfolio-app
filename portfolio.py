@@ -12,45 +12,10 @@ ADMIN_PASSWORD = "admin"
 
 st.set_page_config(layout="wide", page_title="Portfolio", page_icon="✨")
 
-# --- CUSTOM CSS (AGGRESSIVE DESKTOP FORCING) ---
+# --- CUSTOM CSS (THEME AWARE) ---
 st.markdown("""
 <style>
-    /* =============================================
-       FORCE DESKTOP LAYOUT (The "Nuclear" Option)
-       ============================================= */
-       
-    /* 1. Force the MAIN SCROLLING CONTAINER to be wide.
-       This overrides the phone's physical width limitation. */
-    [data-testid="stAppViewContainer"] {
-        min-width: 1200px !important;
-        overflow-x: scroll !important;
-    }
-    
-    /* 2. Force the content block to fill that wide space */
-    .block-container {
-        min-width: 1200px !important;
-        max-width: 1200px !important;
-        padding-left: 5rem !important;
-        padding-right: 5rem !important;
-        margin: 0 auto !important;
-    }
-
-    /* 3. Force Columns to stay Side-by-Side (Flex Row) */
-    div[data-testid="column"] {
-        flex: 1 !important; /* ensure equal width */
-        width: auto !important;
-        min-width: 0 !important;
-    }
-    
-    /* Stop specific elements from wrapping awkwardly */
-    h1 {
-        white-space: nowrap !important; /* Prevents name from breaking */
-    }
-
-    /* =============================================
-       YOUR ORIGINAL THEME STYLES
-       ============================================= */
-    
+    /* --- THEME ADAPTIVE COLORS --- */
     .main { padding-top: 1rem; }
     h1, h2, h3 { font-family: 'Segoe UI', sans-serif; color: var(--text-color) !important; }
     p, div, span { color: var(--text-color); }
@@ -64,7 +29,6 @@ st.markdown("""
         from { opacity: 0; transform: scale3d(0.95, 0.95, 0.95); }
         to { opacity: 1; transform: scale3d(1, 1, 1); }
     }
-
     /* 0. COLUMN SETUP */
     [data-testid="column"] {
         display: flex;
@@ -72,11 +36,12 @@ st.markdown("""
         height: 100%;
     }
     
+    /* --- FIX: HIDE BLINKING CURSOR IN SELECTBOX --- */
+    /* This makes the caret transparent so it doesn't blink after selection */
     div[data-baseweb="select"] input {
         caret-color: transparent !important;
         cursor: pointer !important;
     }
-
     /* 1. PROJECT CARD DESIGN */
     .project-card {
         background-color: var(--secondary-background-color); 
@@ -100,7 +65,6 @@ st.markdown("""
         box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.2);
         border-color: #3B82F6;
     }
-
     /* IMAGES */
     .p-img-container { 
         width: 100%; height: 180px; overflow: hidden; 
@@ -119,7 +83,6 @@ st.markdown("""
         box-shadow: 0 2px 4px rgba(0,0,0,0.1); z-index: 5; 
         border: 1px solid rgba(128, 128, 128, 0.2);
     }
-
     /* TEXT */
     .p-title { 
         font-size: 1.2rem; font-weight: 700; color: var(--text-color);
@@ -137,7 +100,6 @@ st.markdown("""
         overflow: hidden;
         text-overflow: ellipsis;
     }
-
     /* 2. BUTTON STYLING */
     div[data-testid="column"] .stButton {
         position: absolute !important; bottom: 20px !important; 
@@ -157,17 +119,16 @@ st.markdown("""
         background: #2563EB !important; color: white !important;
         transform: translateY(-2px) !important; box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2) !important;
     }
-
     /* 3. DETAILED VIEW */
     .detail-row { display: flex; flex-direction: row; gap: 20px; width: 100%; margin-bottom: 20px; flex-wrap: wrap; animation: zoomIn 0.5s ease-out; }
     .detail-box { flex: 1; display: flex; flex-direction: column; padding: 20px; border-radius: 10px; min-width: 200px; }
     .box-title { font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; font-size: 1rem; color: var(--text-color); }
     .box-content { font-size: 0.95rem; line-height: 1.6; font-weight: 500; color: var(--text-color); opacity: 0.9; }
     
+    /* Adaptive colors for Detail Boxes with tint */
     .d-blue { background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); }
     .d-green { background-color: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); }
     .d-yellow { background-color: rgba(234, 179, 8, 0.1); border: 1px solid rgba(234, 179, 8, 0.2); }
-
     /* 4. METRIC CARDS */
     .metric-card {
         background: var(--secondary-background-color); 
@@ -179,7 +140,7 @@ st.markdown("""
     }
     .metric-card:hover { transform: translateY(-5px); border-color: #3B82F6; }
     .metric-label { font-size: 0.85rem; color: var(--text-color); opacity: 0.7; }
-
+   /* --- TOOLTIP STYLES --- */
     .tooltip-text {
         visibility: hidden;
         width: auto; min-width: 300px; white-space: nowrap; 
@@ -197,7 +158,6 @@ st.markdown("""
     }
     
     .metric-card:hover .tooltip-text { visibility: visible; opacity: 1; top: 125%; }
-
     /* TIMELINE & SKILLS */
     .timeline-card {
         background: var(--secondary-background-color); 
@@ -209,7 +169,6 @@ st.markdown("""
     }
     .timeline-card:hover { transform: translateX(5px); }
     .timeline-desc { color: var(--text-color); opacity: 0.8; }
-
     .skill-metric {
         background: var(--secondary-background-color);
         border: 1px solid rgba(128, 128, 128, 0.2);
@@ -220,7 +179,6 @@ st.markdown("""
     progress { accent-color: #3B82F6; }
     progress::-webkit-progress-value { background-color: #3B82F6 !important; }
     progress::-moz-progress-bar { background-color: #3B82F6 !important; }
-
 </style>
 """, unsafe_allow_html=True)
 
@@ -272,8 +230,9 @@ with st.sidebar:
     
     if selected != "Projects":
         st.session_state.selected_project = None
-    
+        
     st.markdown("---")
+    
     if not st.session_state.is_admin:
         with st.expander("🔒 Admin Access"):
             with st.form("admin_auth"):
@@ -313,7 +272,6 @@ if selected == "Home":
 
     prof = st.session_state.data.get('profile', {})
     mets = st.session_state.data.get('metrics', {})
-
     c1, c2 = st.columns([1.5, 1])
     with c1:
         st.markdown(f"<h1 style='font-size:3.5rem; margin-bottom:0; animation: fadeInUp 0.5s ease-out;'>{prof.get('name', 'Name')}</h1>", unsafe_allow_html=True)
@@ -369,7 +327,7 @@ if selected == "Home":
                 <div class="metric-label">EFFICIENCY</div>
             </div>
             ''', unsafe_allow_html=True)
-        
+            
     with c2: render_image(prof.get('image_url'), width=350)
 
 # --- PROJECTS ---
@@ -431,7 +389,7 @@ elif selected == "Projects":
             if st.button("← Back to Projects"):
                 st.session_state.selected_project = None
                 st.rerun()
-            
+                
             st.title(p.get('title'))
             st.caption(f"📂 {p.get('category')}")
             dash_img = p.get('dashboard_image') or p.get('image')
@@ -511,8 +469,10 @@ elif selected == "Projects":
                         if st.button("More Information ➜", key=f"btn_{actual_idx}"):
                             st.session_state.selected_project = actual_idx
                             st.rerun()
-                        st.markdown("<div style='height: 40px;'></div>", unsafe_allow_html=True)
-                    st.markdown("<div style='height: 40px;'></div>", unsafe_allow_html=True)
+            
+            st.markdown("<div style='height: 40px;'></div>", unsafe_allow_html=True)
+            
+        st.markdown("<div style='height: 40px;'></div>", unsafe_allow_html=True)
 
 # --- SKILLS ---
 elif selected == "Skills":
@@ -531,7 +491,6 @@ elif selected == "Skills":
         with c2:
             r_vals = list(skills.values())
             theta_vals = list(skills.keys())
-            
             fig = go.Figure()
             fig.add_trace(go.Scatterpolar(
                 r=r_vals, theta=theta_vals, fill='toself', name='Skills',
@@ -580,7 +539,6 @@ elif selected == "Experience":
                 if st.form_submit_button("Add Job"):
                     exp_list.insert(0, {"role": n_role, "company": n_comp, "date": n_date, "description": n_desc})
                     st.rerun()
-            
             st.markdown("---")
             st.subheader("Edit Existing")
             for i, job in enumerate(exp_list):
@@ -615,7 +573,6 @@ elif selected == "Contact":
 
     st.title("Contact")
     prof = st.session_state.data.get('profile', {})
-    
     c1, c2 = st.columns(2)
     for i, item in enumerate(prof.get('contact_info', [])):
         with (c1 if i % 2 == 0 else c2):
