@@ -672,7 +672,8 @@ elif selected == "Experience":
         st.markdown(f"""<div class="timeline-card"><div style="font-weight:bold; color:var(--text-color); font-size:1.1rem;">{job.get("role")} @ {job.get("company")}</div><small style="color:var(--text-color); opacity:0.7;">{job.get("date")}</small><div class="timeline-desc" style="white-space:pre-line; margin-top:10px; line-height:1.6; font-size:0.95rem;">{job.get("description")}</div></div>""", unsafe_allow_html=True)
 
 # ==========================================
-# 10. PAGE: CONTACT (UPDATED)
+# ==========================================
+# 10. PAGE: CONTACT (FIXED: PYTHON NATIVE)
 # ==========================================
 elif selected == "Contact":
     if st.session_state.is_admin:
@@ -690,36 +691,32 @@ elif selected == "Contact":
     with c1:
         st.markdown("### Send a Message")
         
-        # CONTACT FORM WITH HIDDEN IFRAME LOGIC (NO RELOAD + THANK YOU MSG)
-        contact_form = f"""
-        <script>
-            function showSuccess() {{
-                document.getElementById('contact-form').style.display = 'none';
-                document.getElementById('success-message').style.display = 'block';
-            }}
-        </script>
-
-        <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(submitted) {{showSuccess();}}"></iframe>
+        # --- FIXED FORM (Uses Python requests instead of HTML/JS) ---
+        with st.form("contact_form"):
+            name = st.text_input("Name")
+            email = st.text_input("Email")
+            message = st.text_area("Message")
+            submit_button = st.form_submit_button("Send Message")
         
-        <div id="contact-form">
-            <form action="https://formsubmit.co/{CONTACT_EMAIL}" method="POST" target="hidden_iframe" onsubmit="submitted=true;">
-                 <input type="hidden" name="_captcha" value="false">
-                 <input type="text" name="name" placeholder="Your Name" required style="width:100%; padding: 12px; margin-bottom:15px; border: 1px solid #ccc; border-radius: 8px; background-color: var(--secondary-background-color); color: var(--text-color);">
-                 <input type="email" name="email" placeholder="Your Email" required style="width:100%; padding: 12px; margin-bottom:15px; border: 1px solid #ccc; border-radius: 8px; background-color: var(--secondary-background-color); color: var(--text-color);">
-                 <textarea name="message" placeholder="Your Message" required style="width:100%; padding: 12px; margin-bottom:15px; border: 1px solid #ccc; border-radius: 8px; min-height: 150px; background-color: var(--secondary-background-color); color: var(--text-color);"></textarea>
-                 <button type="submit" style="background-color:#3B82F6; color:white; padding:12px 24px; border:none; border-radius:8px; cursor:pointer; font-weight:bold; width:100%;">Send Message</button>
-            </form>
-        </div>
-
-        <div id="success-message" style="display:none; padding:30px; border-radius:10px; background-color:rgba(59, 130, 246, 0.1); border:1px solid #3B82F6; text-align:center; animation: fadeInUp 0.5s ease-out;">
-            <div style="font-size: 50px;">🎉</div>
-            <h3 style="color:#3B82F6;">Thank You!</h3>
-            <p style="font-size:18px;">I will reach out to you as soon as possible.</p>
-        </div>
-
-        <script>var submitted = false;</script>
-        """
-        st.markdown(contact_form, unsafe_allow_html=True)
+        if submit_button:
+            if not name or not email or not message:
+                st.warning("⚠️ Please fill out all fields.")
+            else:
+                # Send data to FormSubmit via Python
+                try:
+                    response = requests.post(
+                        f"https://formsubmit.co/{CONTACT_EMAIL}",
+                        data={"name": name, "email": email, "message": message, "_captcha": "false"}
+                    )
+                    
+                    if response.status_code == 200:
+                        # SUCCESS MESSAGE
+                        st.success("🎉 Thank You! I will reach out to you as soon as possible.")
+                        st.balloons() 
+                    else:
+                        st.error("❌ There was an error sending the message. Please try again.")
+                except Exception as e:
+                    st.error(f"❌ Error: {e}")
 
     with c2:
         st.markdown("### Connect")
