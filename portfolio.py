@@ -12,9 +12,22 @@ ADMIN_PASSWORD = "admin"
 
 st.set_page_config(layout="wide", page_title="Portfolio", page_icon="✨")
 
-# --- CUSTOM CSS (THEME AWARE) ---
+# --- CUSTOM CSS (THEME AWARE & FORCED DESKTOP) ---
 st.markdown("""
 <style>
+    /* --- FORCE DESKTOP LAYOUT ON MOBILE --- */
+    /* This forces the app to think it is on a wide screen, 
+       preventing columns from stacking vertically. */
+    .block-container {
+        min-width: 1000px !important; /* Adjust this value if needed (e.g., 1200px) */
+        overflow-x: auto !important;
+    }
+    
+    /* Ensure the main app container allows scrolling */
+    .stApp {
+        overflow-x: auto !important;
+    }
+
     /* --- THEME ADAPTIVE COLORS --- */
     .main { padding-top: 1rem; }
     h1, h2, h3 { font-family: 'Segoe UI', sans-serif; color: var(--text-color) !important; }
@@ -35,6 +48,13 @@ st.markdown("""
         display: flex;
         flex-direction: column;
         height: 100%;
+    }
+    
+    /* --- FIX: HIDE BLINKING CURSOR IN SELECTBOX --- */
+    /* This makes the caret transparent so it doesn't blink after selection */
+    div[data-baseweb="select"] input {
+        caret-color: transparent !important;
+        cursor: pointer !important;
     }
 
     /* 1. PROJECT CARD DESIGN */
@@ -152,15 +172,12 @@ st.markdown("""
         text-align: left; border-radius: 8px; padding: 15px;
         position: absolute; z-index: 100;
         
-        /* Position */
         top: 120%; 
         left: 50%; transform: translateX(-50%);
         opacity: 0; transition: opacity 0.3s, top 0.3s;
         font-size: 0.8rem; font-weight: 500; line-height: 1.5; pointer-events: none;
     }
     
-    /* REMOVED THE ARROW ARTIFACT HERE - CLEANER LOOK */
-
     .metric-card:hover .tooltip-text { visibility: visible; opacity: 1; top: 125%; }
 
     /* TIMELINE & SKILLS */
@@ -237,9 +254,8 @@ with st.sidebar:
     
     if selected != "Projects":
         st.session_state.selected_project = None
-        
-    st.markdown("---")
     
+    st.markdown("---")
     if not st.session_state.is_admin:
         with st.expander("🔒 Admin Access"):
             with st.form("admin_auth"):
@@ -279,6 +295,7 @@ if selected == "Home":
 
     prof = st.session_state.data.get('profile', {})
     mets = st.session_state.data.get('metrics', {})
+
     c1, c2 = st.columns([1.5, 1])
     with c1:
         st.markdown(f"<h1 style='font-size:3.5rem; margin-bottom:0; animation: fadeInUp 0.5s ease-out;'>{prof.get('name', 'Name')}</h1>", unsafe_allow_html=True)
@@ -287,7 +304,6 @@ if selected == "Home":
         
         mc1, mc2, mc3 = st.columns(3)
         
-        # --- RESTORED FULL TOOLTIP TEXT ---
         tt_dash = """
         <div style='margin-bottom:6px;'><b>Key Projects:</b></div>
         • 10+ dashboards supporting data-driven decisions<br>
@@ -335,7 +351,7 @@ if selected == "Home":
                 <div class="metric-label">EFFICIENCY</div>
             </div>
             ''', unsafe_allow_html=True)
-            
+        
     with c2: render_image(prof.get('image_url'), width=350)
 
 # --- PROJECTS ---
@@ -397,7 +413,7 @@ elif selected == "Projects":
             if st.button("← Back to Projects"):
                 st.session_state.selected_project = None
                 st.rerun()
-                
+            
             st.title(p.get('title'))
             st.caption(f"📂 {p.get('category')}")
             dash_img = p.get('dashboard_image') or p.get('image')
@@ -432,39 +448,31 @@ elif selected == "Projects":
     else:
         st.title("Projects")
         
-        # --- MODIFIED: CATEGORY FILTER & SECTION ---
-        # 1. Get unique categories
+        # --- CATEGORY FILTER & SECTION ---
         categories = sorted(list(set([p.get('category', 'Other') for p in projects])))
         
-        # 2. Filter UI
         c_filt, c_space = st.columns([1, 3])
         with c_filt:
             selected_cat_filter = st.selectbox("📂 Filter by Category", ["All Projects"] + categories)
 
-        # 3. Determine which categories to show based on filter
         if selected_cat_filter == "All Projects":
             categories_to_show = categories
         else:
             categories_to_show = [selected_cat_filter]
 
-        # 4. Loop through categories and create sections
         for category in categories_to_show:
-            # Filter projects for this specific category
             cat_projects = [p for p in projects if p.get('category', 'Other') == category]
             
             if not cat_projects:
                 continue
 
-            # Section Header
             st.markdown(f"### {category}")
             st.markdown("---")
             
-            # Grid Display for this category
             for i in range(0, len(cat_projects), 2):
                 cols = st.columns(2)
                 batch = cat_projects[i : i+2]
                 for j, p in enumerate(batch):
-                    # Find the original index in the main list so "More Info" works correctly
                     actual_idx = projects.index(p)
                     
                     with cols[j]:
@@ -485,11 +493,8 @@ elif selected == "Projects":
                         if st.button("More Information ➜", key=f"btn_{actual_idx}"):
                             st.session_state.selected_project = actual_idx
                             st.rerun()
-            
-            # Spacer between categories
-            st.markdown("<div style='height: 40px;'></div>", unsafe_allow_html=True)
-            
-        st.markdown("<div style='height: 40px;'></div>", unsafe_allow_html=True)
+                        st.markdown("<div style='height: 40px;'></div>", unsafe_allow_html=True)
+                    st.markdown("<div style='height: 40px;'></div>", unsafe_allow_html=True)
 
 # --- SKILLS ---
 elif selected == "Skills":
@@ -508,12 +513,15 @@ elif selected == "Skills":
         with c2:
             r_vals = list(skills.values())
             theta_vals = list(skills.keys())
+            
             fig = go.Figure()
             fig.add_trace(go.Scatterpolar(
                 r=r_vals, theta=theta_vals, fill='toself', name='Skills',
                 line=dict(color='#3B82F6', width=2), marker=dict(color='#3B82F6')
             ))
+            # --- UPDATED LAYOUT: FIXED/STATIC CHART ---
             fig.update_layout(
+                dragmode=False,  # Disables dragging/panning
                 polar=dict(
                     radialaxis=dict(visible=True, range=[0, 100], showticklabels=False, ticks='', gridcolor='rgba(128,128,128,0.2)'),
                     angularaxis=dict(showticklabels=True, gridcolor='rgba(128,128,128,0.2)'),
@@ -524,7 +532,8 @@ elif selected == "Skills":
                 plot_bgcolor='rgba(0,0,0,0)', 
                 showlegend=False, height=400, margin=dict(t=40, b=40, l=40, r=40)
             )
-            st.plotly_chart(fig, use_container_width=True)
+            # --- UPDATED CONFIG: HIDES MODEBAR ---
+            st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
 
     st.markdown("### Proficiency")
     s_cols = st.columns(4)
@@ -553,6 +562,7 @@ elif selected == "Experience":
                 if st.form_submit_button("Add Job"):
                     exp_list.insert(0, {"role": n_role, "company": n_comp, "date": n_date, "description": n_desc})
                     st.rerun()
+            
             st.markdown("---")
             st.subheader("Edit Existing")
             for i, job in enumerate(exp_list):
@@ -587,6 +597,7 @@ elif selected == "Contact":
 
     st.title("Contact")
     prof = st.session_state.data.get('profile', {})
+    
     c1, c2 = st.columns(2)
     for i, item in enumerate(prof.get('contact_info', [])):
         with (c1 if i % 2 == 0 else c2):
