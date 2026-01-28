@@ -2,9 +2,9 @@ import streamlit as st
 import json
 import os
 import textwrap
+import requests  # Added for link checking
 from streamlit_option_menu import option_menu
 import plotly.graph_objects as go
-import streamlit.components.v1 as components
 
 # --- CONFIGURATION ---
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -13,81 +13,15 @@ ADMIN_PASSWORD = "admin"
 
 st.set_page_config(layout="wide", page_title="Portfolio", page_icon="✨")
 
-# ==========================================
-# 🚀 THE FIX: FORCE "ZOOMED OUT" DESKTOP VIEW
-# ==========================================
-# This script forces the phone to fit 1200px of content onto the screen 
-# by zooming out initially. The user can then pinch to zoom in.
-# ==========================================
-st.markdown("""
-    <script>
-        function forceDesktopView() {
-            var viewport = document.querySelector("meta[name=viewport]");
-            if (viewport) {
-                // WE REMOVED 'initial-scale=1'. 
-                // Setting just 'width=1200' forces the browser to shrink the page to fit.
-                viewport.setAttribute("content", "width=1200");
-            }
-        }
-        
-        // 1. Run immediately
-        forceDesktopView();
-        
-        // 2. Run on load
-        window.addEventListener('load', forceDesktopView);
-        
-        // 3. AGGRESSIVE MODE: Keep checking if Streamlit tries to change it back
-        var observer = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
-                if (mutation.type === "attributes" && mutation.attributeName === "content") {
-                    var viewport = document.querySelector("meta[name=viewport]");
-                    if (viewport && viewport.getAttribute("content") !== "width=1200") {
-                        forceDesktopView();
-                    }
-                }
-            });
-        });
-        var viewport = document.querySelector("meta[name=viewport]");
-        if (viewport) {
-            observer.observe(viewport, { attributes: true });
-        }
-    </script>
-""", unsafe_allow_html=True)
-
-# --- CUSTOM CSS (LAYOUT ENFORCEMENT) ---
+# --- CUSTOM CSS (THEME AWARE) ---
 st.markdown("""
 <style>
-    /* 1. FORCE WIDTH TO MATCH VIEWPORT */
-    /* This tells the content "You have 1200px of space, fill it!" */
-    .block-container {
-        min-width: 1200px !important;
-        max-width: 1200px !important;
-        padding-left: 2rem !important;
-        padding-right: 2rem !important;
-        margin: 0 auto !important;
-    }
-    
-    /* 2. ENABLE SCROLLING & ZOOMING */
-    [data-testid="stAppViewContainer"] {
-        overflow-x: auto !important;
-        overflow-y: scroll !important;
-    }
-
-    /* 3. FORCE HORIZONTAL LAYOUT (No Stacking) */
-    [data-testid="column"] {
-        width: auto !important;
-        flex: 1 !important;
-        min-width: 0 !important;
-    }
-
-    /* Prevent text wrapping on names */
-    h1 { white-space: nowrap !important; }
-
-    /* --- YOUR ORIGINAL THEME STYLES --- */
+    /* --- THEME ADAPTIVE COLORS --- */
     .main { padding-top: 1rem; }
     h1, h2, h3 { font-family: 'Segoe UI', sans-serif; color: var(--text-color) !important; }
     p, div, span { color: var(--text-color); }
     
+    /* ANIMATIONS */
     @keyframes fadeInUp {
         from { opacity: 0; transform: translate3d(0, 20px, 0); }
         to { opacity: 1; transform: translate3d(0, 0, 0); }
@@ -97,17 +31,20 @@ st.markdown("""
         to { opacity: 1; transform: scale3d(1, 1, 1); }
     }
 
+    /* 0. COLUMN SETUP */
     [data-testid="column"] {
         display: flex;
         flex-direction: column;
         height: 100%;
     }
     
+    /* --- FIX: HIDE BLINKING CURSOR IN SELECTBOX --- */
     div[data-baseweb="select"] input {
         caret-color: transparent !important;
         cursor: pointer !important;
     }
 
+    /* 1. PROJECT CARD DESIGN */
     .project-card {
         background-color: var(--secondary-background-color); 
         border: 1px solid rgba(128, 128, 128, 0.2); 
@@ -131,6 +68,7 @@ st.markdown("""
         border-color: #3B82F6;
     }
 
+    /* IMAGES */
     .p-img-container { 
         width: 100%; height: 180px; overflow: hidden; 
         border-radius: 15px; 
@@ -139,6 +77,7 @@ st.markdown("""
     }
     .p-img { width: 100%; height: 100%; object-fit: cover; }
     
+    /* OVERLAY */
     .p-cat-overlay {
         position: absolute; top: 30px; left: 30px;
         background-color: var(--background-color);
@@ -148,6 +87,7 @@ st.markdown("""
         border: 1px solid rgba(128, 128, 128, 0.2);
     }
 
+    /* TEXT */
     .p-title { 
         font-size: 1.2rem; font-weight: 700; color: var(--text-color);
         margin-bottom: 15px; line-height: 1.3; flex-grow: 0; 
@@ -165,6 +105,7 @@ st.markdown("""
         text-overflow: ellipsis;
     }
 
+    /* 2. BUTTON STYLING */
     div[data-testid="column"] .stButton {
         position: absolute !important; bottom: 20px !important; 
         right: 20px !important; left: unset !important;        
@@ -184,15 +125,18 @@ st.markdown("""
         transform: translateY(-2px) !important; box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2) !important;
     }
 
+    /* 3. DETAILED VIEW */
     .detail-row { display: flex; flex-direction: row; gap: 20px; width: 100%; margin-bottom: 20px; flex-wrap: wrap; animation: zoomIn 0.5s ease-out; }
     .detail-box { flex: 1; display: flex; flex-direction: column; padding: 20px; border-radius: 10px; min-width: 200px; }
     .box-title { font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; font-size: 1rem; color: var(--text-color); }
     .box-content { font-size: 0.95rem; line-height: 1.6; font-weight: 500; color: var(--text-color); opacity: 0.9; }
     
+    /* Adaptive colors for Detail Boxes with tint */
     .d-blue { background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); }
     .d-green { background-color: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); }
     .d-yellow { background-color: rgba(234, 179, 8, 0.1); border: 1px solid rgba(234, 179, 8, 0.2); }
 
+    /* 4. METRIC CARDS */
     .metric-card {
         background: var(--secondary-background-color); 
         border: 1px solid rgba(128, 128, 128, 0.2); 
@@ -203,7 +147,8 @@ st.markdown("""
     }
     .metric-card:hover { transform: translateY(-5px); border-color: #3B82F6; }
     .metric-label { font-size: 0.85rem; color: var(--text-color); opacity: 0.7; }
-
+   
+    /* --- TOOLTIP STYLES --- */
     .tooltip-text {
         visibility: hidden;
         width: auto; min-width: 300px; white-space: nowrap; 
@@ -212,8 +157,7 @@ st.markdown("""
         border: 1px solid rgba(128, 128, 128, 0.3);
         box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2);
         text-align: left; border-radius: 8px; padding: 15px;
-        position: absolute; z-index: 100;
-        
+        position: absolute; z-index: 100;        
         top: 120%; 
         left: 50%; transform: translateX(-50%);
         opacity: 0; transition: opacity 0.3s, top 0.3s;
@@ -222,6 +166,7 @@ st.markdown("""
     
     .metric-card:hover .tooltip-text { visibility: visible; opacity: 1; top: 125%; }
 
+    /* TIMELINE & SKILLS */
     .timeline-card {
         background: var(--secondary-background-color); 
         border: 1px solid rgba(128, 128, 128, 0.2);
@@ -232,7 +177,6 @@ st.markdown("""
     }
     .timeline-card:hover { transform: translateX(5px); }
     .timeline-desc { color: var(--text-color); opacity: 0.8; }
-
     .skill-metric {
         background: var(--secondary-background-color);
         border: 1px solid rgba(128, 128, 128, 0.2);
@@ -243,14 +187,13 @@ st.markdown("""
     progress { accent-color: #3B82F6; }
     progress::-webkit-progress-value { background-color: #3B82F6 !important; }
     progress::-moz-progress-bar { background-color: #3B82F6 !important; }
-
 </style>
 """, unsafe_allow_html=True)
 
 # --- DATA MANAGER ---
 def load_data():
     if not os.path.exists(DATA_FILE): 
-        return {
+         return {
             "profile": {"name": "Your Name", "role": "Your Role", "summary": "Summary here", "image_url": "", "contact_info": []},
             "metrics": {"dashboards": "10+", "manual_reduction": "50%", "efficiency": "30%"},
             "experience": [],
@@ -261,11 +204,35 @@ def load_data():
         with open(DATA_FILE, 'r', encoding='utf-8') as f: return json.load(f)
     except: return {}
 
+# --- LINK VALIDATOR WITH CACHE ---
+@st.cache_data(ttl=3600)
+def check_url_exists(url):
+    """
+    Checks if a URL is accessible via a HEAD request.
+    Cached for 1 hour to improve performance.
+    """
+    try:
+        # Timeout set to 1.5s to avoid blocking UI for too long on bad links
+        response = requests.head(url, timeout=1.5)
+        # Returns True if status code is 200-399
+        return response.status_code < 400
+    except:
+        return False
+
 def get_img_src(image_path):
     if not image_path: return "https://placehold.co/600x400/png?text=No+Image"
+    
+    # Normalize GitHub blobs to raw
     if "github.com" in image_path and "/blob/" in image_path:
         image_path = image_path.replace("github.com", "raw.githubusercontent.com").replace("/blob/", "/")
-    if image_path.startswith("http"): return image_path
+    
+    # Check if the link works
+    if image_path.startswith("http"):
+        if check_url_exists(image_path):
+            return image_path
+        else:
+            return "https://placehold.co/600x400/png?text=Updating+Soon"
+            
     return image_path
 
 def render_image(image_path, width=None):
@@ -282,6 +249,7 @@ with st.sidebar:
     prof = st.session_state.data.get('profile', {})
     
     if prof.get('image_url'):
+        # Check profile image as well
         img_src = get_img_src(prof.get('image_url'))
         st.markdown(f"""
             <div style="display: flex; justify-content: center; margin-bottom: 20px;">
@@ -297,6 +265,7 @@ with st.sidebar:
         st.session_state.selected_project = None
     
     st.markdown("---")
+    
     if not st.session_state.is_admin:
         with st.expander("🔒 Admin Access"):
             with st.form("admin_auth"):
@@ -392,7 +361,7 @@ if selected == "Home":
                 <div class="metric-label">EFFICIENCY</div>
             </div>
             ''', unsafe_allow_html=True)
-        
+    
     with c2: render_image(prof.get('image_url'), width=350)
 
 # --- PROJECTS ---
@@ -457,9 +426,25 @@ elif selected == "Projects":
             
             st.title(p.get('title'))
             st.caption(f"📂 {p.get('category')}")
+            
+            # --- UPDATED VIDEO/IMAGE RENDER WITH FALLBACK ---
             dash_img = p.get('dashboard_image') or p.get('image')
-            if dash_img and dash_img.endswith('.mp4'): st.video(dash_img)
-            else: st.image(get_img_src(dash_img), use_container_width=True)
+            
+            # Pre-check normalization for video links
+            normalized_url = dash_img
+            if normalized_url and "github.com" in normalized_url and "/blob/" in normalized_url:
+                normalized_url = normalized_url.replace("github.com", "raw.githubusercontent.com").replace("/blob/", "/")
+
+            if dash_img and dash_img.endswith('.mp4'): 
+                # Specifically check video link
+                if check_url_exists(normalized_url):
+                    st.video(normalized_url)
+                else:
+                    st.image("https://placehold.co/600x400/png?text=Updating+Soon", use_container_width=True)
+            else: 
+                # Use standard function for images
+                st.image(get_img_src(dash_img), use_container_width=True)
+            # ------------------------------------------------
             
             st.markdown("### 📝 Details")
             st.write(p.get('details', 'Description coming soon.'))
@@ -485,7 +470,6 @@ elif selected == "Projects":
         else:
             st.session_state.selected_project = None
             st.rerun()
-
     else:
         st.title("Projects")
         
@@ -560,6 +544,7 @@ elif selected == "Skills":
                 r=r_vals, theta=theta_vals, fill='toself', name='Skills',
                 line=dict(color='#3B82F6', width=2), marker=dict(color='#3B82F6')
             ))
+            
             # --- UPDATED LAYOUT: FIXED/STATIC CHART ---
             fig.update_layout(
                 dragmode=False,  # Disables dragging/panning
@@ -594,6 +579,7 @@ elif selected == "Experience":
     if st.session_state.is_admin:
         with st.expander("✏️ Manage Experience"):
             exp_list = st.session_state.data.get('experience', [])
+            
             with st.form("add_exp"):
                 st.subheader("Add New Job")
                 n_role = st.text_input("Role")
@@ -603,7 +589,7 @@ elif selected == "Experience":
                 if st.form_submit_button("Add Job"):
                     exp_list.insert(0, {"role": n_role, "company": n_comp, "date": n_date, "description": n_desc})
                     st.rerun()
-            
+
             st.markdown("---")
             st.subheader("Edit Existing")
             for i, job in enumerate(exp_list):
@@ -638,7 +624,6 @@ elif selected == "Contact":
 
     st.title("Contact")
     prof = st.session_state.data.get('profile', {})
-    
     c1, c2 = st.columns(2)
     for i, item in enumerate(prof.get('contact_info', [])):
         with (c1 if i % 2 == 0 else c2):
