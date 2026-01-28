@@ -9,7 +9,6 @@ import plotly.graph_objects as go
 # ==========================================
 # 1. CONFIGURATION & SETUP
 # ==========================================
-# Gets the current directory of this file so we can load data.json correctly
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_FILE = os.path.join(BASE_DIR, 'data.json')
 ADMIN_PASSWORD = "admin" 
@@ -19,40 +18,30 @@ st.set_page_config(layout="wide", page_title="Portfolio", page_icon="🧑‍💻
 # ==========================================
 # 2. MOBILE NOTIFICATION
 # ==========================================
-# Checks if screen is mobile (< 800px) and shows a warning toast.
 st.markdown("""
 <style>
     /* 1. The Toast Design */
     #mobile-toast {
-        visibility: hidden; /* Hidden by default */
+        visibility: hidden;
         min-width: 300px;
         max-width: 80%;
-        
-        /* DEFAULT (LIGHT MODE) - FORCE SOLID WHITE */
         background-color: #ffffff !important;
         color: #000000 !important;
-        
         text-align: center;
         border-radius: 12px;
         padding: 24px;
         position: fixed;
         z-index: 999999; 
-        
-        /* CENTER POSITIONING */
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        
         font-size: 18px;
         font-weight: bold;
         font-family: 'Segoe UI', sans-serif;
-        
-        /* Heavy Shadow for separation */
         box-shadow: 0 0 50px rgba(0,0,0,0.5);
         border: 2px solid #3B82F6;
     }
 
-    /* DARK MODE OVERRIDE - FORCE SOLID DARK GREY */
     @media (prefers-color-scheme: dark) {
         #mobile-toast {
             background-color: #262730 !important;
@@ -61,7 +50,6 @@ st.markdown("""
         }
     }
 
-    /* 2. The Mobile Detection & Animation Trigger */
     @media only screen and (max-width: 800px) {
         #mobile-toast {
             visibility: visible;
@@ -70,7 +58,6 @@ st.markdown("""
         }
     }
 
-    /* 3. The Animations */
     @-webkit-keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
     @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
     @-webkit-keyframes fadeout { from { opacity: 1; } to { opacity: 0; visibility: hidden;} }
@@ -87,21 +74,17 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 3. CUSTOM CSS (THEME AWARE)
+# 3. CUSTOM CSS (THEME AWARE & MOBILE RESPONSIVE)
 # ==========================================
-# This section controls the fonts, card styling, and specific alignments.
 st.markdown("""
 <style>
     /* --- SIDEBAR SPACING FIXES --- */
-    /* 1. Reduce the massive default top padding in the sidebar */
     section[data-testid="stSidebar"] div.block-container {
-        padding-top: 2rem !important; /* Was default ~6rem */
+        padding-top: 2rem !important;
         padding-bottom: 1rem !important;
     }
-
-    /* 2. Reduce the gap between sidebar elements (Menu, Line, Admin) */
     section[data-testid="stSidebar"] [data-testid="stVerticalBlock"] {
-        gap: 0.5rem !important; /* Was default 1rem */
+        gap: 0.5rem !important;
     }
 
     /* --- THEME ADAPTIVE COLORS --- */
@@ -126,20 +109,10 @@ st.markdown("""
         height: 100%;
     }
     
-    /* --- FIX: BLUE DROPDOWN OUTLINE (ENHANCEMENT 1) --- */
-    div[data-baseweb="select"] > div {
-        border-color: rgba(128, 128, 128, 0.2) !important;
-    }
-    div[data-baseweb="select"]:focus-within > div {
-        border-color: #3B82F6 !important; /* Blue color */
-        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important; /* Blue glow */
-    }
-
-    /* --- FIX: HIDE BLINKING CURSOR IN SELECTBOX --- */
-    div[data-baseweb="select"] input {
-        caret-color: transparent !important;
-        cursor: pointer !important;
-    }
+    /* FIXES */
+    div[data-baseweb="select"] > div { border-color: rgba(128, 128, 128, 0.2) !important; }
+    div[data-baseweb="select"]:focus-within > div { border-color: #3B82F6 !important; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important; }
+    div[data-baseweb="select"] input { caret-color: transparent !important; cursor: pointer !important; }
 
     /* 1. PROJECT CARD DESIGN */
     .project-card {
@@ -149,13 +122,8 @@ st.markdown("""
         padding: 20px;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         position: relative; 
-        display: flex;
-        flex-direction: column;
-        flex: 1;
-        height: 100%; 
-        min-height: 480px; 
-        padding-bottom: 70px; 
-        margin-bottom: 20px; 
+        display: flex; flex-direction: column; flex: 1; height: 100%; min-height: 480px; 
+        padding-bottom: 70px; margin-bottom: 20px; 
         animation: fadeInUp 0.6s ease-out;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
@@ -166,15 +134,9 @@ st.markdown("""
     }
 
     /* IMAGES */
-    .p-img-container { 
-        width: 100%; height: 180px; overflow: hidden; 
-        border-radius: 15px; 
-        margin-bottom: 15px; 
-        border: 1px solid rgba(128, 128, 128, 0.1); flex-shrink: 0; 
-    }
+    .p-img-container { width: 100%; height: 180px; overflow: hidden; border-radius: 15px; margin-bottom: 15px; border: 1px solid rgba(128, 128, 128, 0.1); flex-shrink: 0; }
     .p-img { width: 100%; height: 100%; object-fit: cover; }
     
-    /* OVERLAY */
     .p-cat-overlay {
         position: absolute; top: 30px; left: 30px;
         background-color: var(--background-color);
@@ -185,83 +147,64 @@ st.markdown("""
     }
 
     /* TEXT */
-    .p-title { 
-        font-size: 1.2rem; font-weight: 700; color: var(--text-color);
-        margin-bottom: 15px; line-height: 1.3; flex-grow: 0; 
-    }
+    .p-title { font-size: 1.2rem; font-weight: 700; color: var(--text-color); margin-bottom: 15px; line-height: 1.3; flex-grow: 0; }
     .p-details-container { flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
     
-    /* --- ALIGNMENT FIX (ENHANCEMENT 2) --- */
-    .p-row { 
-        display: flex;            /* Forces side-by-side */
-        align-items: flex-start; /* Aligns top */
-        margin-bottom: 10px; 
-    }
-    .p-label { 
-        min-width: 90px;         /* Increased slightly to prevent wrapping "Solution:" */
-        flex-shrink: 0; 
-        font-weight: 700; 
-        color: var(--text-color); 
-        font-size: 0.85rem;      /* ORIGINAL FONT SIZE KEPT */
-        opacity: 0.9; 
-    }
-    
-    .p-val { 
-        font-size: 0.85rem;      /* ORIGINAL FONT SIZE KEPT */
-        color: var(--text-color); 
-        line-height: 1.5; 
-        opacity: 0.8;
-        display: -webkit-box;
-        -webkit-line-clamp: 3; 
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        flex-grow: 1;            /* Fills remaining space */
-    }
+    .p-row { display: flex; align-items: flex-start; margin-bottom: 10px; }
+    .p-label { min-width: 90px; flex-shrink: 0; font-weight: 700; color: var(--text-color); font-size: 0.85rem; opacity: 0.9; }
+    .p-val { font-size: 0.85rem; color: var(--text-color); line-height: 1.5; opacity: 0.8; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; flex-grow: 1; }
 
     /* 2. BUTTON STYLING */
-    div[data-testid="column"] .stButton {
-        position: absolute !important; bottom: 20px !important; 
-        right: 20px !important; left: unset !important;        
-        width: auto !important; text-align: right !important; z-index: 10 !important;
-    }
-    div[data-testid="column"] .stButton button {
-        background: var(--background-color) !important; 
-        color: #2563EB !important;
-        border: 1px solid #2563EB !important; border-radius: 8px !important;
-        width: auto !important; font-size: 0.90rem !important;
-        font-weight: 600 !important; padding: 0.5rem 1.0rem !important;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
-        transition: all 0.2s ease !important; float: right !important; 
-    }
-    div[data-testid="column"] .stButton button:hover {
-        background: #2563EB !important; color: white !important;
-        transform: translateY(-2px) !important; box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2) !important;
-    }
+    div[data-testid="column"] .stButton { position: absolute !important; bottom: 20px !important; right: 20px !important; left: unset !important; width: auto !important; text-align: right !important; z-index: 10 !important; }
+    div[data-testid="column"] .stButton button { background: var(--background-color) !important; color: #2563EB !important; border: 1px solid #2563EB !important; border-radius: 8px !important; width: auto !important; font-size: 0.90rem !important; font-weight: 600 !important; padding: 0.5rem 1.0rem !important; box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important; transition: all 0.2s ease !important; float: right !important; }
+    div[data-testid="column"] .stButton button:hover { background: #2563EB !important; color: white !important; transform: translateY(-2px) !important; box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2) !important; }
 
     /* 3. DETAILED VIEW */
     .detail-row { display: flex; flex-direction: row; gap: 20px; width: 100%; margin-bottom: 20px; flex-wrap: wrap; animation: zoomIn 0.5s ease-out; }
     .detail-box { flex: 1; display: flex; flex-direction: column; padding: 20px; border-radius: 10px; min-width: 200px; }
     .box-title { font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; font-size: 1rem; color: var(--text-color); }
     .box-content { font-size: 0.95rem; line-height: 1.6; font-weight: 500; color: var(--text-color); opacity: 0.9; }
-    
-    /* Adaptive colors for Detail Boxes with tint */
     .d-blue { background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); }
     .d-green { background-color: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); }
     .d-yellow { background-color: rgba(234, 179, 8, 0.1); border: 1px solid rgba(234, 179, 8, 0.2); }
 
-    /* 4. METRIC CARDS */
+    /* 4. METRIC CARDS - DESKTOP DEFAULTS */
     .metric-card {
         background: var(--secondary-background-color); 
         border: 1px solid rgba(128, 128, 128, 0.2); 
         border-radius: 12px;
-        padding: 20px; text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-        animation: zoomIn 0.5s ease-out; transition: transform 0.3s ease, box-shadow 0.3s ease;
+        padding: 20px; 
+        text-align: center; 
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        animation: zoomIn 0.5s ease-out; 
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
         position: relative;
     }
     .metric-card:hover { transform: translateY(-5px); border-color: #3B82F6; }
+    
+    /* New class for the value text */
+    .metric-value {
+        font-size: 1.8rem; /* Desktop size */
+        font-weight: 800; 
+        color: #3B82F6;
+    }
     .metric-label { font-size: 0.85rem; color: var(--text-color); opacity: 0.7; }
     
+    /* --- MOBILE OPTIMIZATION (Overrides for phones) --- */
+    @media only screen and (max-width: 768px) {
+        .metric-card {
+            padding: 12px !important;      /* Reduced padding */
+        }
+        .metric-value {
+            font-size: 1.4rem !important;  /* Smaller font for numbers */
+        }
+        .metric-label {
+            font-size: 0.75rem !important; /* Smaller label font */
+        }
+        /* Make the Title text smaller on mobile too so it fits */
+        h1 { font-size: 2.2rem !important; } 
+    }
+
     /* --- TOOLTIP STYLES --- */
     .tooltip-text {
         visibility: hidden;
@@ -277,7 +220,6 @@ st.markdown("""
         opacity: 0; transition: opacity 0.3s, top 0.3s;
         font-size: 0.8rem; font-weight: 500; line-height: 1.5; pointer-events: none;
     }
-    
     .metric-card:hover .tooltip-text { visibility: visible; opacity: 1; top: 125%; }
 
     /* TIMELINE & SKILLS */
@@ -320,35 +262,23 @@ def load_data():
         with open(DATA_FILE, 'r', encoding='utf-8') as f: return json.load(f)
     except: return {}
 
-# --- LINK VALIDATOR WITH CACHE ---
 @st.cache_data(ttl=3600)
 def check_url_exists(url):
-    """
-    Checks if a URL is accessible via a HEAD request.
-    Cached for 1 hour to improve performance.
-    """
     try:
-        # Timeout set to 1.5s to avoid blocking UI for too long on bad links
         response = requests.head(url, timeout=1.5)
-        # Returns True if status code is 200-399
         return response.status_code < 400
     except:
         return False
 
 def get_img_src(image_path):
     if not image_path: return "https://placehold.co/600x400/png?text=No+Image"
-    
-    # Normalize GitHub blobs to raw
     if "github.com" in image_path and "/blob/" in image_path:
         image_path = image_path.replace("github.com", "raw.githubusercontent.com").replace("/blob/", "/")
-    
-    # Check if the link works
     if image_path.startswith("http"):
         if check_url_exists(image_path):
             return image_path
         else:
             return "https://placehold.co/600x400/png?text=Updating+Soon"
-            
     return image_path
 
 def render_image(image_path, width=None):
@@ -365,9 +295,7 @@ if 'is_admin' not in st.session_state: st.session_state.is_admin = False
 # --- SIDEBAR ---
 with st.sidebar:
     prof = st.session_state.data.get('profile', {})
-    
     if prof.get('image_url'):
-        # Check profile image as well
         img_src = get_img_src(prof.get('image_url'))
         st.markdown(f"""
             <div style="display: flex; justify-content: center; margin-bottom: 20px;">
@@ -382,7 +310,6 @@ with st.sidebar:
     if selected != "Projects":
         st.session_state.selected_project = None
     
-    # --- REPLACED SEPARATOR FOR COMPACT SPACING ---
     st.markdown("""
         <div style="margin-top: -15px; margin-bottom: 10px;">
             <hr style="border: 0; border-top: 1px solid rgba(128,128,128,0.2);">
@@ -439,33 +366,17 @@ if selected == "Home":
         
         mc1, mc2, mc3 = st.columns(3)
         
-        # --- ENHANCEMENT 3: FULL ORIGINAL TEXT RESTORED ---
-        tt_dash = """
-        <div style='margin-bottom:6px;'><b>Key Projects:</b></div>
-        • 10+ dashboards supporting data-driven decisions<br>
-        • Combines KPIs, trends, and variance analysis<br>
-        • Designed for both operational and leadership use
-        """
+        tt_dash = """<div style='margin-bottom:6px;'><b>Key Projects:</b></div>• 10+ dashboards supporting data-driven decisions<br>• Combines KPIs, trends, and variance analysis<br>• Designed for both operational and leadership use"""
+        tt_red = """<div style='margin-bottom:6px;'><b>Impact:</b></div>• Automated 15+ manual reports<br>• Saved 20 hrs/week for analysts<br>• Reduced error rate by 90%"""
+        tt_eff = """<div style='margin-bottom:6px;'><b>Gains:</b></div>• Faster decision making<br>• Real-time data access<br>• Improved cross-team colab"""
         
-        tt_red = """
-        <div style='margin-bottom:6px;'><b>Impact:</b></div>
-        • Automated 15+ manual reports<br>
-        • Saved 20 hrs/week for analysts<br>
-        • Reduced error rate by 90%
-        """
-        
-        tt_eff = """
-        <div style='margin-bottom:6px;'><b>Gains:</b></div>
-        • Faster decision making<br>
-        • Real-time data access<br>
-        • Improved cross-team colab
-        """
-        
+        # --- CHANGED: Uses CSS class 'metric-value' instead of inline styles ---
+        # --- This allows the Media Query in CSS to resize them for mobile ---
         with mc1: 
             st.markdown(f'''
             <div class="metric-card">
                 <div class="tooltip-text">{tt_dash}</div>
-                <div style="font-size:1.8rem; font-weight:800; color:#3B82F6;">{mets.get("dashboards","0")}</div>
+                <div class="metric-value">{mets.get("dashboards","0")}</div>
                 <div class="metric-label">DASHBOARDS</div>
             </div>
             ''', unsafe_allow_html=True)
@@ -474,7 +385,7 @@ if selected == "Home":
             st.markdown(f'''
             <div class="metric-card">
                 <div class="tooltip-text">{tt_red}</div>
-                <div style="font-size:1.8rem; font-weight:800; color:#3B82F6;">{mets.get("manual_reduction","0%")}</div>
+                <div class="metric-value">{mets.get("manual_reduction","0%")}</div>
                 <div class="metric-label">REDUCTION</div>
             </div>
             ''', unsafe_allow_html=True)
@@ -483,7 +394,7 @@ if selected == "Home":
             st.markdown(f'''
             <div class="metric-card">
                 <div class="tooltip-text">{tt_eff}</div>
-                <div style="font-size:1.8rem; font-weight:800; color:#3B82F6;">{mets.get("efficiency","0%")}</div>
+                <div class="metric-value">{mets.get("efficiency","0%")}</div>
                 <div class="metric-label">EFFICIENCY</div>
             </div>
             ''', unsafe_allow_html=True)
@@ -529,7 +440,6 @@ elif selected == "Projects":
                     proj['solution'] = st.text_area("Solution", proj.get('solution'))
                     proj['impact'] = st.text_area("Impact", proj.get('impact'))
                     proj['details'] = st.text_area("Details", proj.get('details'))
-                    
                     c1, c2 = st.columns(2)
                     with c1:
                         if st.form_submit_button("Update Project"):
@@ -555,24 +465,18 @@ elif selected == "Projects":
             st.title(p.get('title'))
             st.caption(f"📂 {p.get('category')}")
             
-            # --- UPDATED VIDEO/IMAGE RENDER WITH FALLBACK ---
             dash_img = p.get('dashboard_image') or p.get('image')
-            
-            # Pre-check normalization for video links
             normalized_url = dash_img
             if normalized_url and "github.com" in normalized_url and "/blob/" in normalized_url:
                 normalized_url = normalized_url.replace("github.com", "raw.githubusercontent.com").replace("/blob/", "/")
 
             if dash_img and dash_img.endswith('.mp4'): 
-                # Specifically check video link
                 if check_url_exists(normalized_url):
                     st.video(normalized_url)
                 else:
                     st.image("https://placehold.co/600x400/png?text=Updating+Soon", use_container_width=True)
             else: 
-                # Use standard function for images
                 st.image(get_img_src(dash_img), use_container_width=True)
-            # ------------------------------------------------
             
             st.markdown("### 📝 Details")
             st.write(p.get('details', 'Description coming soon.'))
@@ -600,10 +504,7 @@ elif selected == "Projects":
             st.rerun()
     else:
         st.title("Projects")
-        
-        # --- CATEGORY FILTER & SECTION ---
         categories = sorted(list(set([p.get('category', 'Other') for p in projects])))
-        
         c_filt, c_space = st.columns([1, 3])
         with c_filt:
             selected_cat_filter = st.selectbox("📂 Filter by Category", ["All Projects"] + categories)
@@ -615,9 +516,7 @@ elif selected == "Projects":
 
         for category in categories_to_show:
             cat_projects = [p for p in projects if p.get('category', 'Other') == category]
-            
-            if not cat_projects:
-                continue
+            if not cat_projects: continue
 
             st.markdown(f"### {category}")
             st.markdown("---")
@@ -627,7 +526,6 @@ elif selected == "Projects":
                 batch = cat_projects[i : i+2]
                 for j, p in enumerate(batch):
                     actual_idx = projects.index(p)
-                    
                     with cols[j]:
                         img_src = get_img_src(p.get('image', ''))
                         html_content = textwrap.dedent(f"""
@@ -662,33 +560,14 @@ elif selected == "Skills":
 
     st.title("Technical Skills")
     skills = st.session_state.data.get('skills', {})
-    
     if skills:
         c1, c2, c3 = st.columns([1, 2, 1])
         with c2:
             r_vals = list(skills.values())
             theta_vals = list(skills.keys())
-            
             fig = go.Figure()
-            fig.add_trace(go.Scatterpolar(
-                r=r_vals, theta=theta_vals, fill='toself', name='Skills',
-                line=dict(color='#3B82F6', width=2), marker=dict(color='#3B82F6')
-            ))
-            
-            # --- UPDATED LAYOUT: FIXED/STATIC CHART ---
-            fig.update_layout(
-                dragmode=False,  # Disables dragging/panning
-                polar=dict(
-                    radialaxis=dict(visible=True, range=[0, 100], showticklabels=False, ticks='', gridcolor='rgba(128,128,128,0.2)'),
-                    angularaxis=dict(showticklabels=True, gridcolor='rgba(128,128,128,0.2)'),
-                    gridshape='linear', 
-                    bgcolor='rgba(0,0,0,0)' 
-                ),
-                paper_bgcolor='rgba(0,0,0,0)',
-                plot_bgcolor='rgba(0,0,0,0)', 
-                showlegend=False, height=400, margin=dict(t=40, b=40, l=40, r=40)
-            )
-            # --- UPDATED CONFIG: HIDES MODEBAR ---
+            fig.add_trace(go.Scatterpolar(r=r_vals, theta=theta_vals, fill='toself', name='Skills', line=dict(color='#3B82F6', width=2), marker=dict(color='#3B82F6')))
+            fig.update_layout(dragmode=False, polar=dict(radialaxis=dict(visible=True, range=[0, 100], showticklabels=False, ticks='', gridcolor='rgba(128,128,128,0.2)'), angularaxis=dict(showticklabels=True, gridcolor='rgba(128,128,128,0.2)'), gridshape='linear', bgcolor='rgba(0,0,0,0)'), paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', showlegend=False, height=400, margin=dict(t=40, b=40, l=40, r=40))
             st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
 
     st.markdown("### Proficiency")
@@ -696,13 +575,7 @@ elif selected == "Skills":
     skill_items = list(skills.items())
     for i, (s, v) in enumerate(skill_items):
         with s_cols[i % 4]:
-            st.markdown(f"""
-            <div class="skill-metric">
-                <b>{s}</b>
-                <div style="color:#3B82F6; font-size:1.2rem; font-weight:800;">{v}%</div>
-                <progress value="{v}" max="100" style="width:100%; height:8px; border-radius:5px;"></progress>
-            </div>
-            """, unsafe_allow_html=True)
+            st.markdown(f"""<div class="skill-metric"><b>{s}</b><div style="color:#3B82F6; font-size:1.2rem; font-weight:800;">{v}%</div><progress value="{v}" max="100" style="width:100%; height:8px; border-radius:5px;"></progress></div>""", unsafe_allow_html=True)
 
 # ==========================================
 # 9. PAGE: EXPERIENCE
@@ -711,7 +584,6 @@ elif selected == "Experience":
     if st.session_state.is_admin:
         with st.expander("✏️ Manage Experience"):
             exp_list = st.session_state.data.get('experience', [])
-            
             with st.form("add_exp"):
                 st.subheader("Add New Job")
                 n_role = st.text_input("Role")
@@ -721,7 +593,6 @@ elif selected == "Experience":
                 if st.form_submit_button("Add Job"):
                     exp_list.insert(0, {"role": n_role, "company": n_comp, "date": n_date, "description": n_desc})
                     st.rerun()
-
             st.markdown("---")
             st.subheader("Edit Existing")
             for i, job in enumerate(exp_list):
@@ -736,13 +607,7 @@ elif selected == "Experience":
 
     st.title("Experience")
     for job in st.session_state.data.get('experience', []):
-        st.markdown(f"""
-        <div class="timeline-card">
-            <div style="font-weight:bold; color:var(--text-color); font-size:1.1rem;">{job.get("role")} @ {job.get("company")}</div>
-            <small style="color:var(--text-color); opacity:0.7;">{job.get("date")}</small>
-            <div class="timeline-desc" style="white-space:pre-line; margin-top:10px; line-height:1.6; font-size:0.95rem;">{job.get("description")}</div>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown(f"""<div class="timeline-card"><div style="font-weight:bold; color:var(--text-color); font-size:1.1rem;">{job.get("role")} @ {job.get("company")}</div><small style="color:var(--text-color); opacity:0.7;">{job.get("date")}</small><div class="timeline-desc" style="white-space:pre-line; margin-top:10px; line-height:1.6; font-size:0.95rem;">{job.get("description")}</div></div>""", unsafe_allow_html=True)
 
 # ==========================================
 # 10. PAGE: CONTACT
