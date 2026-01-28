@@ -20,7 +20,6 @@ st.set_page_config(layout="wide", page_title="Portfolio", page_icon="🧑‍💻
 # ==========================================
 st.markdown("""
 <style>
-    /* 1. The Toast Design */
     #mobile-toast {
         visibility: hidden;
         min-width: 300px;
@@ -41,7 +40,6 @@ st.markdown("""
         box-shadow: 0 0 50px rgba(0,0,0,0.5);
         border: 2px solid #3B82F6;
     }
-
     @media (prefers-color-scheme: dark) {
         #mobile-toast {
             background-color: #262730 !important;
@@ -49,7 +47,6 @@ st.markdown("""
             box-shadow: 0 0 50px rgba(0,0,0,0.8);
         }
     }
-
     @media only screen and (max-width: 800px) {
         #mobile-toast {
             visibility: visible;
@@ -57,7 +54,6 @@ st.markdown("""
             animation: fadein 0.5s, fadeout 0.5s 4.5s forwards;
         }
     }
-
     @-webkit-keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
     @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
     @-webkit-keyframes fadeout { from { opacity: 1; } to { opacity: 0; visibility: hidden;} }
@@ -74,7 +70,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 3. CUSTOM CSS (THEME AWARE & MOBILE RESPONSIVE)
+# 3. CUSTOM CSS (RESPONSIVE FIXES)
 # ==========================================
 st.markdown("""
 <style>
@@ -102,12 +98,7 @@ st.markdown("""
         to { opacity: 1; transform: scale3d(1, 1, 1); }
     }
 
-    /* 0. COLUMN SETUP */
-    [data-testid="column"] {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-    }
+    [data-testid="column"] { display: flex; flex-direction: column; height: 100%; }
     
     /* FIXES */
     div[data-baseweb="select"] > div { border-color: rgba(128, 128, 128, 0.2) !important; }
@@ -133,7 +124,6 @@ st.markdown("""
         border-color: #3B82F6;
     }
 
-    /* IMAGES */
     .p-img-container { width: 100%; height: 180px; overflow: hidden; border-radius: 15px; margin-bottom: 15px; border: 1px solid rgba(128, 128, 128, 0.1); flex-shrink: 0; }
     .p-img { width: 100%; height: 100%; object-fit: cover; }
     
@@ -146,7 +136,6 @@ st.markdown("""
         border: 1px solid rgba(128, 128, 128, 0.2);
     }
 
-    /* TEXT */
     .p-title { font-size: 1.2rem; font-weight: 700; color: var(--text-color); margin-bottom: 15px; line-height: 1.3; flex-grow: 0; }
     .p-details-container { flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
     
@@ -168,7 +157,7 @@ st.markdown("""
     .d-green { background-color: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); }
     .d-yellow { background-color: rgba(234, 179, 8, 0.1); border: 1px solid rgba(234, 179, 8, 0.2); }
 
-    /* 4. METRIC CARDS - DESKTOP DEFAULTS */
+    /* 4. METRIC CARDS - DESKTOP DEFAULTS (Large Screens > 1150px) */
     .metric-card {
         background: var(--secondary-background-color); 
         border: 1px solid rgba(128, 128, 128, 0.2); 
@@ -182,30 +171,40 @@ st.markdown("""
     }
     .metric-card:hover { transform: translateY(-5px); border-color: #3B82F6; }
     
-    /* New class for the value text */
     .metric-value {
-        font-size: 1.8rem; /* Desktop size */
+        font-size: 1.8rem; /* Large Desktop size */
         font-weight: 800; 
         color: #3B82F6;
     }
     .metric-label { font-size: 0.85rem; color: var(--text-color); opacity: 0.7; }
     
-    /* --- MOBILE OPTIMIZATION (Overrides for phones) --- */
+    /* === FIX 1: MOBILE OPTIMIZATION (Vertical Layout < 768px) === */
     @media only screen and (max-width: 768px) {
-        .metric-card {
-            padding: 12px !important;      /* Reduced padding */
-        }
-        .metric-value {
-            font-size: 1.4rem !important;  /* Smaller font for numbers */
-        }
-        .metric-label {
-            font-size: 0.75rem !important; /* Smaller label font */
-        }
-        /* Make the Title text smaller on mobile too so it fits */
+        .metric-card { padding: 12px !important; }
+        .metric-value { font-size: 1.4rem !important; }
+        .metric-label { font-size: 0.75rem !important; }
         h1 { font-size: 2.2rem !important; } 
     }
 
-    /* --- TOOLTIP STYLES --- */
+    /* === FIX 2: DESKTOP-MODE-ON-MOBILE / TABLET (769px - 1150px) === */
+    /* This targets 'Desktop Mode' on phones which is usually ~980px wide. */
+    /* We force a compact layout here so text doesn't break. */
+    @media only screen and (min-width: 769px) and (max-width: 1150px) {
+        .metric-card {
+            padding: 10px 5px !important; /* Extremely tight padding to maximize space */
+        }
+        .metric-value {
+            font-size: 1.4rem !important; /* Smaller numbers */
+        }
+        .metric-label {
+            font-size: 0.70rem !important; /* Smaller text */
+            white-space: nowrap !important; /* Forces text to stay on one line */
+            overflow: hidden !important;
+            text-overflow: clip !important;
+        }
+    }
+
+    /* TOOLTIP */
     .tooltip-text {
         visibility: hidden;
         width: auto; min-width: 300px; white-space: nowrap; 
@@ -370,8 +369,6 @@ if selected == "Home":
         tt_red = """<div style='margin-bottom:6px;'><b>Impact:</b></div>• Automated 15+ manual reports<br>• Saved 20 hrs/week for analysts<br>• Reduced error rate by 90%"""
         tt_eff = """<div style='margin-bottom:6px;'><b>Gains:</b></div>• Faster decision making<br>• Real-time data access<br>• Improved cross-team colab"""
         
-        # --- CHANGED: Uses CSS class 'metric-value' instead of inline styles ---
-        # --- This allows the Media Query in CSS to resize them for mobile ---
         with mc1: 
             st.markdown(f'''
             <div class="metric-card">
