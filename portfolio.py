@@ -15,15 +15,16 @@ st.set_page_config(layout="wide", page_title="Portfolio", page_icon="✨")
 # --- CUSTOM CSS (THEME AWARE & FORCED DESKTOP) ---
 st.markdown("""
 <style>
-    /* --- FORCE DESKTOP LAYOUT ON MOBILE --- */
-    /* This forces the app to think it is on a wide screen, 
-       preventing columns from stacking vertically. */
+    /* =============================================
+       FORCE DESKTOP LAYOUT ON MOBILE
+       =============================================
+       The following rules force the app to maintain a 1200px width.
+       This prevents columns from stacking on top of each other on phones.
+    */
     .block-container {
-        min-width: 1000px !important; /* Adjust this value if needed (e.g., 1200px) */
+        min-width: 1200px !important; 
         overflow-x: auto !important;
     }
-    
-    /* Ensure the main app container allows scrolling */
     .stApp {
         overflow-x: auto !important;
     }
@@ -51,7 +52,6 @@ st.markdown("""
     }
     
     /* --- FIX: HIDE BLINKING CURSOR IN SELECTBOX --- */
-    /* This makes the caret transparent so it doesn't blink after selection */
     div[data-baseweb="select"] input {
         caret-color: transparent !important;
         cursor: pointer !important;
