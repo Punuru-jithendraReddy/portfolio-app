@@ -13,29 +13,39 @@ ADMIN_PASSWORD = "admin"
 
 st.set_page_config(layout="wide", page_title="Portfolio", page_icon="✨")
 
-# --- MOBILE NOTIFICATION (CSS METHOD - 100% RELIABLE) ---
-# This uses CSS @media queries to detect mobile. 
-# It works even inside Hugging Face iframes.
+# --- MOBILE NOTIFICATION (UPDATED: CENTERED & HIGH CONTRAST) ---
 st.markdown("""
 <style>
     /* 1. The Toast Design */
     #mobile-toast {
         visibility: hidden; /* Hidden by default */
-        min-width: 250px;
-        background-color: #262730;
-        color: #fff;
+        min-width: 300px;
+        max-width: 80%;
+        
+        /* THEME ADAPTIVE HIGH CONTRAST COLORS */
+        /* Background = Text Color (White in Dark Mode, Black in Light Mode) */
+        background-color: var(--text-color); 
+        /* Text = Background Color (Dark in Dark Mode, Light in Light Mode) */
+        color: var(--background-color);
+        
         text-align: center;
         border-radius: 12px;
-        padding: 16px;
+        padding: 24px;
         position: fixed;
-        z-index: 999999; /* Super high to sit on top of everything */
+        z-index: 999999; 
+        
+        /* CENTER POSITIONING */
+        top: 50%;
         left: 50%;
-        bottom: 30px;
-        transform: translateX(-50%);
-        font-size: 16px;
+        transform: translate(-50%, -50%);
+        
+        font-size: 18px;
+        font-weight: bold;
         font-family: 'Segoe UI', sans-serif;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        border: 1px solid #3B82F6;
+        
+        /* Highlighting Shadow */
+        box-shadow: 0 0 40px rgba(0,0,0,0.6);
+        border: 2px solid #3B82F6;
     }
 
     /* 2. The Mobile Detection & Animation Trigger */
@@ -43,37 +53,40 @@ st.markdown("""
     @media only screen and (max-width: 800px) {
         #mobile-toast {
             visibility: visible;
-            /* Fade in, stay there, then fade out. Total 4 seconds */
-            -webkit-animation: fadein 0.5s, fadeout 0.5s 3.5s forwards;
-            animation: fadein 0.5s, fadeout 0.5s 3.5s forwards;
+            /* Fade in, stay 4s, Fade out */
+            -webkit-animation: fadein 0.5s, fadeout 0.5s 4.5s forwards;
+            animation: fadein 0.5s, fadeout 0.5s 4.5s forwards;
         }
     }
 
     /* 3. The Animations */
     @-webkit-keyframes fadein {
-        from {bottom: 0; opacity: 0;} 
-        to {bottom: 30px; opacity: 1;}
+        from { opacity: 0; } 
+        to { opacity: 1; }
     }
 
     @keyframes fadein {
-        from {bottom: 0; opacity: 0;}
-        to {bottom: 30px; opacity: 1;}
+        from { opacity: 0; }
+        to { opacity: 1; }
     }
 
     @-webkit-keyframes fadeout {
-        from {bottom: 30px; opacity: 1;} 
-        to {bottom: 0; opacity: 0; visibility: hidden;}
+        from { opacity: 1; } 
+        to { opacity: 0; visibility: hidden;}
     }
 
     @keyframes fadeout {
-        from {bottom: 30px; opacity: 1;}
-        to {bottom: 0; opacity: 0; visibility: hidden;}
+        from { opacity: 1; }
+        to { opacity: 0; visibility: hidden;}
     }
 </style>
 
 <div id="mobile-toast">
-     <b>You are using Mobile </b><br>
-    Please Enable Desktop mode for the best experience.
+    <div style="font-size: 30px; margin-bottom: 10px;">📱</div>
+     You are using Mobile View<br>
+     <span style="font-size: 14px; font-weight: normal; opacity: 0.8;">
+     For the best experience, please switch to Desktop or enable "Desktop Mode".
+     </span>
 </div>
 """, unsafe_allow_html=True)
 
@@ -211,7 +224,7 @@ st.markdown("""
     }
     .metric-card:hover { transform: translateY(-5px); border-color: #3B82F6; }
     .metric-label { font-size: 0.85rem; color: var(--text-color); opacity: 0.7; }
-   
+    
     /* --- TOOLTIP STYLES --- */
     .tooltip-text {
         visibility: hidden;
@@ -692,4 +705,3 @@ elif selected == "Contact":
     for i, item in enumerate(prof.get('contact_info', [])):
         with (c1 if i % 2 == 0 else c2):
             st.markdown(f'<a href="{item.get("value")}" target="_blank" style="text-decoration:none;"><div class="metric-card"><img src="{item.get("icon")}" width="40"><br><b style="color:var(--text-color)">{item.get("label")}</b></div></a>', unsafe_allow_html=True)
-
