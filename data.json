@@ -106,8 +106,8 @@
         {
           "title": "Hospital Risk Analysis Dashboard",
           "category": "Medical",
-          "image": "",
-          "dashboard_image": "",
+          "image": "https://images.unsplash.com/photo-1586773860418-d37222d8fce3?auto=format&fit=crop&w=800&q=80",
+          "dashboard_image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/HospitalRiskAnalysis.mp4",
           "problem": "Healthcare risk data was fragmented, making it difficult to identify high-risk patients and operational issues.",
           "solution": "An interactive Power BI dashboard that consolidates clinical and operational risk indicators into a single view.",
           "impact": "Improved risk visibility, faster decision-making, and better prioritization of patient care and resources.",
@@ -136,6 +136,7 @@
  
     ]
 }
+
 
 
 
