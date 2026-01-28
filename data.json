@@ -25,7 +25,7 @@
         ]
     },
     "metrics": {
-        "dashboards": "8+",
+        "dashboards": "10+",
         "manual_reduction": "40%",
         "efficiency": "30%"
     },
@@ -43,79 +43,96 @@
             "role": "Software Engineer (BI & Automation)",
             "company": "Svarapps Technologies Pvt Ltd",
             "date": "Sep 2024 - Present",
-            "description": "\u2022 Delivered 8+ high-impact Power BI dashboards across Finance, Sales, Logistics, and Operations, improving management decision-making and financial visibility.\n\u2022 Built and optimized end-to-end data pipelines (Oracle -> SharePoint -> Power BI) using Python and automation, reducing manual effort and improving data reliability.\n\u2022 Enhanced reporting performance by optimizing data models and refresh logic, achieving faster refresh times and more responsive dashboards.\n\u2022 Developed automation and AI solutions using Copilot Studio, Logic Apps, and AI Builder to enable self-service insights, automate invoice processing, and streamline file management.\n\u2022 Drove cost optimization by introducing Excel-based reporting alternatives, reducing dependency on premium BI licensing without sacrificing insights."
+            "description": "• Delivered 8+ high-impact Power BI dashboards across Finance, Sales, Logistics, and Operations, improving management decision-making and financial visibility.\n• Built and optimized end-to-end data pipelines (Oracle -> SharePoint -> Power BI) using Python and automation, reducing manual effort and improving data reliability.\n• Enhanced reporting performance by optimizing data models and refresh logic, achieving faster refresh times and more responsive dashboards.\n• Developed automation and AI solutions using Copilot Studio, Logic Apps, and AI Builder to enable self-service insights, automate invoice processing, and streamline file management.\n• Drove cost optimization by introducing Excel-based reporting alternatives, reducing dependency on premium BI licensing without sacrificing insights."
         },
         {
             "role": "Data Analyst Intern",
             "company": "AI Varient",
-            "date": "Jan 2023 - Jan 2024",
-            "description": "\u2022 Generated Reports and Dashboards using Power-Bi Desktop, Tableau, and Advanced Excel.\n\u2022 Constructed tabular and multidimensional data models.\n\u2022 Created compelling data visualizations from live & extract data sources.\n\u2022 Processed and shaped data using Excel, MySQL and advanced extraction techniques.\n\u2022 Completed two projects during a 6-month internship, demonstrating proficiency in data analytics and visualization."
+            "date": "Nov 2023 - Apr 2024",
+            "description": "• Generated Reports and Dashboards using Power-Bi Desktop, Tableau, and Advanced Excel.\n• Constructed tabular and multidimensional data models.\n• Created compelling data visualizations from live & extract data sources.\n• Processed and shaped data using Excel, MySQL and advanced extraction techniques.\n• Completed two projects during a 6-month internship, demonstrating proficiency in data analytics and visualization."
         }
     ],
     "projects": [
-  {
-    "title": "Open Sales Order & Pipeline Analytics",
-    "category": "Sales",
-    "image": "https://i.pinimg.com/1200x/43/54/ad/4354ad598883f576ccc2c3bda1eab558.jpg?auto=format&fit=crop&w=800&h=600&q=80",
-    "dashboard_image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/OpensalesOrder.png",
-    "problem": "Limited visibility into open sales orders obscures true pipeline health.",
-    "solution": "Delivers a real-time, consolidated view of open orders with trend insights.",
-    "impact": "Enables clearer pipeline tracking and faster, data-driven sales decisions.",
-    "details": "This Open Sales Order analytics solution provides a real-time, consolidated view of open sales performance across customers, regions, and sales ownership. It enables clear visibility into order value, volume, pricing, and status, while supporting year-over-year trend analysis to identify demand patterns and seasonality.\n\nThe solution demonstrates strong capability in business-aligned KPI definition, dynamic, filter-driven analysis, and insight-focused reporting, supporting faster and more informed decision-making for sales and leadership teams."
-  },
-  {
-    "title": "Performance Leaderboard",
-    "category": "Sales",
-    "image": "https://i.pinimg.com/1200x/9a/ee/10/9aee10159bcc70f8912713c7933b86b6.jpg?auto=format&fit=crop&w=800&h=600&q=80",
-    "dashboard_image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/SPR.mp4",
-    "problem": "Relying on intuition to assess performance caused leaders to overlook top talent.",
-    "solution": "Automated rankings and trend insights to recognize high performers instantly.",
-    "impact": "Data-driven performance reviews without manual reporting.",
-    "details": "This dashboard delivers a holistic view of sales performance and revenue trends across time, regions, products, and ownership. It enables stakeholders to track sales growth, contribution patterns, and performance drivers through interactive comparisons and drill-down analysis.\n\nThe solution highlights the ability to structure complex sales data into meaningful KPIs, enable multi-dimensional analysis, and present insights in a way that supports strategic planning, performance monitoring, and informed business decisions."
-  },
-  {
-    "title": "Time-Intelligent Sales Benchmarking",
-    "category": "Sales",
-    "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=900&h=600&q=80",
-    "dashboard_image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/AdvancePerformanceAnalytics.mp4",
-    "problem": "Current-month performance lacks historical context for meaningful evaluation.",
-    "solution": "Compares current sales, profit, and volume against rolling historical averages.",
-    "impact": "Enables clearer trend detection and more confident performance decisions.",
-    "details": "This dashboard enables comparative performance analysis by evaluating current month sales, profit, and volume against rolling 3-, 6-, 12-, and 24-month averages. This approach helps identify short-term momentum, long-term trends, and performance deviations with clarity.\n\nThe solution demonstrates the ability to deliver time-intelligent analytics, support trend benchmarking, and provide context-driven insights that improve sales monitoring, forecasting accuracy, and data-driven decision-making."
-  },
-  {
-    "title": "Period-Based Sales Performance Comparison",
-    "category": "Sales",
-    "image": "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&w=900&h=600&q=80",
-    "dashboard_image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/PeriodBasedSales.mp4",
-    "problem": "Sales performance is difficult to interpret without clear comparison across time periods.",
-    "solution": "Displays previous, current, and next period sales metrics dynamically based on the selected period.",
-    "impact": "Enables quick period-over-period analysis and better short-term planning decisions.",
-    "details": "This dashboard provides a dynamic, period-driven sales comparison view by displaying previous, current, and next period values across all key sales metrics based on a user-selected timeframe. It allows users to seamlessly evaluate performance shifts, identify momentum changes, and anticipate near-term outcomes.\n\nThe solution demonstrates strong use of time intelligence and dynamic calculations, enabling consistent period-over-period analysis that improves sales monitoring, planning accuracy, and data-driven decision-making."
-  },
-  {
-  "title": "Flat File Comparison Tool",
-  "category": "Tools",
-  "image": "https://images.unsplash.com/photo-1587620962725-abab7fe55159?auto=format&fit=crop&w=800&q=80",
-  "dashboard_image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/FFCT.mp4",
-  "problem": "Manual validation of large Excel and CSV files is time-consuming and error-prone.",
-  "solution": "A browser-based Python Streamlit application for reliable Source vs Target flat-file comparison.",
-  "impact": "Enables fast, accurate validation of 100k+ row datasets with audit-ready Excel outputs.",
-  "details": "The Flat File Comparison Tool is a web-hosted data comparison application built using Python and Streamlit, designed to compare large Excel and CSV files directly from the browser without any local installation, setup, or technical configuration. It is optimized for business users, data analysts, auditors, and engineers who require reliable file-level and data-level comparison with clear diagnostics and structured outputs.\n\nThe tool supports Excel (.xlsx, .xls) and CSV (.csv) files and allows users to upload Source and Target files, dynamically select sheets, configure header row positions, and choose single or multiple business key columns. It includes advanced normalization features such as case-insensitive column matching, case-insensitive data comparison, optional whitespace trimming, and automatic handling of dates, numeric formats, and null values.\n\nComparison results include match percentage calculation, row-level classification (present in both files, missing in target, newly added in target), schema difference detection, and value-level mismatch identification. Intelligent diagnostics provide root-cause analysis, ranked mismatch impact, sample value inspection, and automated recommendations to improve match accuracy.\n\nAfter execution, the tool generates a downloadable, business-friendly Excel report containing an Executive Summary, Column Names comparison, Row Comparison, Unique Values analysis, and Summary Statistics. All files are processed securely in-memory per session, with no permanent storage or external system integration, ensuring data privacy and session-level isolation.\n\nThe tool is ideal for data migration validation, periodic reconciliation, finance and operations audits, schema drift detection, regression testing, and quality assurance for reporting datasets. Developed and maintained by Jithendra Reddy, Software Engineer – Data & Automation."
+        {
+            "title": "Open Sales Order & Pipeline Analytics",
+            "category": "Sales",
+            "image": "https://i.pinimg.com/1200x/43/54/ad/4354ad598883f576ccc2c3bda1eab558.jpg?auto=format&fit=crop&w=800&h=600&q=80",
+            "dashboard_image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/Opensales.mp4",
+            "problem": "Limited visibility into open sales orders obscures true pipeline health.",
+            "solution": "Delivers a real-time, consolidated view of open orders with trend insights.",
+            "impact": "Enables clearer pipeline tracking and faster, data-driven sales decisions.",
+            "details": "This Open Sales Order analytics solution provides a real-time, consolidated view of open sales performance across customers, regions, and sales ownership. It enables clear visibility into order value, volume, pricing, and status, while supporting year-over-year trend analysis to identify demand patterns and seasonality.\n\nThe solution demonstrates strong capability in business-aligned KPI definition, dynamic, filter-driven analysis, and insight-focused reporting, supporting faster and more informed decision-making for sales and leadership teams."
+        },
+        {
+            "title": "Performance Leaderboard",
+            "category": "Sales",
+            "image": "https://i.pinimg.com/1200x/9a/ee/10/9aee10159bcc70f8912713c7933b86b6.jpg?auto=format&fit=crop&w=800&h=600&q=80",
+            "dashboard_image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/SPR.mp4",
+            "problem": "Relying on intuition to assess performance caused leaders to overlook top talent.",
+            "solution": "Automated rankings and trend insights to recognize high performers instantly.",
+            "impact": "Data-driven performance reviews without manual reporting.",
+            "details": "This dashboard delivers a holistic view of sales performance and revenue trends across time, regions, products, and ownership. It enables stakeholders to track sales growth, contribution patterns, and performance drivers through interactive comparisons and drill-down analysis.\n\nThe solution highlights the ability to structure complex sales data into meaningful KPIs, enable multi-dimensional analysis, and present insights in a way that supports strategic planning, performance monitoring, and informed business decisions."
+        },
+        {
+            "title": "Time-Intelligent Sales Benchmarking",
+            "category": "Sales",
+            "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=900&h=600&q=80",
+            "dashboard_image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/AdvancePerformanceAnalytics.mp4",
+            "problem": "Current-month performance lacks historical context for meaningful evaluation.",
+            "solution": "Compares current sales, profit, and volume against rolling historical averages.",
+            "impact": "Enables clearer trend detection and more confident performance decisions.",
+            "details": "This dashboard enables comparative performance analysis by evaluating current month sales, profit, and volume against rolling 3-, 6-, 12-, and 24-month averages. This approach helps identify short-term momentum, long-term trends, and performance deviations with clarity.\n\nThe solution demonstrates the ability to deliver time-intelligent analytics, support trend benchmarking, and provide context-driven insights that improve sales monitoring, forecasting accuracy, and data-driven decision-making."
+        },
+        {
+            "title": "Period-Based Sales Performance Comparison",
+            "category": "Sales",
+            "image": "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&w=900&h=600&q=80",
+            "dashboard_image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/PeriodBasedSales.mp4",
+            "problem": "Sales performance is difficult to interpret without clear comparison across time periods.",
+            "solution": "Displays previous, current, and next period sales metrics dynamically based on the selected period.",
+            "impact": "Enables quick period-over-period analysis and better short-term planning decisions.",
+            "details": "This dashboard provides a dynamic, period-driven sales comparison view by displaying previous, current, and next period values across all key sales metrics based on a user-selected timeframe. It allows users to seamlessly evaluate performance shifts, identify momentum changes, and anticipate near-term outcomes.\n\nThe solution demonstrates strong use of time intelligence and dynamic calculations, enabling consistent period-over-period analysis that improves sales monitoring, planning accuracy, and data-driven decision-making."
+        },
+        {
+            "title": "Budget vs Actuals Analytics Dashboard",
+            "category": "Finance",
+            "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80",
+            "dashboard_image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/BudgetVsActuals.mp4",
+            "problem": "Budget and actual data were spread across multiple systems, making reconciliation slow and inconsistent.",
+            "solution": "A unified Power BI dashboard combining Budget, SPR, Open Sales, and Inventory data for accurate variance analysis.",
+            "impact": "Enabled faster financial insights, reduced manual reconciliation, and improved budget control .",
+            "details": "The Budget vs Actuals Dashboard consolidates budgeted values and actual performance from SPR, Open Sales, and Inventory into a single Power BI model. It standardizes business unit mappings, resolves source-level inconsistencies, and provides clear variance analysis across time periods. The dashboard supports dynamic comparisons, KPI tracking, and drill-down analysis, helping finance and business stakeholders monitor performance, identify gaps, and support informed decision-making. Developed and maintained by Jithendra Reddy, Software Engineer – Data & Automation." 
+        },
+        {
+          "title": "Hospital Risk Analysis Dashboard",
+          "category": "Medical",
+          "image": "https://images.unsplash.com/photo-1586773860418-d37222d8fce3?auto=format&fit=crop&w=800&q=80",
+          "dashboard_image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/HospitalRiskAnalysis.mp4",
+          "problem": "Healthcare risk data was fragmented, making it difficult to identify high-risk patients and operational issues.",
+          "solution": "An interactive Power BI dashboard that consolidates clinical and operational risk indicators into a single view.",
+          "impact": "Improved risk visibility, faster decision-making, and better prioritization of patient care and resources.",
+          "details": "The Hospital Risk Analysis Dashboard provides a unified view of patient risk, operational metrics, and key indicators using Power BI. It enables users to monitor high-risk cases, analyze trends, and drill down into contributing factors across departments and time periods. Designed for healthcare analysts and management, the dashboard supports proactive risk identification and data-driven decision-making. Developed and maintained by Jithendra Reddy, Software Engineer – Data & Automation."
+        },
+        {
+          "title": "Hospital Quality Analysis Dashboard",
+          "category": "Medical",
+          "image": "https://i.pinimg.com/1200x/68/61/5e/68615e2319cab398d47f19bd58e0035e.jpg?auto=format&fit=crop&w=800&q=80",
+          "dashboard_image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/HospitalQualityAnalysis.mp4",
+          "problem": "Quality performance metrics were scattered across reports, limiting visibility into care outcomes and service quality.",
+          "solution": "A centralized Power BI dashboard to track and analyze hospital quality indicators in one place.",
+          "impact": "Enhanced quality monitoring, quicker insights, and better support for continuous improvement initiatives.",
+          "details": "The Hospital Quality Analysis Dashboard delivers a consolidated view of healthcare quality metrics using Power BI. It helps stakeholders monitor performance trends, compare key indicators across time and departments, and identify areas requiring improvement. The dashboard is designed for healthcare management and analysts to support data-driven quality assessments and reporting. Developed and maintained by Jithendra Reddy, Software Engineer – Data & Automation."
+        },
+        {
+            "title": "Flat File Comparison Tool",
+            "category": "Tools",
+            "image": "https://images.unsplash.com/photo-1587620962725-abab7fe55159?auto=format&fit=crop&w=800&q=80",
+            "dashboard_image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/FFCT.mp4",
+            "problem": "Manual validation of large Excel and CSV files is time-consuming and error-prone.",
+            "solution": "A browser-based Python Streamlit application for reliable Source vs Target flat-file comparison.",
+            "impact": "Enables fast, accurate validation of 100k+ row datasets with audit-ready Excel outputs.",
+            "details": "The Flat File Comparison Tool is a web-hosted data comparison application built using Python and Streamlit, designed to compare large Excel and CSV files directly from the browser without any local installation, setup, or technical configuration. It is optimized for business users, data analysts, auditors, and engineers who require reliable file-level and data-level comparison with clear diagnostics and structured outputs.\n\nThe tool supports Excel (.xlsx, .xls) and CSV (.csv) files and allows users to upload Source and Target files, dynamically select sheets, configure header row positions, and choose single or multiple business key columns. It includes advanced normalization features such as case-insensitive column matching, case-insensitive data comparison, optional whitespace trimming, and automatic handling of dates, numeric formats, and null values.\n\nComparison results include match percentage calculation, row-level classification (present in both files, missing in target, newly added in target), schema difference detection, and value-level mismatch identification. Intelligent diagnostics provide root-cause analysis, ranked mismatch impact, sample value inspection, and automated recommendations to improve match accuracy.\n\nAfter execution, the tool generates a downloadable, business-friendly Excel report containing an Executive Summary, Column Names comparison, Row Comparison, Unique Values analysis, and Summary Statistics. All files are processed securely in-memory per session, with no permanent storage or external system integration, ensuring data privacy and session-level isolation.\n\nThe tool is ideal for data migration validation, periodic reconciliation, finance and operations audits, schema drift detection, regression testing, and quality assurance for reporting datasets. Developed and maintained by Jithendra Reddy, Software Engineer – Data & Automation."
+        }
+ 
+    ]
 }
-
-]
-  
-}
-
-
-
-
-
-
-
-
-
-
-
-
