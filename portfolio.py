@@ -14,7 +14,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_FILE = os.path.join(BASE_DIR, 'data.json')
 RESUME_FILE = os.path.join(BASE_DIR, 'resume.pdf') # Place resume.pdf in the same folder
 ADMIN_PASSWORD = "admin" 
-CONTACT_EMAIL = "your-email@example.com" # <--- UPDATE THIS TO RECEIVE EMAILS
+CONTACT_EMAIL = "jithendrareddypunuru@gmail.com" # <--- UPDATE THIS TO RECEIVE EMAILS
 
 st.set_page_config(layout="wide", page_title="Portfolio", page_icon="🧑‍💻")
 
@@ -705,3 +705,4 @@ elif selected == "Contact":
         prof = st.session_state.data.get('profile', {})
         for item in prof.get('contact_info', []):
             st.markdown(f'<a href="{item.get("value")}" target="_blank" style="text-decoration:none;"><div class="metric-card" style="margin-bottom:15px; padding:15px;"><img src="{item.get("icon")}" width="30"><br><b style="color:var(--text-color); font-size:0.9rem;">{item.get("label")}</b></div></a>', unsafe_allow_html=True)
+
