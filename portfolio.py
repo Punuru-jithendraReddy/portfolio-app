@@ -14,30 +14,51 @@ ADMIN_PASSWORD = "admin"
 st.set_page_config(layout="wide", page_title="Portfolio", page_icon="✨")
 
 # ==========================================
-# 🚀 THE FIX: JAVASCRIPT VIEWPORT OVERRIDE
+# 🚀 THE FIX: FORCE "ZOOMED OUT" DESKTOP VIEW
 # ==========================================
-# This script finds the tag that tells the phone "be mobile" 
-# and changes it to "be 1200px wide".
+# This script forces the phone to fit 1200px of content onto the screen 
+# by zooming out initially. The user can then pinch to zoom in.
 # ==========================================
 st.markdown("""
     <script>
         function forceDesktopView() {
             var viewport = document.querySelector("meta[name=viewport]");
             if (viewport) {
-                viewport.setAttribute("content", "width=1200, initial-scale=0.1");
+                // WE REMOVED 'initial-scale=1'. 
+                // Setting just 'width=1200' forces the browser to shrink the page to fit.
+                viewport.setAttribute("content", "width=1200");
             }
         }
-        // Run immediately
+        
+        // 1. Run immediately
         forceDesktopView();
-        // Run on load just in case
+        
+        // 2. Run on load
         window.addEventListener('load', forceDesktopView);
+        
+        // 3. AGGRESSIVE MODE: Keep checking if Streamlit tries to change it back
+        var observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === "attributes" && mutation.attributeName === "content") {
+                    var viewport = document.querySelector("meta[name=viewport]");
+                    if (viewport && viewport.getAttribute("content") !== "width=1200") {
+                        forceDesktopView();
+                    }
+                }
+            });
+        });
+        var viewport = document.querySelector("meta[name=viewport]");
+        if (viewport) {
+            observer.observe(viewport, { attributes: true });
+        }
     </script>
 """, unsafe_allow_html=True)
 
 # --- CUSTOM CSS (LAYOUT ENFORCEMENT) ---
 st.markdown("""
 <style>
-    /* Ensure the container is wide enough to match the JS viewport setting */
+    /* 1. FORCE WIDTH TO MATCH VIEWPORT */
+    /* This tells the content "You have 1200px of space, fill it!" */
     .block-container {
         min-width: 1200px !important;
         max-width: 1200px !important;
@@ -46,12 +67,13 @@ st.markdown("""
         margin: 0 auto !important;
     }
     
-    /* Allow scrolling if needed */
+    /* 2. ENABLE SCROLLING & ZOOMING */
     [data-testid="stAppViewContainer"] {
         overflow-x: auto !important;
+        overflow-y: scroll !important;
     }
 
-    /* Force columns to align horizontally (row) not vertically */
+    /* 3. FORCE HORIZONTAL LAYOUT (No Stacking) */
     [data-testid="column"] {
         width: auto !important;
         flex: 1 !important;
