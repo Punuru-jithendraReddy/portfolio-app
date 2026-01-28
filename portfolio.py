@@ -11,9 +11,9 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_FILE = os.path.join(BASE_DIR, 'data.json')
 ADMIN_PASSWORD = "admin" 
 
-st.set_page_config(layout="wide", page_title="Portfolio", page_icon="✨")
+st.set_page_config(layout="wide", page_title="Portfolio", page_icon="👤")
 
-# --- MOBILE NOTIFICATION (UPDATED: CENTERED & HIGH CONTRAST) ---
+# --- MOBILE NOTIFICATION (FIXED: SOLID BACKGROUND & HIGH CONTRAST) ---
 st.markdown("""
 <style>
     /* 1. The Toast Design */
@@ -22,11 +22,10 @@ st.markdown("""
         min-width: 300px;
         max-width: 80%;
         
-        /* THEME ADAPTIVE HIGH CONTRAST COLORS */
-        /* Background = Text Color (White in Dark Mode, Black in Light Mode) */
-        background-color: var(--text-color); 
-        /* Text = Background Color (Dark in Dark Mode, Light in Light Mode) */
-        color: var(--background-color);
+        /* THEME ADAPTIVE COLORS (Fixed) */
+        /* Uses the Card/Sidebar background color which is always solid */
+        background-color: var(--secondary-background-color); 
+        color: var(--text-color);
         
         text-align: center;
         border-radius: 12px;
@@ -43,8 +42,8 @@ st.markdown("""
         font-weight: bold;
         font-family: 'Segoe UI', sans-serif;
         
-        /* Highlighting Shadow */
-        box-shadow: 0 0 40px rgba(0,0,0,0.6);
+        /* Deep Shadow to make it pop in Dark Mode */
+        box-shadow: 0 10px 40px rgba(0,0,0,0.5);
         border: 2px solid #3B82F6;
     }
 
