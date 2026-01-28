@@ -3,6 +3,7 @@ import json
 import os
 import textwrap
 import requests
+import streamlit.components.v1 as components  # Added for Scroll Fix
 from streamlit_option_menu import option_menu
 import plotly.graph_objects as go
 
@@ -239,7 +240,6 @@ st.markdown("""
         #first-metric .tooltip-text {
             /* Keep it at 'center' anchor but shift body Right */
             left: 50% !important; 
-            /* Changed from -50% to -10% -> Moves the box right significantly */
             transform: translateX(-10%) !important; 
         }
         
@@ -334,6 +334,24 @@ with st.sidebar:
                            icons=["house", "briefcase", "rocket", "cpu", "envelope"], default_index=0,
                            styles={"nav-link-selected": {"background-color": "#3B82F6"}})
     
+    # --- SCROLL TO TOP LOGIC START ---
+    # This block checks if the user has changed the page. 
+    # If they have, it injects JavaScript to force the window to scroll to the top.
+    if "current_page" not in st.session_state:
+        st.session_state["current_page"] = selected
+
+    if st.session_state["current_page"] != selected:
+        st.session_state["current_page"] = selected
+        components.html(
+            f"""
+                <script>
+                    window.parent.document.querySelector('section.main').scrollTo(0, 0);
+                </script>
+            """,
+            height=0
+        )
+    # --- SCROLL TO TOP LOGIC END ---
+
     if selected != "Projects":
         st.session_state.selected_project = None
     
