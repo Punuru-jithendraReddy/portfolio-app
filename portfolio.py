@@ -12,35 +12,45 @@ ADMIN_PASSWORD = "admin"
 
 st.set_page_config(layout="wide", page_title="Portfolio", page_icon="✨")
 
-# --- CUSTOM CSS (THEME AWARE, FORCED DESKTOP & ZOOM ENABLED) ---
+# --- CUSTOM CSS (AGGRESSIVE DESKTOP FORCING) ---
 st.markdown("""
 <style>
     /* =============================================
-       1. FORCE DESKTOP LAYOUT & ENABLE NATURAL ZOOM
+       FORCE DESKTOP LAYOUT (The "Nuclear" Option)
        ============================================= */
+       
+    /* 1. Force the MAIN SCROLLING CONTAINER to be wide.
+       This overrides the phone's physical width limitation. */
+    [data-testid="stAppViewContainer"] {
+        min-width: 1200px !important;
+        overflow-x: scroll !important;
+    }
     
-    /* Force the content to be wide (Desktop width), even on mobile. */
+    /* 2. Force the content block to fill that wide space */
     .block-container {
-        min-width: 1200px !important; 
-        max-width: 100% !important;
+        min-width: 1200px !important;
+        max-width: 1200px !important;
+        padding-left: 5rem !important;
+        padding-right: 5rem !important;
+        margin: 0 auto !important;
     }
 
-    /* Allow the main app to scroll horizontally and handle zoom gestures */
-    .stApp {
-        overflow-x: auto !important;
-        /* Explicitly tell the browser to allow panning and pinching */
-        touch-action: pan-x pan-y pinch-zoom !important; 
+    /* 3. Force Columns to stay Side-by-Side (Flex Row) */
+    div[data-testid="column"] {
+        flex: 1 !important; /* ensure equal width */
+        width: auto !important;
+        min-width: 0 !important;
     }
-
-    /* Remove the sidebar toggle arrow if you want a cleaner look (optional) */
-    /* [data-testid="stSidebarNav"] { display: none; } */
-
+    
+    /* Stop specific elements from wrapping awkwardly */
+    h1 {
+        white-space: nowrap !important; /* Prevents name from breaking */
+    }
 
     /* =============================================
-       2. YOUR EXISTING STYLES
+       YOUR ORIGINAL THEME STYLES
        ============================================= */
     
-    /* --- THEME ADAPTIVE COLORS --- */
     .main { padding-top: 1rem; }
     h1, h2, h3 { font-family: 'Segoe UI', sans-serif; color: var(--text-color) !important; }
     p, div, span { color: var(--text-color); }
@@ -62,7 +72,6 @@ st.markdown("""
         height: 100%;
     }
     
-    /* --- FIX: HIDE BLINKING CURSOR IN SELECTBOX --- */
     div[data-baseweb="select"] input {
         caret-color: transparent !important;
         cursor: pointer !important;
@@ -155,7 +164,6 @@ st.markdown("""
     .box-title { font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; font-size: 1rem; color: var(--text-color); }
     .box-content { font-size: 0.95rem; line-height: 1.6; font-weight: 500; color: var(--text-color); opacity: 0.9; }
     
-    /* Adaptive colors for Detail Boxes with tint */
     .d-blue { background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); }
     .d-green { background-color: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); }
     .d-yellow { background-color: rgba(234, 179, 8, 0.1); border: 1px solid rgba(234, 179, 8, 0.2); }
@@ -172,7 +180,6 @@ st.markdown("""
     .metric-card:hover { transform: translateY(-5px); border-color: #3B82F6; }
     .metric-label { font-size: 0.85rem; color: var(--text-color); opacity: 0.7; }
 
-   /* --- TOOLTIP STYLES --- */
     .tooltip-text {
         visibility: hidden;
         width: auto; min-width: 300px; white-space: nowrap; 
