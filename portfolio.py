@@ -168,6 +168,8 @@ st.markdown("""
         animation: zoomIn 0.5s ease-out; 
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         position: relative;
+        /* Critical for tooltip to fly out */
+        overflow: visible !important;
     }
     .metric-card:hover { transform: translateY(-5px); border-color: #3B82F6; }
     
@@ -178,7 +180,7 @@ st.markdown("""
     }
     .metric-label { font-size: 0.85rem; color: var(--text-color); opacity: 0.7; }
     
-    /* TOOLTIP (Default Desktop) */
+    /* TOOLTIP (Default Desktop - Wide) */
     .tooltip-text {
         visibility: hidden;
         width: auto; min-width: 300px; white-space: nowrap; 
@@ -187,7 +189,7 @@ st.markdown("""
         border: 1px solid rgba(128, 128, 128, 0.3);
         box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2);
         text-align: left; border-radius: 8px; padding: 15px;
-        position: absolute; z-index: 100;        
+        position: absolute; z-index: 99999;        
         top: 120%; 
         left: 50%; transform: translateX(-50%);
         opacity: 0; transition: opacity 0.3s, top 0.3s;
@@ -195,18 +197,18 @@ st.markdown("""
     }
     .metric-card:hover .tooltip-text { visibility: visible; opacity: 1; top: 125%; }
 
-    /* === MOBILE OPTIMIZATION (Phone Layout) === */
+    /* === MOBILE OPTIMIZATION (Vertical Phone Layout < 768px) === */
     @media only screen and (max-width: 768px) {
         .metric-card { padding: 12px !important; }
         .metric-value { font-size: 1.4rem !important; }
         .metric-label { font-size: 0.75rem !important; }
         h1 { font-size: 2.2rem !important; } 
-        
-        /* FIX: Hide tooltips on mobile to prevent overlapping */
+        /* Hide tooltip on vertical mobile to avoid overlap */
         .tooltip-text { display: none !important; }
     }
 
-    /* === DESKTOP-MODE-ON-MOBILE / TABLET FIX (769px - 1150px) === */
+    /* === FIX: DESKTOP-MODE-ON-MOBILE / TABLET (769px - 1150px) === */
+    /* This handles the "Mobile Desktop Mode" specifically */
     @media only screen and (min-width: 769px) and (max-width: 1150px) {
         .metric-card { padding: 10px 5px !important; }
         .metric-value { font-size: 1.4rem !important; }
@@ -215,8 +217,33 @@ st.markdown("""
             white-space: nowrap !important; 
         }
         
-        /* FIX: Hide tooltips here too as cards might still be tight/stacked */
-        .tooltip-text { display: none !important; }
+        /* FIX: Re-enable Tooltip but Constrain Width */
+        .tooltip-text { 
+            display: block !important;       
+            visibility: hidden;
+            
+            /* Make it narrow to fit cramped screen */
+            min-width: 140px !important;     
+            max-width: 180px !important;
+            width: auto !important;
+            
+            /* Allow text to wrap so it doesn't bleed sidebar */
+            white-space: normal !important;  
+            font-size: 0.75rem !important;
+            line-height: 1.3 !important;
+            padding: 10px !important;
+            
+            /* Ensure it is centered relative to card */
+            top: 110% !important;           
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            z-index: 10000 !important; 
+        }
+        
+        .metric-card:hover .tooltip-text { 
+            visibility: visible; 
+            opacity: 1; 
+        }
     }
 
     /* TIMELINE & SKILLS */
