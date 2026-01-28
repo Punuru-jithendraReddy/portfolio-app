@@ -521,7 +521,8 @@ elif selected == "Experience":
         st.markdown(f"""<div class="timeline-card"><div style="font-weight:bold; color:var(--text-color); font-size:1.1rem;">{job.get("role")} @ {job.get("company")}</div><small style="color:var(--text-color); opacity:0.7;">{job.get("date")}</small><div class="timeline-desc" style="white-space:pre-line; margin-top:10px; line-height:1.6; font-size:0.95rem;">{job.get("description")}</div></div>""", unsafe_allow_html=True)
 
 # ==========================================
-# 10. PAGE: CONTACT (FINAL AJAX VERSION)
+# ==========================================
+# 10. PAGE: CONTACT (FIXED RENDERING)
 # ==========================================
 elif selected == "Contact":
     if st.session_state.is_admin:
@@ -540,73 +541,65 @@ elif selected == "Contact":
         st.markdown("### Send a Message")
         
         # --- AJAX FORM SCRIPT ---
-        # This sends Name, Email, Phone (Optional), Message to your email
-        # without reloading the page.
-        contact_form = f"""
-        <script>
-        function submitForm(event) {{
-            event.preventDefault(); // Stop page reload
-            
-            var btn = document.getElementById("myBtn");
-            var form = document.getElementById("myForm");
-            
-            // Change Button to Loading State
-            var originalText = btn.innerHTML;
-            btn.innerHTML = "⏳ Sending...";
-            btn.disabled = true;
+        # We use textwrap.dedent to strip the indentation so Markdown renders it as HTML
+        contact_form = textwrap.dedent(f"""
+            <script>
+            function submitForm(event) {{
+                event.preventDefault();
+                var btn = document.getElementById("myBtn");
+                var form = document.getElementById("myForm");
+                
+                var originalText = btn.innerHTML;
+                btn.innerHTML = "⏳ Sending...";
+                btn.disabled = true;
 
-            var formData = new FormData(form);
-            
-            // Send to FormSubmit via AJAX
-            fetch("https://formsubmit.co/ajax/{CONTACT_EMAIL}", {{
-                method: "POST",
-                body: formData,
-                headers: {{ 
-                    'Accept': 'application/json' 
-                }}
-            }})
-            .then(response => {{
-                if (response.ok) {{
-                    // Success State
-                    btn.innerHTML = "✅ Message Sent!";
-                    btn.style.backgroundColor = "#22c55e"; // Green
-                    form.reset(); // Clear form
-                }} else {{
-                    // Error State
-                    btn.innerHTML = "❌ Error sending";
+                var formData = new FormData(form);
+                
+                fetch("https://formsubmit.co/ajax/{CONTACT_EMAIL}", {{
+                    method: "POST",
+                    body: formData,
+                    headers: {{ 'Accept': 'application/json' }}
+                }})
+                .then(response => {{
+                    if (response.ok) {{
+                        btn.innerHTML = "✅ Message Sent!";
+                        btn.style.backgroundColor = "#22c55e";
+                        form.reset();
+                    }} else {{
+                        btn.innerHTML = "❌ Error sending";
+                        btn.disabled = false;
+                        setTimeout(() => {{ btn.innerHTML = originalText; }}, 3000);
+                    }}
+                }})
+                .catch(error => {{
+                    console.error('Error:', error);
+                    btn.innerHTML = "❌ Error";
                     btn.disabled = false;
                     setTimeout(() => {{ btn.innerHTML = originalText; }}, 3000);
-                }}
-            }})
-            .catch(error => {{
-                console.error('Error:', error);
-                btn.innerHTML = "❌ Error";
-                btn.disabled = false;
-                setTimeout(() => {{ btn.innerHTML = originalText; }}, 3000);
-            }});
-        }}
-        </script>
+                }});
+            }}
+            </script>
 
-        <form id="myForm" onsubmit="submitForm(event)">
-             <input type="hidden" name="_captcha" value="false">
-             <input type="hidden" name="_template" value="table">
-             <input type="hidden" name="_subject" value="New Portfolio Contact">
+            <form id="myForm" onsubmit="submitForm(event)">
+                 <input type="hidden" name="_captcha" value="false">
+                 <input type="hidden" name="_template" value="table">
+                 <input type="hidden" name="_subject" value="New Portfolio Contact">
 
-             <input type="text" name="name" placeholder="Your Name" required 
-                style="width:100%; padding: 12px; margin-bottom:15px; border: 1px solid #ccc; border-radius: 8px; background-color: var(--secondary-background-color); color: var(--text-color);">
-             
-             <input type="email" name="email" placeholder="Your Email" required 
-                style="width:100%; padding: 12px; margin-bottom:15px; border: 1px solid #ccc; border-radius: 8px; background-color: var(--secondary-background-color); color: var(--text-color);">
-             
-             <input type="text" name="phone" placeholder="Phone Number (Optional)" 
-                style="width:100%; padding: 12px; margin-bottom:15px; border: 1px solid #ccc; border-radius: 8px; background-color: var(--secondary-background-color); color: var(--text-color);">
-             
-             <textarea name="message" placeholder="Purpose of Contact" required 
-                style="width:100%; padding: 12px; margin-bottom:15px; border: 1px solid #ccc; border-radius: 8px; min-height: 150px; background-color: var(--secondary-background-color); color: var(--text-color);"></textarea>
-             
-             <button id="myBtn" type="submit" style="background-color:#3B82F6; color:white; padding:12px 24px; border:none; border-radius:8px; cursor:pointer; font-weight:bold; width:100%;">Send Message</button>
-        </form>
-        """
+                 <input type="text" name="name" placeholder="Your Name" required 
+                    style="width:100%; padding: 12px; margin-bottom:15px; border: 1px solid #ccc; border-radius: 8px; background-color: var(--secondary-background-color); color: var(--text-color);">
+                 
+                 <input type="email" name="email" placeholder="Your Email" required 
+                    style="width:100%; padding: 12px; margin-bottom:15px; border: 1px solid #ccc; border-radius: 8px; background-color: var(--secondary-background-color); color: var(--text-color);">
+                 
+                 <input type="text" name="phone" placeholder="Phone Number (Optional)" 
+                    style="width:100%; padding: 12px; margin-bottom:15px; border: 1px solid #ccc; border-radius: 8px; background-color: var(--secondary-background-color); color: var(--text-color);">
+                 
+                 <textarea name="message" placeholder="Purpose of Contact" required 
+                    style="width:100%; padding: 12px; margin-bottom:15px; border: 1px solid #ccc; border-radius: 8px; min-height: 150px; background-color: var(--secondary-background-color); color: var(--text-color);"></textarea>
+                 
+                 <button id="myBtn" type="submit" style="background-color:#3B82F6; color:white; padding:12px 24px; border:none; border-radius:8px; cursor:pointer; font-weight:bold; width:100%;">Send Message</button>
+            </form>
+        """)
         st.markdown(contact_form, unsafe_allow_html=True)
 
     with c2:
