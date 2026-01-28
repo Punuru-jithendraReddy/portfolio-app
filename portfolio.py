@@ -13,55 +13,68 @@ ADMIN_PASSWORD = "admin"
 
 st.set_page_config(layout="wide", page_title="Portfolio", page_icon="✨")
 
-# --- MOBILE DETECTION & TOAST SCRIPT ---
-# This script injects a temporary popup if the screen width is small (mobile)
+# --- MOBILE NOTIFICATION (CSS METHOD - 100% RELIABLE) ---
+# This uses CSS @media queries to detect mobile. 
+# It works even inside Hugging Face iframes.
 st.markdown("""
-<script>
-    var width = window.innerWidth > 0 ? window.innerWidth : screen.width;
-    
-    // Threshold for mobile devices (usually < 768px or < 800px)
-    if (width < 800) {
-        
-        // Check if we have already shown the notification in this session
-        // This prevents it from popping up every time you click a button
-        if (!sessionStorage.getItem('mobile_notify_shown')) {
-            
-            // Create the toast element
-            var toast = document.createElement('div');
-            
-            // Style the toast
-            toast.style.position = 'fixed';
-            toast.style.bottom = '30px';
-            toast.style.left = '50%';
-            toast.style.transform = 'translateX(-50%)';
-            toast.style.backgroundColor = '#262730';
-            toast.style.color = 'white';
-            toast.style.padding = '12px 24px';
-            toast.style.borderRadius = '10px';
-            toast.style.zIndex = '999999';
-            toast.style.boxShadow = '0 4px 15px rgba(0,0,0,0.3)';
-            toast.style.border = '1px solid #3B82F6';
-            toast.style.fontFamily = 'sans-serif';
-            toast.style.fontSize = '14px';
-            toast.style.textAlign = 'center';
-            toast.style.transition = 'opacity 0.5s ease';
-            toast.innerHTML = '📱 <b>Mobile Detected</b><br>For the best experience, please use Desktop.';
-            
-            document.body.appendChild(toast);
-            
-            // Mark as shown in session storage
-            sessionStorage.setItem('mobile_notify_shown', 'true');
-            
-            // Remove after 3 seconds
-            setTimeout(function() {
-                toast.style.opacity = '0';
-                setTimeout(function() {
-                    document.body.removeChild(toast);
-                }, 500);
-            }, 3000);
+<style>
+    /* 1. The Toast Design */
+    #mobile-toast {
+        visibility: hidden; /* Hidden by default */
+        min-width: 250px;
+        background-color: #262730;
+        color: #fff;
+        text-align: center;
+        border-radius: 12px;
+        padding: 16px;
+        position: fixed;
+        z-index: 999999; /* Super high to sit on top of everything */
+        left: 50%;
+        bottom: 30px;
+        transform: translateX(-50%);
+        font-size: 16px;
+        font-family: 'Segoe UI', sans-serif;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        border: 1px solid #3B82F6;
+    }
+
+    /* 2. The Mobile Detection & Animation Trigger */
+    /* Only shows if screen width is less than 800px */
+    @media only screen and (max-width: 800px) {
+        #mobile-toast {
+            visibility: visible;
+            /* Fade in, stay there, then fade out. Total 4 seconds */
+            -webkit-animation: fadein 0.5s, fadeout 0.5s 3.5s forwards;
+            animation: fadein 0.5s, fadeout 0.5s 3.5s forwards;
         }
     }
-</script>
+
+    /* 3. The Animations */
+    @-webkit-keyframes fadein {
+        from {bottom: 0; opacity: 0;} 
+        to {bottom: 30px; opacity: 1;}
+    }
+
+    @keyframes fadein {
+        from {bottom: 0; opacity: 0;}
+        to {bottom: 30px; opacity: 1;}
+    }
+
+    @-webkit-keyframes fadeout {
+        from {bottom: 30px; opacity: 1;} 
+        to {bottom: 0; opacity: 0; visibility: hidden;}
+    }
+
+    @keyframes fadeout {
+        from {bottom: 30px; opacity: 1;}
+        to {bottom: 0; opacity: 0; visibility: hidden;}
+    }
+</style>
+
+<div id="mobile-toast">
+    📱 <b>Mobile Detected</b><br>
+    Open in Desktop for the best experience.
+</div>
 """, unsafe_allow_html=True)
 
 # --- CUSTOM CSS (THEME AWARE) ---
