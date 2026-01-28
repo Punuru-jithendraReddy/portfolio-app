@@ -168,7 +168,6 @@ st.markdown("""
         animation: zoomIn 0.5s ease-out; 
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         position: relative;
-        /* Critical for tooltip to fly out */
         overflow: visible !important;
     }
     .metric-card:hover { transform: translateY(-5px); border-color: #3B82F6; }
@@ -197,18 +196,27 @@ st.markdown("""
     }
     .metric-card:hover .tooltip-text { visibility: visible; opacity: 1; top: 125%; }
 
-    /* === MOBILE OPTIMIZATION (Vertical Phone Layout < 768px) === */
+    /* === MOBILE PHONE OPTIMIZATION (< 768px) === */
     @media only screen and (max-width: 768px) {
         .metric-card { padding: 12px !important; }
         .metric-value { font-size: 1.4rem !important; }
         .metric-label { font-size: 0.75rem !important; }
         h1 { font-size: 2.2rem !important; } 
+        
+        /* FIX: Increase Sidebar Toggle Button Size specifically for Mobile */
+        [data-testid="stSidebarCollapsedControl"] {
+            width: 50px !important;
+            height: 50px !important;
+            background-color: rgba(59, 130, 246, 0.1); /* Subtle Blue Tint */
+            border-radius: 10px;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        
         /* Hide tooltip on vertical mobile to avoid overlap */
         .tooltip-text { display: none !important; }
     }
 
-    /* === FIX: DESKTOP-MODE-ON-MOBILE / TABLET (769px - 1150px) === */
-    /* This handles the "Mobile Desktop Mode" specifically */
+    /* === FIX: MOBILE DESKTOP MODE / TABLET (769px - 1150px) === */
     @media only screen and (min-width: 769px) and (max-width: 1150px) {
         .metric-card { padding: 10px 5px !important; }
         .metric-value { font-size: 1.4rem !important; }
@@ -217,27 +225,31 @@ st.markdown("""
             white-space: nowrap !important; 
         }
         
-        /* FIX: Re-enable Tooltip but Constrain Width */
+        /* FIX: FULL WIDTH BOTTOM SHEET TOOLTIP */
         .tooltip-text { 
             display: block !important;       
             visibility: hidden;
             
-            /* Make it narrow to fit cramped screen */
-            min-width: 140px !important;     
-            max-width: 180px !important;
-            width: auto !important;
-            
-            /* Allow text to wrap so it doesn't bleed sidebar */
-            white-space: normal !important;  
-            font-size: 0.75rem !important;
-            line-height: 1.3 !important;
-            padding: 10px !important;
-            
-            /* Ensure it is centered relative to card */
-            top: 110% !important;           
+            /* Full Width Fixed Positioning at Bottom of Screen */
+            position: fixed !important;
+            bottom: 20px !important; 
+            top: auto !important; /* Reset top */
             left: 50% !important;
             transform: translateX(-50%) !important;
-            z-index: 10000 !important; 
+            
+            width: 90vw !important; /* 90% of Viewport Width */
+            min-width: unset !important;
+            max-width: 800px !important;
+            
+            white-space: nowrap !important; /* Try to keep lines single */
+            font-size: 0.85rem !important;
+            line-height: 1.5 !important;
+            padding: 20px !important;
+            z-index: 100000 !important; /* On top of everything */
+            
+            background-color: var(--secondary-background-color); 
+            border: 2px solid #3B82F6; /* Blue border to highlight it */
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.2);
         }
         
         .metric-card:hover .tooltip-text { 
