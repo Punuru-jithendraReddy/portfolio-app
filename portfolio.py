@@ -3,6 +3,7 @@ import json
 import os
 import textwrap
 import requests
+import streamlit.components.v1 as components
 from streamlit_option_menu import option_menu
 import plotly.graph_objects as go
 
@@ -16,7 +17,34 @@ ADMIN_PASSWORD = "admin"
 st.set_page_config(layout="wide", page_title="Portfolio", page_icon="🧑‍💻")
 
 # ==========================================
-# 2. MOBILE NOTIFICATION
+# 2. JAVASCRIPT: SIDEBAR AUTO-COLLAPSE
+# ==========================================
+# This script runs on every reload. It checks if the screen is mobile (<800px).
+# If it is, and the sidebar is open, it tries to close it after navigation.
+def inject_mobile_sidebar_fix():
+    js = """
+    <script>
+        // Function to check width and close sidebar if on mobile
+        function autoCloseSidebar() {
+            if (window.innerWidth <= 800) {
+                const sidebar = window.parent.document.querySelector('[data-testid="stSidebar"]');
+                if (sidebar) {
+                    // Look for the close button (x) inside the sidebar header
+                    const closeBtn = sidebar.querySelector('button[kind="header"]');
+                    if (closeBtn) {
+                        closeBtn.click();
+                    }
+                }
+            }
+        }
+        // Run slightly delayed to ensure DOM is ready
+        setTimeout(autoCloseSidebar, 100);
+    </script>
+    """
+    components.html(js, height=0, width=0)
+
+# ==========================================
+# 3. MOBILE NOTIFICATION
 # ==========================================
 st.markdown("""
 <style>
@@ -70,7 +98,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 3. CUSTOM CSS (RESPONSIVE FIXES)
+# 4. CUSTOM CSS (RESPONSIVE FIXES)
 # ==========================================
 st.markdown("""
 <style>
@@ -207,16 +235,18 @@ st.markdown("""
         [data-testid="stSidebarCollapsedControl"] {
             width: 50px !important;
             height: 50px !important;
-            background-color: rgba(59, 130, 246, 0.1); /* Subtle Blue Tint */
+            background-color: rgba(59, 130, 246, 0.1);
             border-radius: 10px;
             border: 1px solid rgba(59, 130, 246, 0.3);
+            margin-top: 10px;
+            margin-left: 10px;
         }
         
-        /* Hide tooltip on vertical mobile to avoid overlap */
         .tooltip-text { display: none !important; }
     }
 
     /* === FIX: MOBILE DESKTOP MODE / TABLET (769px - 1150px) === */
+    /* This targets "Desktop Mode" on mobile to show tooltip BELOW the cards spanning full width */
     @media only screen and (min-width: 769px) and (max-width: 1150px) {
         .metric-card { padding: 10px 5px !important; }
         .metric-value { font-size: 1.4rem !important; }
@@ -225,31 +255,29 @@ st.markdown("""
             white-space: nowrap !important; 
         }
         
-        /* FIX: FULL WIDTH BOTTOM SHEET TOOLTIP */
+        /* FIX: FULL WIDTH TOOLTIP BELOW CARDS */
         .tooltip-text { 
             display: block !important;       
             visibility: hidden;
             
-            /* Full Width Fixed Positioning at Bottom of Screen */
+            /* FIXED Position: Locked to viewport */
             position: fixed !important;
-            bottom: 20px !important; 
-            top: auto !important; /* Reset top */
-            left: 50% !important;
+            top: 380px !important;     /* Adjusted to sit BELOW the metrics row */
+            left: 50% !important;      /* Center Horizontally */
             transform: translateX(-50%) !important;
             
-            width: 90vw !important; /* 90% of Viewport Width */
-            min-width: unset !important;
+            width: 90vw !important;    /* 90% of Screen Width (Start of 1st to End of 3rd) */
             max-width: 800px !important;
             
-            white-space: nowrap !important; /* Try to keep lines single */
+            white-space: normal !important; /* Allow text wrapping */
             font-size: 0.85rem !important;
             line-height: 1.5 !important;
-            padding: 20px !important;
-            z-index: 100000 !important; /* On top of everything */
+            padding: 15px !important;
+            z-index: 100000 !important; 
             
             background-color: var(--secondary-background-color); 
-            border: 2px solid #3B82F6; /* Blue border to highlight it */
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.2);
+            border: 2px solid #3B82F6; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
         
         .metric-card:hover .tooltip-text { 
@@ -283,7 +311,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 4. DATA MANAGER
+# 5. DATA MANAGER
 # ==========================================
 def load_data():
     if not os.path.exists(DATA_FILE): 
@@ -323,10 +351,11 @@ def render_image(image_path, width=None):
     else: st.image(src, use_container_width=True)
 
 # ==========================================
-# 5. INITIALIZE SESSION STATE
+# 6. INITIALIZE SESSION STATE & LOGIC
 # ==========================================
 if 'data' not in st.session_state: st.session_state.data = load_data()
 if 'is_admin' not in st.session_state: st.session_state.is_admin = False
+if 'last_selected_page' not in st.session_state: st.session_state.last_selected_page = "Home"
 
 # --- SIDEBAR ---
 with st.sidebar:
@@ -343,6 +372,12 @@ with st.sidebar:
                            icons=["house", "briefcase", "rocket", "cpu", "envelope"], default_index=0,
                            styles={"nav-link-selected": {"background-color": "#3B82F6"}})
     
+    # --- LOGIC: CHECK IF NAVIGATION HAPPENED ---
+    if selected != st.session_state.last_selected_page:
+        st.session_state.last_selected_page = selected
+        # Inject the JS to close sidebar because a new page was selected
+        inject_mobile_sidebar_fix()
+
     if selected != "Projects":
         st.session_state.selected_project = None
     
@@ -376,7 +411,7 @@ with st.sidebar:
             st.rerun()
 
 # ==========================================
-# 6. PAGE: HOME
+# 7. PAGE: HOME
 # ==========================================
 if selected == "Home":
     if st.session_state.is_admin:
@@ -436,7 +471,7 @@ if selected == "Home":
     with c2: render_image(prof.get('image_url'), width=350)
 
 # ==========================================
-# 7. PAGE: PROJECTS
+# 8. PAGE: PROJECTS
 # ==========================================
 elif selected == "Projects":
     if st.session_state.is_admin:
@@ -582,7 +617,7 @@ elif selected == "Projects":
                     st.markdown("<div style='height: 40px;'></div>", unsafe_allow_html=True)
 
 # ==========================================
-# 8. PAGE: SKILLS
+# 9. PAGE: SKILLS
 # ==========================================
 elif selected == "Skills":
     if st.session_state.is_admin:
@@ -612,7 +647,7 @@ elif selected == "Skills":
             st.markdown(f"""<div class="skill-metric"><b>{s}</b><div style="color:#3B82F6; font-size:1.2rem; font-weight:800;">{v}%</div><progress value="{v}" max="100" style="width:100%; height:8px; border-radius:5px;"></progress></div>""", unsafe_allow_html=True)
 
 # ==========================================
-# 9. PAGE: EXPERIENCE
+# 10. PAGE: EXPERIENCE
 # ==========================================
 elif selected == "Experience":
     if st.session_state.is_admin:
@@ -644,7 +679,7 @@ elif selected == "Experience":
         st.markdown(f"""<div class="timeline-card"><div style="font-weight:bold; color:var(--text-color); font-size:1.1rem;">{job.get("role")} @ {job.get("company")}</div><small style="color:var(--text-color); opacity:0.7;">{job.get("date")}</small><div class="timeline-desc" style="white-space:pre-line; margin-top:10px; line-height:1.6; font-size:0.95rem;">{job.get("description")}</div></div>""", unsafe_allow_html=True)
 
 # ==========================================
-# 10. PAGE: CONTACT
+# 11. PAGE: CONTACT
 # ==========================================
 elif selected == "Contact":
     if st.session_state.is_admin:
