@@ -13,7 +13,7 @@ ADMIN_PASSWORD = "admin"
 
 st.set_page_config(layout="wide", page_title="Portfolio", page_icon="👤")
 
-# --- MOBILE NOTIFICATION (FIXED: SOLID BACKGROUND & HIGH CONTRAST) ---
+# --- MOBILE NOTIFICATION (FIXED: HARDCODED SOLID COLORS) ---
 st.markdown("""
 <style>
     /* 1. The Toast Design */
@@ -22,10 +22,9 @@ st.markdown("""
         min-width: 300px;
         max-width: 80%;
         
-        /* THEME ADAPTIVE COLORS (Fixed) */
-        /* Uses the Card/Sidebar background color which is always solid */
-        background-color: var(--secondary-background-color); 
-        color: var(--text-color);
+        /* DEFAULT (LIGHT MODE) - FORCE SOLID WHITE */
+        background-color: #ffffff !important;
+        color: #000000 !important;
         
         text-align: center;
         border-radius: 12px;
@@ -42,17 +41,24 @@ st.markdown("""
         font-weight: bold;
         font-family: 'Segoe UI', sans-serif;
         
-        /* Deep Shadow to make it pop in Dark Mode */
-        box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        /* Heavy Shadow for separation */
+        box-shadow: 0 0 50px rgba(0,0,0,0.5);
         border: 2px solid #3B82F6;
     }
 
+    /* DARK MODE OVERRIDE - FORCE SOLID DARK GREY */
+    @media (prefers-color-scheme: dark) {
+        #mobile-toast {
+            background-color: #262730 !important;
+            color: #ffffff !important;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+        }
+    }
+
     /* 2. The Mobile Detection & Animation Trigger */
-    /* Only shows if screen width is less than 800px */
     @media only screen and (max-width: 800px) {
         #mobile-toast {
             visibility: visible;
-            /* Fade in, stay 4s, Fade out */
             -webkit-animation: fadein 0.5s, fadeout 0.5s 4.5s forwards;
             animation: fadein 0.5s, fadeout 0.5s 4.5s forwards;
         }
@@ -63,17 +69,14 @@ st.markdown("""
         from { opacity: 0; } 
         to { opacity: 1; }
     }
-
     @keyframes fadein {
         from { opacity: 0; }
         to { opacity: 1; }
     }
-
     @-webkit-keyframes fadeout {
         from { opacity: 1; } 
         to { opacity: 0; visibility: hidden;}
     }
-
     @keyframes fadeout {
         from { opacity: 1; }
         to { opacity: 0; visibility: hidden;}
@@ -83,7 +86,7 @@ st.markdown("""
 <div id="mobile-toast">
     <div style="font-size: 30px; margin-bottom: 10px;">📱</div>
      You are using Mobile View<br>
-     <span style="font-size: 14px; font-weight: normal; opacity: 0.8;">
+     <span style="font-size: 14px; font-weight: normal; opacity: 0.7;">
      For the best experience, please switch to Desktop or enable "Desktop Mode".
      </span>
 </div>
@@ -704,3 +707,4 @@ elif selected == "Contact":
     for i, item in enumerate(prof.get('contact_info', [])):
         with (c1 if i % 2 == 0 else c2):
             st.markdown(f'<a href="{item.get("value")}" target="_blank" style="text-decoration:none;"><div class="metric-card"><img src="{item.get("icon")}" width="40"><br><b style="color:var(--text-color)">{item.get("label")}</b></div></a>', unsafe_allow_html=True)
+
