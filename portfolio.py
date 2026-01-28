@@ -521,7 +521,6 @@ elif selected == "Experience":
         st.markdown(f"""<div class="timeline-card"><div style="font-weight:bold; color:var(--text-color); font-size:1.1rem;">{job.get("role")} @ {job.get("company")}</div><small style="color:var(--text-color); opacity:0.7;">{job.get("date")}</small><div class="timeline-desc" style="white-space:pre-line; margin-top:10px; line-height:1.6; font-size:0.95rem;">{job.get("description")}</div></div>""", unsafe_allow_html=True)
 
 # ==========================================
-# ==========================================
 # 10. PAGE: CONTACT (FIXED RENDERING)
 # ==========================================
 elif selected == "Contact":
@@ -542,6 +541,7 @@ elif selected == "Contact":
         
         # --- AJAX FORM SCRIPT ---
         # We use textwrap.dedent to strip the indentation so Markdown renders it as HTML
+        # and not as a code block.
         contact_form = textwrap.dedent(f"""
             <script>
             function submitForm(event) {{
