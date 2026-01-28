@@ -12,9 +12,9 @@ import plotly.graph_objects as go
 # ==========================================
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_FILE = os.path.join(BASE_DIR, 'data.json')
-RESUME_FILE = os.path.join(BASE_DIR, 'resume.pdf') # Place resume.pdf in the same folder
+RESUME_FILE = os.path.join(BASE_DIR, 'resume.pdf') 
 ADMIN_PASSWORD = "admin" 
-CONTACT_EMAIL = "your-email@example.com" # <--- UPDATE THIS TO RECEIVE EMAILS
+CONTACT_EMAIL = "jithendrareddypunuru@gmail.com" # <--- UPDATED EMAIL
 
 st.set_page_config(layout="wide", page_title="Portfolio", page_icon="🧑‍💻")
 
@@ -39,7 +39,7 @@ st.markdown("""
         transform: translate(-50%, -50%);
         font-size: 18px;
         font-weight: bold;
-        font-family: 'Poppins', sans-serif; /* Applied Font here too */
+        font-family: 'Poppins', sans-serif;
         box-shadow: 0 0 50px rgba(0,0,0,0.5);
         border: 2px solid #3B82F6;
     }
@@ -372,7 +372,7 @@ with st.sidebar:
         with open(RESUME_FILE, "rb") as pdf_file:
             PDFbyte = pdf_file.read()
         st.download_button(
-            label="📄 Download CV",
+            label="📥 Download Resume",
             data=PDFbyte,
             file_name="resume.pdf",
             mime='application/octet-stream',
@@ -689,14 +689,35 @@ elif selected == "Contact":
     
     with c1:
         st.markdown("### Send a Message")
+        
+        # CONTACT FORM WITH HIDDEN IFRAME LOGIC (NO RELOAD + THANK YOU MSG)
         contact_form = f"""
-        <form action="https://formsubmit.co/{CONTACT_EMAIL}" method="POST">
-             <input type="hidden" name="_captcha" value="false">
-             <input type="text" name="name" placeholder="Your Name" required style="width:100%; padding: 12px; margin-bottom:15px; border: 1px solid #ccc; border-radius: 8px; background-color: var(--secondary-background-color); color: var(--text-color);">
-             <input type="email" name="email" placeholder="Your Email" required style="width:100%; padding: 12px; margin-bottom:15px; border: 1px solid #ccc; border-radius: 8px; background-color: var(--secondary-background-color); color: var(--text-color);">
-             <textarea name="message" placeholder="Your Message" required style="width:100%; padding: 12px; margin-bottom:15px; border: 1px solid #ccc; border-radius: 8px; min-height: 150px; background-color: var(--secondary-background-color); color: var(--text-color);"></textarea>
-             <button type="submit" style="background-color:#3B82F6; color:white; padding:12px 24px; border:none; border-radius:8px; cursor:pointer; font-weight:bold; width:100%;">Send Message</button>
-        </form>
+        <script>
+            function showSuccess() {{
+                document.getElementById('contact-form').style.display = 'none';
+                document.getElementById('success-message').style.display = 'block';
+            }}
+        </script>
+
+        <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(submitted) {{showSuccess();}}"></iframe>
+        
+        <div id="contact-form">
+            <form action="https://formsubmit.co/{CONTACT_EMAIL}" method="POST" target="hidden_iframe" onsubmit="submitted=true;">
+                 <input type="hidden" name="_captcha" value="false">
+                 <input type="text" name="name" placeholder="Your Name" required style="width:100%; padding: 12px; margin-bottom:15px; border: 1px solid #ccc; border-radius: 8px; background-color: var(--secondary-background-color); color: var(--text-color);">
+                 <input type="email" name="email" placeholder="Your Email" required style="width:100%; padding: 12px; margin-bottom:15px; border: 1px solid #ccc; border-radius: 8px; background-color: var(--secondary-background-color); color: var(--text-color);">
+                 <textarea name="message" placeholder="Your Message" required style="width:100%; padding: 12px; margin-bottom:15px; border: 1px solid #ccc; border-radius: 8px; min-height: 150px; background-color: var(--secondary-background-color); color: var(--text-color);"></textarea>
+                 <button type="submit" style="background-color:#3B82F6; color:white; padding:12px 24px; border:none; border-radius:8px; cursor:pointer; font-weight:bold; width:100%;">Send Message</button>
+            </form>
+        </div>
+
+        <div id="success-message" style="display:none; padding:30px; border-radius:10px; background-color:rgba(59, 130, 246, 0.1); border:1px solid #3B82F6; text-align:center; animation: fadeInUp 0.5s ease-out;">
+            <div style="font-size: 50px;">🎉</div>
+            <h3 style="color:#3B82F6;">Thank You!</h3>
+            <p style="font-size:18px;">I will reach out to you as soon as possible.</p>
+        </div>
+
+        <script>var submitted = false;</script>
         """
         st.markdown(contact_form, unsafe_allow_html=True)
 
