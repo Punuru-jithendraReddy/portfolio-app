@@ -3,7 +3,7 @@ import json
 import os
 import textwrap
 import requests
-import streamlit.components.v1 as components  # Added for Scroll Fix
+import streamlit.components.v1 as components
 from streamlit_option_menu import option_menu
 import plotly.graph_objects as go
 
@@ -12,7 +12,9 @@ import plotly.graph_objects as go
 # ==========================================
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_FILE = os.path.join(BASE_DIR, 'data.json')
+RESUME_FILE = os.path.join(BASE_DIR, 'resume.pdf') # Place resume.pdf in the same folder
 ADMIN_PASSWORD = "admin" 
+CONTACT_EMAIL = "your-email@example.com" # <--- UPDATE THIS TO RECEIVE EMAILS
 
 st.set_page_config(layout="wide", page_title="Portfolio", page_icon="🧑‍💻")
 
@@ -37,7 +39,7 @@ st.markdown("""
         transform: translate(-50%, -50%);
         font-size: 18px;
         font-weight: bold;
-        font-family: 'Segoe UI', sans-serif;
+        font-family: 'Poppins', sans-serif; /* Applied Font here too */
         box-shadow: 0 0 50px rgba(0,0,0,0.5);
         border: 2px solid #3B82F6;
     }
@@ -71,10 +73,18 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 3. CUSTOM CSS (RESPONSIVE FIXES)
+# 3. CUSTOM CSS (FONTS & RESPONSIVE FIXES)
 # ==========================================
 st.markdown("""
 <style>
+    /* --- IMPORT GOOGLE FONT (POPPINS) --- */
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
+
+    /* APPLY FONTS GLOBALLY */
+    html, body, [class*="css"]  {
+        font-family: 'Poppins', sans-serif;
+    }
+    
     /* --- SIDEBAR SPACING FIXES --- */
     section[data-testid="stSidebar"] div.block-container {
         padding-top: 2rem !important;
@@ -86,7 +96,7 @@ st.markdown("""
 
     /* --- THEME ADAPTIVE COLORS --- */
     .main { padding-top: 1rem; }
-    h1, h2, h3 { font-family: 'Segoe UI', sans-serif; color: var(--text-color) !important; }
+    h1, h2, h3 { color: var(--text-color) !important; letter-spacing: -0.5px; }
     p, div, span { color: var(--text-color); }
     
     /* ANIMATIONS */
@@ -216,7 +226,6 @@ st.markdown("""
             white-space: nowrap !important; 
         }
         
-        /* 1. GENERAL TOOLTIP STYLE */
         .tooltip-text { 
             display: block !important;        
             visibility: hidden;
@@ -236,9 +245,7 @@ st.markdown("""
             z-index: 10000 !important; 
         }
 
-        /* 2. SPECIFIC FIX FOR THE 1ST TOOLTIP (MOVES IT RIGHT) */
         #first-metric .tooltip-text {
-            /* Keep it at 'center' anchor but shift body Right */
             left: 50% !important; 
             transform: translateX(-10%) !important; 
         }
@@ -270,6 +277,11 @@ st.markdown("""
     progress { accent-color: #3B82F6; }
     progress::-webkit-progress-value { background-color: #3B82F6 !important; }
     progress::-moz-progress-bar { background-color: #3B82F6 !important; }
+    
+    /* Contact Form Styling Override */
+    input, textarea {
+        font-family: 'Poppins', sans-serif;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -334,23 +346,16 @@ with st.sidebar:
                            icons=["house", "briefcase", "rocket", "cpu", "envelope"], default_index=0,
                            styles={"nav-link-selected": {"background-color": "#3B82F6"}})
     
-    # --- SCROLL TO TOP LOGIC START ---
-    # This block checks if the user has changed the page. 
-    # If they have, it injects JavaScript to force the window to scroll to the top.
+    # --- SCROLL TO TOP LOGIC ---
     if "current_page" not in st.session_state:
         st.session_state["current_page"] = selected
 
     if st.session_state["current_page"] != selected:
         st.session_state["current_page"] = selected
         components.html(
-            f"""
-                <script>
-                    window.parent.document.querySelector('section.main').scrollTo(0, 0);
-                </script>
-            """,
+            f"""<script>window.parent.document.querySelector('section.main').scrollTo(0, 0);</script>""",
             height=0
         )
-    # --- SCROLL TO TOP LOGIC END ---
 
     if selected != "Projects":
         st.session_state.selected_project = None
@@ -360,6 +365,20 @@ with st.sidebar:
             <hr style="border: 0; border-top: 1px solid rgba(128,128,128,0.2);">
         </div>
     """, unsafe_allow_html=True)
+    
+    # --- RESUME DOWNLOAD BUTTON ---
+    # Checks if resume.pdf exists in folder, if so, shows download button
+    if os.path.exists(RESUME_FILE):
+        with open(RESUME_FILE, "rb") as pdf_file:
+            PDFbyte = pdf_file.read()
+        st.download_button(
+            label="📄 Download CV",
+            data=PDFbyte,
+            file_name="resume.pdf",
+            mime='application/octet-stream',
+            use_container_width=True
+        )
+        st.markdown("<br>", unsafe_allow_html=True)
     
     if not st.session_state.is_admin:
         with st.expander("🔒 Admin Access"):
@@ -416,7 +435,6 @@ if selected == "Home":
         tt_eff = """<div style='margin-bottom:6px;'><b>Gains:</b></div>• Faster decision making<br>• Real-time data access<br>• Improved cross-team colab"""
         
         with mc1: 
-            # ADDED id="first-metric" HERE TO TARGET WITH CSS
             st.markdown(f'''
             <div class="metric-card" id="first-metric">
                 <div class="tooltip-text">{tt_dash}</div>
@@ -654,7 +672,7 @@ elif selected == "Experience":
         st.markdown(f"""<div class="timeline-card"><div style="font-weight:bold; color:var(--text-color); font-size:1.1rem;">{job.get("role")} @ {job.get("company")}</div><small style="color:var(--text-color); opacity:0.7;">{job.get("date")}</small><div class="timeline-desc" style="white-space:pre-line; margin-top:10px; line-height:1.6; font-size:0.95rem;">{job.get("description")}</div></div>""", unsafe_allow_html=True)
 
 # ==========================================
-# 10. PAGE: CONTACT
+# 10. PAGE: CONTACT (UPDATED)
 # ==========================================
 elif selected == "Contact":
     if st.session_state.is_admin:
@@ -665,9 +683,25 @@ elif selected == "Contact":
             new_contacts = [{"label": r['Label'], "value": r['Value'], "icon": r['Icon']} for r in edited_contacts if r['Label']]
             st.session_state.data['profile']['contact_info'] = new_contacts
 
-    st.title("Contact")
-    prof = st.session_state.data.get('profile', {})
-    c1, c2 = st.columns(2)
-    for i, item in enumerate(prof.get('contact_info', [])):
-        with (c1 if i % 2 == 0 else c2):
-            st.markdown(f'<a href="{item.get("value")}" target="_blank" style="text-decoration:none;"><div class="metric-card"><img src="{item.get("icon")}" width="40"><br><b style="color:var(--text-color)">{item.get("label")}</b></div></a>', unsafe_allow_html=True)
+    st.title("Get in Touch")
+    
+    c1, c2 = st.columns([2, 1])
+    
+    with c1:
+        st.markdown("### Send a Message")
+        contact_form = f"""
+        <form action="https://formsubmit.co/{CONTACT_EMAIL}" method="POST">
+             <input type="hidden" name="_captcha" value="false">
+             <input type="text" name="name" placeholder="Your Name" required style="width:100%; padding: 12px; margin-bottom:15px; border: 1px solid #ccc; border-radius: 8px; background-color: var(--secondary-background-color); color: var(--text-color);">
+             <input type="email" name="email" placeholder="Your Email" required style="width:100%; padding: 12px; margin-bottom:15px; border: 1px solid #ccc; border-radius: 8px; background-color: var(--secondary-background-color); color: var(--text-color);">
+             <textarea name="message" placeholder="Your Message" required style="width:100%; padding: 12px; margin-bottom:15px; border: 1px solid #ccc; border-radius: 8px; min-height: 150px; background-color: var(--secondary-background-color); color: var(--text-color);"></textarea>
+             <button type="submit" style="background-color:#3B82F6; color:white; padding:12px 24px; border:none; border-radius:8px; cursor:pointer; font-weight:bold; width:100%;">Send Message</button>
+        </form>
+        """
+        st.markdown(contact_form, unsafe_allow_html=True)
+
+    with c2:
+        st.markdown("### Connect")
+        prof = st.session_state.data.get('profile', {})
+        for item in prof.get('contact_info', []):
+            st.markdown(f'<a href="{item.get("value")}" target="_blank" style="text-decoration:none;"><div class="metric-card" style="margin-bottom:15px; padding:15px;"><img src="{item.get("icon")}" width="30"><br><b style="color:var(--text-color); font-size:0.9rem;">{item.get("label")}</b></div></a>', unsafe_allow_html=True)
