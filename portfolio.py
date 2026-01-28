@@ -168,7 +168,6 @@ st.markdown("""
         animation: zoomIn 0.5s ease-out; 
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         position: relative;
-        /* Critical for tooltip to fly out */
         overflow: visible !important;
     }
     .metric-card:hover { transform: translateY(-5px); border-color: #3B82F6; }
@@ -208,7 +207,6 @@ st.markdown("""
     }
 
     /* === FIX: DESKTOP-MODE-ON-MOBILE / TABLET (769px - 1150px) === */
-    /* This handles the "Mobile Desktop Mode" specifically */
     @media only screen and (min-width: 769px) and (max-width: 1150px) {
         .metric-card { padding: 10px 5px !important; }
         .metric-value { font-size: 1.4rem !important; }
@@ -217,27 +215,32 @@ st.markdown("""
             white-space: nowrap !important; 
         }
         
-        /* FIX: Re-enable Tooltip but Constrain Width */
+        /* 1. GENERAL TOOLTIP STYLE */
         .tooltip-text { 
             display: block !important;        
             visibility: hidden;
             
-            /* INCREASED WIDTH FOR MOBILE DESKTOP/TABLET VIEW */
             min-width: 220px !important;     
             max-width: 300px !important;
             width: auto !important;
             
-            /* Allow text to wrap so it doesn't bleed sidebar */
             white-space: normal !important;  
             font-size: 0.75rem !important;
             line-height: 1.3 !important;
             padding: 10px !important;
             
-            /* Ensure it is centered relative to card */
             top: 110% !important;            
             left: 50% !important;
             transform: translateX(-50%) !important;
             z-index: 10000 !important; 
+        }
+
+        /* 2. SPECIFIC FIX FOR THE 1ST TOOLTIP (MOVES IT RIGHT) */
+        #first-metric .tooltip-text {
+            /* Keep it at 'center' anchor but shift body Right */
+            left: 50% !important; 
+            /* Changed from -50% to -10% -> Moves the box right significantly */
+            transform: translateX(-10%) !important; 
         }
         
         .metric-card:hover .tooltip-text { 
@@ -395,8 +398,9 @@ if selected == "Home":
         tt_eff = """<div style='margin-bottom:6px;'><b>Gains:</b></div>• Faster decision making<br>• Real-time data access<br>• Improved cross-team colab"""
         
         with mc1: 
+            # ADDED id="first-metric" HERE TO TARGET WITH CSS
             st.markdown(f'''
-            <div class="metric-card">
+            <div class="metric-card" id="first-metric">
                 <div class="tooltip-text">{tt_dash}</div>
                 <div class="metric-value">{mets.get("dashboards","0")}</div>
                 <div class="metric-label">DASHBOARDS</div>
