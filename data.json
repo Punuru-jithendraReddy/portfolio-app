@@ -96,8 +96,8 @@
         {
             "title": "Budget vs Actuals Analytics Dashboard",
             "category": "Finance",
-            "image": "",
-            "dashboard_image": "https://raw.githubusercontent.com/Punuru-jithendraReddy/portfolio-app/main/assets/BudgetVsActuals.mp4",
+            "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80"",
+            "dashboard_image": "",
             "problem": "Budget and actual data were spread across multiple systems, making reconciliation slow and inconsistent.",
             "solution": "A unified Power BI dashboard combining Budget, SPR, Open Sales, and Inventory data for accurate variance analysis.",
             "impact": "Enabled faster financial insights, reduced manual reconciliation, and improved budget control .",
@@ -136,4 +136,5 @@
  
     ]
 }
+
 
