@@ -12,9 +12,11 @@ import plotly.graph_objects as go
 # ==========================================
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_FILE = os.path.join(BASE_DIR, 'data.json')
-RESUME_FILE = os.path.join(BASE_DIR, 'resume.pdf') # Place resume.pdf in the same folder
+RESUME_FILE = os.path.join(BASE_DIR, 'resume.pdf') 
 ADMIN_PASSWORD = "admin" 
-CONTACT_EMAIL = "jithendrareddypunuru@gmail.com" # <--- UPDATE THIS TO RECEIVE EMAILS
+
+# 👇 UPDATE THIS EMAIL TO YOUR OWN EMAIL ADDRESS
+CONTACT_EMAIL = "jithendrareddypunuru@gmail.com" 
 
 st.set_page_config(layout="wide", page_title="Portfolio", page_icon="🧑‍💻")
 
@@ -39,9 +41,11 @@ st.markdown("""
         transform: translate(-50%, -50%);
         font-size: 18px;
         font-weight: bold;
-        font-family: 'Poppins', sans-serif; /* Applied Font here too */
+        font-family: 'Poppins', sans-serif;
         box-shadow: 0 0 50px rgba(0,0,0,0.5);
         border: 2px solid #3B82F6;
+        animation: fadein 0.5s, fadeout 0.5s 6s forwards; 
+        pointer-events: none;
     }
     @media (prefers-color-scheme: dark) {
         #mobile-toast {
@@ -53,8 +57,6 @@ st.markdown("""
     @media only screen and (max-width: 800px) {
         #mobile-toast {
             visibility: visible;
-            -webkit-animation: fadein 0.5s, fadeout 0.5s 4.5s forwards;
-            animation: fadein 0.5s, fadeout 0.5s 4.5s forwards;
         }
     }
     @-webkit-keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
@@ -73,214 +75,62 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 3. CUSTOM CSS (FONTS & RESPONSIVE FIXES)
+# 3. CUSTOM CSS
 # ==========================================
 st.markdown("""
 <style>
-    /* --- IMPORT GOOGLE FONT (POPPINS) --- */
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
-
-    /* APPLY FONTS GLOBALLY */
-    html, body, [class*="css"]  {
-        font-family: 'Poppins', sans-serif;
-    }
+    html, body, [class*="css"]  { font-family: 'Poppins', sans-serif; }
     
-    /* --- SIDEBAR SPACING FIXES --- */
-    section[data-testid="stSidebar"] div.block-container {
-        padding-top: 2rem !important;
-        padding-bottom: 1rem !important;
-    }
-    section[data-testid="stSidebar"] [data-testid="stVerticalBlock"] {
-        gap: 0.5rem !important;
-    }
-
-    /* --- THEME ADAPTIVE COLORS --- */
+    section[data-testid="stSidebar"] div.block-container { padding-top: 2rem !important; padding-bottom: 1rem !important; }
+    section[data-testid="stSidebar"] [data-testid="stVerticalBlock"] { gap: 0.5rem !important; }
     .main { padding-top: 1rem; }
     h1, h2, h3 { color: var(--text-color) !important; letter-spacing: -0.5px; }
-    p, div, span { color: var(--text-color); }
     
-    /* ANIMATIONS */
-    @keyframes fadeInUp {
-        from { opacity: 0; transform: translate3d(0, 20px, 0); }
-        to { opacity: 1; transform: translate3d(0, 0, 0); }
-    }
-    @keyframes zoomIn {
-        from { opacity: 0; transform: scale3d(0.95, 0.95, 0.95); }
-        to { opacity: 1; transform: scale3d(1, 1, 1); }
-    }
-
-    [data-testid="column"] { display: flex; flex-direction: column; height: 100%; }
+    @keyframes fadeInUp { from { opacity: 0; transform: translate3d(0, 20px, 0); } to { opacity: 1; transform: translate3d(0, 0, 0); } }
     
-    /* FIXES */
-    div[data-baseweb="select"] > div { border-color: rgba(128, 128, 128, 0.2) !important; }
-    div[data-baseweb="select"]:focus-within > div { border-color: #3B82F6 !important; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important; }
-    div[data-baseweb="select"] input { caret-color: transparent !important; cursor: pointer !important; }
-
-    /* 1. PROJECT CARD DESIGN */
-    .project-card {
-        background-color: var(--secondary-background-color); 
-        border: 1px solid rgba(128, 128, 128, 0.2); 
-        border-radius: 12px;
-        padding: 20px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        position: relative; 
-        display: flex; flex-direction: column; flex: 1; height: 100%; min-height: 480px; 
-        padding-bottom: 70px; margin-bottom: 20px; 
-        animation: fadeInUp 0.6s ease-out;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .project-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.2);
-        border-color: #3B82F6;
-    }
-
+    .project-card { background-color: var(--secondary-background-color); border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); position: relative; display: flex; flex-direction: column; flex: 1; height: 100%; min-height: 480px; padding-bottom: 70px; margin-bottom: 20px; animation: fadeInUp 0.6s ease-out; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .project-card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.2); border-color: #3B82F6; }
     .p-img-container { width: 100%; height: 180px; overflow: hidden; border-radius: 15px; margin-bottom: 15px; border: 1px solid rgba(128, 128, 128, 0.1); flex-shrink: 0; }
     .p-img { width: 100%; height: 100%; object-fit: cover; }
-    
-    .p-cat-overlay {
-        position: absolute; top: 30px; left: 30px;
-        background-color: var(--background-color);
-        color: #3B82F6; padding: 5px 12px; border-radius: 20px;
-        font-size: 0.7rem; font-weight: 800; text-transform: uppercase;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1); z-index: 5; 
-        border: 1px solid rgba(128, 128, 128, 0.2);
-    }
-
+    .p-cat-overlay { position: absolute; top: 30px; left: 30px; background-color: var(--background-color); color: #3B82F6; padding: 5px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; box-shadow: 0 2px 4px rgba(0,0,0,0.1); z-index: 5; border: 1px solid rgba(128, 128, 128, 0.2); }
     .p-title { font-size: 1.2rem; font-weight: 700; color: var(--text-color); margin-bottom: 15px; line-height: 1.3; flex-grow: 0; }
     .p-details-container { flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
-    
     .p-row { display: flex; align-items: flex-start; margin-bottom: 10px; }
     .p-label { min-width: 90px; flex-shrink: 0; font-weight: 700; color: var(--text-color); font-size: 0.85rem; opacity: 0.9; }
     .p-val { font-size: 0.85rem; color: var(--text-color); line-height: 1.5; opacity: 0.8; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; flex-grow: 1; }
-
-    /* 2. BUTTON STYLING */
     div[data-testid="column"] .stButton { position: absolute !important; bottom: 20px !important; right: 20px !important; left: unset !important; width: auto !important; text-align: right !important; z-index: 10 !important; }
     div[data-testid="column"] .stButton button { background: var(--background-color) !important; color: #2563EB !important; border: 1px solid #2563EB !important; border-radius: 8px !important; width: auto !important; font-size: 0.90rem !important; font-weight: 600 !important; padding: 0.5rem 1.0rem !important; box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important; transition: all 0.2s ease !important; float: right !important; }
     div[data-testid="column"] .stButton button:hover { background: #2563EB !important; color: white !important; transform: translateY(-2px) !important; box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2) !important; }
-
-    /* 3. DETAILED VIEW */
-    .detail-row { display: flex; flex-direction: row; gap: 20px; width: 100%; margin-bottom: 20px; flex-wrap: wrap; animation: zoomIn 0.5s ease-out; }
-    .detail-box { flex: 1; display: flex; flex-direction: column; padding: 20px; border-radius: 10px; min-width: 200px; }
-    .box-title { font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; font-size: 1rem; color: var(--text-color); }
-    .box-content { font-size: 0.95rem; line-height: 1.6; font-weight: 500; color: var(--text-color); opacity: 0.9; }
-    .d-blue { background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); }
-    .d-green { background-color: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); }
-    .d-yellow { background-color: rgba(234, 179, 8, 0.1); border: 1px solid rgba(234, 179, 8, 0.2); }
-
-    /* 4. METRIC CARDS - DESKTOP DEFAULTS */
-    .metric-card {
-        background: var(--secondary-background-color); 
-        border: 1px solid rgba(128, 128, 128, 0.2); 
-        border-radius: 12px;
-        padding: 20px; 
-        text-align: center; 
-        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-        animation: zoomIn 0.5s ease-out; 
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        position: relative;
-        overflow: visible !important;
-    }
-    .metric-card:hover { transform: translateY(-5px); border-color: #3B82F6; }
     
-    .metric-value {
-        font-size: 1.8rem; /* Large Desktop size */
-        font-weight: 800; 
-        color: #3B82F6;
-    }
+    .metric-card { background: var(--secondary-background-color); border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 12px; padding: 20px; text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); position: relative; overflow: visible !important; }
+    .metric-card:hover { transform: translateY(-5px); border-color: #3B82F6; }
+    .metric-value { font-size: 1.8rem; font-weight: 800; color: #3B82F6; }
     .metric-label { font-size: 0.85rem; color: var(--text-color); opacity: 0.7; }
     
-    /* TOOLTIP (Default Desktop - Wide) */
-    .tooltip-text {
-        visibility: hidden;
-        width: auto; min-width: 300px; white-space: nowrap; 
-        background-color: var(--secondary-background-color); 
-        color: var(--text-color);
-        border: 1px solid rgba(128, 128, 128, 0.3);
-        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2);
-        text-align: left; border-radius: 8px; padding: 15px;
-        position: absolute; z-index: 99999;        
-        top: 120%; 
-        left: 50%; transform: translateX(-50%);
-        opacity: 0; transition: opacity 0.3s, top 0.3s;
-        font-size: 0.8rem; font-weight: 500; line-height: 1.5; pointer-events: none;
-    }
+    .timeline-card { background: var(--secondary-background-color); border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 12px; padding: 24px; margin-bottom: 20px; border-left: 6px solid #3B82F6; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+    .skill-metric { background: var(--secondary-background-color); border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 8px; padding: 15px; text-align: center; margin-bottom: 10px; color: var(--text-color); }
+    progress { accent-color: #3B82F6; }
+    
+    /* TOOLTIPS & RESPONSIVENESS */
+    .tooltip-text { visibility: hidden; width: auto; min-width: 300px; white-space: nowrap; background-color: var(--secondary-background-color); color: var(--text-color); border: 1px solid rgba(128, 128, 128, 0.3); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2); text-align: left; border-radius: 8px; padding: 15px; position: absolute; z-index: 99999; top: 120%; left: 50%; transform: translateX(-50%); opacity: 0; transition: opacity 0.3s, top 0.3s; font-size: 0.8rem; font-weight: 500; line-height: 1.5; pointer-events: none; }
     .metric-card:hover .tooltip-text { visibility: visible; opacity: 1; top: 125%; }
 
-    /* === MOBILE OPTIMIZATION (Vertical Phone Layout < 768px) === */
     @media only screen and (max-width: 768px) {
         .metric-card { padding: 12px !important; }
         .metric-value { font-size: 1.4rem !important; }
         .metric-label { font-size: 0.75rem !important; }
         h1 { font-size: 2.2rem !important; } 
-        /* Hide tooltip on vertical mobile to avoid overlap */
         .tooltip-text { display: none !important; }
     }
 
-    /* === FIX: DESKTOP-MODE-ON-MOBILE / TABLET (769px - 1150px) === */
     @media only screen and (min-width: 769px) and (max-width: 1150px) {
         .metric-card { padding: 10px 5px !important; }
         .metric-value { font-size: 1.4rem !important; }
-        .metric-label { 
-            font-size: 0.70rem !important; 
-            white-space: nowrap !important; 
-        }
-        
-        .tooltip-text { 
-            display: block !important;        
-            visibility: hidden;
-            
-            min-width: 220px !important;     
-            max-width: 300px !important;
-            width: auto !important;
-            
-            white-space: normal !important;  
-            font-size: 0.75rem !important;
-            line-height: 1.3 !important;
-            padding: 10px !important;
-            
-            top: 110% !important;            
-            left: 50% !important;
-            transform: translateX(-50%) !important;
-            z-index: 10000 !important; 
-        }
-
-        #first-metric .tooltip-text {
-            left: 50% !important; 
-            transform: translateX(-10%) !important; 
-        }
-        
-        .metric-card:hover .tooltip-text { 
-            visibility: visible; 
-            opacity: 1; 
-        }
-    }
-
-    /* TIMELINE & SKILLS */
-    .timeline-card {
-        background: var(--secondary-background-color); 
-        border: 1px solid rgba(128, 128, 128, 0.2);
-        border-radius: 12px;
-        padding: 24px; margin-bottom: 20px; border-left: 6px solid #3B82F6;
-        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); animation: fadeInUp 0.6s ease-out;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .timeline-card:hover { transform: translateX(5px); }
-    .timeline-desc { color: var(--text-color); opacity: 0.8; }
-    .skill-metric {
-        background: var(--secondary-background-color);
-        border: 1px solid rgba(128, 128, 128, 0.2);
-        border-radius: 8px;
-        padding: 15px; text-align: center; margin-bottom: 10px; animation: fadeInUp 0.7s ease-out;
-        color: var(--text-color);
-    }
-    progress { accent-color: #3B82F6; }
-    progress::-webkit-progress-value { background-color: #3B82F6 !important; }
-    progress::-moz-progress-bar { background-color: #3B82F6 !important; }
-    
-    /* Contact Form Styling Override */
-    input, textarea {
-        font-family: 'Poppins', sans-serif;
+        .metric-label { font-size: 0.70rem !important; white-space: nowrap !important; }
+        .tooltip-text { display: block !important; visibility: hidden; min-width: 220px !important; max-width: 300px !important; width: auto !important; white-space: normal !important; font-size: 0.75rem !important; line-height: 1.3 !important; padding: 10px !important; top: 110% !important; left: 50% !important; transform: translateX(-50%) !important; z-index: 10000 !important; }
+        #first-metric .tooltip-text { left: 50% !important; transform: translateX(-10%) !important; }
+        .metric-card:hover .tooltip-text { visibility: visible; opacity: 1; }
     }
 </style>
 """, unsafe_allow_html=True)
@@ -367,7 +217,6 @@ with st.sidebar:
     """, unsafe_allow_html=True)
     
     # --- RESUME DOWNLOAD BUTTON ---
-    # Checks if resume.pdf exists in folder, if so, shows download button
     if os.path.exists(RESUME_FILE):
         with open(RESUME_FILE, "rb") as pdf_file:
             PDFbyte = pdf_file.read()
@@ -672,7 +521,7 @@ elif selected == "Experience":
         st.markdown(f"""<div class="timeline-card"><div style="font-weight:bold; color:var(--text-color); font-size:1.1rem;">{job.get("role")} @ {job.get("company")}</div><small style="color:var(--text-color); opacity:0.7;">{job.get("date")}</small><div class="timeline-desc" style="white-space:pre-line; margin-top:10px; line-height:1.6; font-size:0.95rem;">{job.get("description")}</div></div>""", unsafe_allow_html=True)
 
 # ==========================================
-# 10. PAGE: CONTACT (UPDATED)
+# 10. PAGE: CONTACT (FINAL AJAX VERSION)
 # ==========================================
 elif selected == "Contact":
     if st.session_state.is_admin:
@@ -689,13 +538,73 @@ elif selected == "Contact":
     
     with c1:
         st.markdown("### Send a Message")
+        
+        # --- AJAX FORM SCRIPT ---
+        # This sends Name, Email, Phone (Optional), Message to your email
+        # without reloading the page.
         contact_form = f"""
-        <form action="https://formsubmit.co/{CONTACT_EMAIL}" method="POST">
+        <script>
+        function submitForm(event) {{
+            event.preventDefault(); // Stop page reload
+            
+            var btn = document.getElementById("myBtn");
+            var form = document.getElementById("myForm");
+            
+            // Change Button to Loading State
+            var originalText = btn.innerHTML;
+            btn.innerHTML = "⏳ Sending...";
+            btn.disabled = true;
+
+            var formData = new FormData(form);
+            
+            // Send to FormSubmit via AJAX
+            fetch("https://formsubmit.co/ajax/{CONTACT_EMAIL}", {{
+                method: "POST",
+                body: formData,
+                headers: {{ 
+                    'Accept': 'application/json' 
+                }}
+            }})
+            .then(response => {{
+                if (response.ok) {{
+                    // Success State
+                    btn.innerHTML = "✅ Message Sent!";
+                    btn.style.backgroundColor = "#22c55e"; // Green
+                    form.reset(); // Clear form
+                }} else {{
+                    // Error State
+                    btn.innerHTML = "❌ Error sending";
+                    btn.disabled = false;
+                    setTimeout(() => {{ btn.innerHTML = originalText; }}, 3000);
+                }}
+            }})
+            .catch(error => {{
+                console.error('Error:', error);
+                btn.innerHTML = "❌ Error";
+                btn.disabled = false;
+                setTimeout(() => {{ btn.innerHTML = originalText; }}, 3000);
+            }});
+        }}
+        </script>
+
+        <form id="myForm" onsubmit="submitForm(event)">
              <input type="hidden" name="_captcha" value="false">
-             <input type="text" name="name" placeholder="Your Name" required style="width:100%; padding: 12px; margin-bottom:15px; border: 1px solid #ccc; border-radius: 8px; background-color: var(--secondary-background-color); color: var(--text-color);">
-             <input type="email" name="email" placeholder="Your Email" required style="width:100%; padding: 12px; margin-bottom:15px; border: 1px solid #ccc; border-radius: 8px; background-color: var(--secondary-background-color); color: var(--text-color);">
-             <textarea name="message" placeholder="Your Message" required style="width:100%; padding: 12px; margin-bottom:15px; border: 1px solid #ccc; border-radius: 8px; min-height: 150px; background-color: var(--secondary-background-color); color: var(--text-color);"></textarea>
-             <button type="submit" style="background-color:#3B82F6; color:white; padding:12px 24px; border:none; border-radius:8px; cursor:pointer; font-weight:bold; width:100%;">Send Message</button>
+             <input type="hidden" name="_template" value="table">
+             <input type="hidden" name="_subject" value="New Portfolio Contact">
+
+             <input type="text" name="name" placeholder="Your Name" required 
+                style="width:100%; padding: 12px; margin-bottom:15px; border: 1px solid #ccc; border-radius: 8px; background-color: var(--secondary-background-color); color: var(--text-color);">
+             
+             <input type="email" name="email" placeholder="Your Email" required 
+                style="width:100%; padding: 12px; margin-bottom:15px; border: 1px solid #ccc; border-radius: 8px; background-color: var(--secondary-background-color); color: var(--text-color);">
+             
+             <input type="text" name="phone" placeholder="Phone Number (Optional)" 
+                style="width:100%; padding: 12px; margin-bottom:15px; border: 1px solid #ccc; border-radius: 8px; background-color: var(--secondary-background-color); color: var(--text-color);">
+             
+             <textarea name="message" placeholder="Purpose of Contact" required 
+                style="width:100%; padding: 12px; margin-bottom:15px; border: 1px solid #ccc; border-radius: 8px; min-height: 150px; background-color: var(--secondary-background-color); color: var(--text-color);"></textarea>
+             
+             <button id="myBtn" type="submit" style="background-color:#3B82F6; color:white; padding:12px 24px; border:none; border-radius:8px; cursor:pointer; font-weight:bold; width:100%;">Send Message</button>
         </form>
         """
         st.markdown(contact_form, unsafe_allow_html=True)
@@ -705,4 +614,3 @@ elif selected == "Contact":
         prof = st.session_state.data.get('profile', {})
         for item in prof.get('contact_info', []):
             st.markdown(f'<a href="{item.get("value")}" target="_blank" style="text-decoration:none;"><div class="metric-card" style="margin-bottom:15px; padding:15px;"><img src="{item.get("icon")}" width="30"><br><b style="color:var(--text-color); font-size:0.9rem;">{item.get("label")}</b></div></a>', unsafe_allow_html=True)
-
