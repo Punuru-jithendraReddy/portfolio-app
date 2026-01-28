@@ -72,8 +72,8 @@ st.markdown("""
 </style>
 
 <div id="mobile-toast">
-    📱 <b>Mobile Detected</b><br>
-    Open in Desktop for the best experience.
+     <b>You are using Mobile </b><br>
+    Please Enable Desktop mode for the best experience.
 </div>
 """, unsafe_allow_html=True)
 
@@ -692,3 +692,4 @@ elif selected == "Contact":
     for i, item in enumerate(prof.get('contact_info', [])):
         with (c1 if i % 2 == 0 else c2):
             st.markdown(f'<a href="{item.get("value")}" target="_blank" style="text-decoration:none;"><div class="metric-card"><img src="{item.get("icon")}" width="40"><br><b style="color:var(--text-color)">{item.get("label")}</b></div></a>', unsafe_allow_html=True)
+
