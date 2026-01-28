@@ -219,12 +219,12 @@ st.markdown("""
         
         /* FIX: Re-enable Tooltip but Constrain Width */
         .tooltip-text { 
-            display: block !important;       
+            display: block !important;        
             visibility: hidden;
             
-            /* Make it narrow to fit cramped screen */
-            min-width: 140px !important;     
-            max-width: 180px !important;
+            /* INCREASED WIDTH FOR MOBILE DESKTOP/TABLET VIEW */
+            min-width: 220px !important;     
+            max-width: 300px !important;
             width: auto !important;
             
             /* Allow text to wrap so it doesn't bleed sidebar */
@@ -234,7 +234,7 @@ st.markdown("""
             padding: 10px !important;
             
             /* Ensure it is centered relative to card */
-            top: 110% !important;           
+            top: 110% !important;            
             left: 50% !important;
             transform: translateX(-50%) !important;
             z-index: 10000 !important; 
