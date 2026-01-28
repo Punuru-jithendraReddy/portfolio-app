@@ -12,23 +12,34 @@ ADMIN_PASSWORD = "admin"
 
 st.set_page_config(layout="wide", page_title="Portfolio", page_icon="✨")
 
-# --- CUSTOM CSS (THEME AWARE & FORCED DESKTOP) ---
+# --- CUSTOM CSS (THEME AWARE, FORCED DESKTOP & ZOOM ENABLED) ---
 st.markdown("""
 <style>
     /* =============================================
-       FORCE DESKTOP LAYOUT ON MOBILE
-       =============================================
-       The following rules force the app to maintain a 1200px width.
-       This prevents columns from stacking on top of each other on phones.
-    */
+       1. FORCE DESKTOP LAYOUT & ENABLE NATURAL ZOOM
+       ============================================= */
+    
+    /* Force the content to be wide (Desktop width), even on mobile. */
     .block-container {
         min-width: 1200px !important; 
-        overflow-x: auto !important;
-    }
-    .stApp {
-        overflow-x: auto !important;
+        max-width: 100% !important;
     }
 
+    /* Allow the main app to scroll horizontally and handle zoom gestures */
+    .stApp {
+        overflow-x: auto !important;
+        /* Explicitly tell the browser to allow panning and pinching */
+        touch-action: pan-x pan-y pinch-zoom !important; 
+    }
+
+    /* Remove the sidebar toggle arrow if you want a cleaner look (optional) */
+    /* [data-testid="stSidebarNav"] { display: none; } */
+
+
+    /* =============================================
+       2. YOUR EXISTING STYLES
+       ============================================= */
+    
     /* --- THEME ADAPTIVE COLORS --- */
     .main { padding-top: 1rem; }
     h1, h2, h3 { font-family: 'Segoe UI', sans-serif; color: var(--text-color) !important; }
